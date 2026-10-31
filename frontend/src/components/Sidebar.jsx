@@ -10,7 +10,6 @@ import {
   Users, 
   User, 
   ShieldCheck,
-  Globe,
   Check, 
   LogOut 
 } from 'lucide-react';
@@ -25,13 +24,11 @@ export default function Sidebar({ activeTab, setActiveTab, currentUser, onSwitch
 
   if (role === 'customer') {
     menuItems = [
-      { id: 'website', label: 'Brand Website', icon: Globe },
       { id: 'store', label: 'Live Store', icon: Store },
       { id: 'portal', label: 'My Portal', icon: User },
     ];
   } else if (role === 'staff') {
     menuItems = [
-      { id: 'website', label: 'Brand Website', icon: Globe },
       { id: 'store', label: 'Live Store', icon: Store },
       { id: 'analytics', label: 'Dashboard', icon: BarChart3 },
       { id: 'billing_day', label: 'Billing', icon: Calendar },
@@ -42,7 +39,6 @@ export default function Sidebar({ activeTab, setActiveTab, currentUser, onSwitch
   } else {
     // Admin has full control of whole system + Staff Management & Settings
     menuItems = [
-      { id: 'website', label: 'Brand Website', icon: Globe },
       { id: 'store', label: 'Live Store', icon: Store },
       { id: 'analytics', label: 'Dashboard', icon: BarChart3 },
       { id: 'billing_day', label: 'Billing', icon: Calendar },

@@ -12,14 +12,12 @@ import CustomerPortalView from './pages/CustomerPortalView';
 import LiveStoreView from './pages/LiveStoreView';
 import StaffManagementView from './pages/StaffManagementView';
 import FirewallSecurityView from './pages/FirewallSecurityView';
-import BrandWebsiteView from './pages/BrandWebsiteView';
 import { apiRequest, setAuthToken, setCurrentUser, getCurrentUser, clearAuth } from './api';
 
 export default function App() {
   const [currentUser, setUser] = useState(getCurrentUser());
   const [activeTab, setActiveTab] = useState('analytics');
   const [isAppLoading, setIsAppLoading] = useState(true);
-  const [viewingWebsite, setViewingWebsite] = useState(false);
   const [liveToast, setLiveToast] = useState(null);
 
   const handlePurchaseNotification = (order) => {
@@ -66,7 +64,7 @@ export default function App() {
 
   // Adjust active tab if user role changes or doesn't have permission
   useEffect(() => {
-    if (currentUser?.role === 'customer' && activeTab !== 'portal' && activeTab !== 'store' && activeTab !== 'website') {
+    if (currentUser?.role === 'customer' && activeTab !== 'portal' && activeTab !== 'store') {
       setActiveTab('portal');
     }
     if (currentUser?.role === 'staff' && (activeTab === 'staff_mgmt' || activeTab === 'firewall')) {
@@ -75,7 +73,6 @@ export default function App() {
   }, [currentUser, activeTab]);
 
   const tabTitles = {
-    website: 'Brand Website & Fragrance Catalog',
     store: 'Live Perfume Store',
     analytics: 'Dashboard',
     billing_day: 'Billing Operations',
@@ -93,24 +90,9 @@ export default function App() {
     return <LoadingScreen onFinished={() => setIsAppLoading(false)} />;
   }
 
-  // 2. Unauthenticated Brand Website or Login Page
+  // 2. Unauthenticated Login Page
   if (!currentUser) {
-    if (viewingWebsite) {
-      return (
-        <BrandWebsiteView
-          onGoToLogin={() => setViewingWebsite(false)}
-          onGoToStore={() => {
-            handleUserLogin('CUSTOMER', '1234');
-          }}
-        />
-      );
-    }
-    return (
-      <LoginPage
-        onLoginSuccess={handleLoginSuccess}
-        onExploreWebsite={() => setViewingWebsite(true)}
-      />
-    );
+    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
   }
 
   // 3. Authenticated Workspace
@@ -207,7 +189,6 @@ export default function App() {
 
           {/* Page Viewport based on Role Permissions */}
           <div style={{ padding: '34px clamp(20px, 3vw, 48px) 30px' }}>
-            {activeTab === 'website' && <BrandWebsiteView onGoToLogin={() => setActiveTab('analytics')} onGoToStore={() => setActiveTab('store')} />}
             {activeTab === 'store' && <LiveStoreView onPurchaseSuccess={handlePurchaseNotification} />}
             {activeTab === 'analytics' && currentUser?.role !== 'customer' && <FinanceDashboard setActiveTab={setActiveTab} />}
             {activeTab === 'billing_day' && currentUser?.role !== 'customer' && <BillingDayView />}

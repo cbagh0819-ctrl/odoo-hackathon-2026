@@ -56,18 +56,12 @@
 ### 6. Omnichannel Customer Portal & Live Storefront
 - Real-time customer self-service: plan upgrades, payment method updates, invoice history, and instant subscription purchase.
 
-### 7. Public Luxury Brand Website & Subscription Experience
-- Complete public-facing storefront presenting the Haute Parfumerie collections and brand philosophy.
-- Interactive Fragrance Vault featuring detailed olfactory notes palettes (Cambodian Agarwood, Grasse Rose, Mysore Sandalwood).
-- Membership Club tiers with instant recurring sign-up (*Bespoke Discovery*, *Connoisseur Club*, *Royal Reserve*).
-- 1-Click gateway allowing visitors and evaluators to seamlessly toggle between the Public Brand Website and the ERP / Billing Workspace.
-
-### 8. Genuine Downloadable PDF Invoices (ReportLab Engine)
-- Generates official binary `.pdf` invoices on demand for all customer and batch billing cycles.
+### 7. Genuine Downloadable PDF Invoices (ReportLab Engine)
+- Generates official binary .pdf invoices on demand for all customer and batch billing cycles.
 - Formatted with luxury typography, itemized tax computations (CGST/SGST), and security certification stamp.
 - 1-click download directly from Invoices View, Customer Portal, and Billing Day console.
 
-### 9. Cinematic Dark Luxury Dashboard
+### 8. Cinematic Dark Luxury Dashboard
 - Real-time MRR, ARR, and Cash Collection Health visualizations.
 - Interactive date-range revenue analytics (7-day, 30-day, 90-day Bézier curves).
 - One-click Billing Day execution and quick subscription generation modals.
@@ -171,7 +165,7 @@ tests/test_firewall_security.py::test_real_pdf_invoice_download PASSED
 ├── frontend/                 # React 18 + Vite Web Application
 │   ├── src/
 │   │   ├── components/       # LoadingScreen, LoginPage, Sidebar
-│   │   ├── pages/            # BrandWebsiteView, LiveStore, FinanceDashboard, FirewallSecurityView, StaffManagementView
+│   │   ├── pages/            # LiveStore, FinanceDashboard, FirewallSecurityView, StaffManagementView
 │   │   ├── api.js            # API Client & Auth Gateway
 │   │   └── brightloop-dashboard.css # Cinematic Theme Styles
 │   └── package.json          # Node Dependencies
