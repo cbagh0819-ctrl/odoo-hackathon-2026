@@ -75,3 +75,23 @@ export async function testFirewallProbe(payload) {
 export async function clearFirewallIncidents() {
   return apiRequest('/firewall/clear-incidents', { method: 'POST' });
 }
+
+export async function downloadInvoicePdf(invoiceId, invoiceNumber) {
+  const token = getAuthToken();
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  const response = await fetch(`/api/billing/invoices/${invoiceId}/pdf`, { headers });
+  if (!response.ok) {
+    throw new Error('Failed to generate invoice PDF');
+  }
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${invoiceNumber || `Invoice_${invoiceId}`}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }, 200);
+}

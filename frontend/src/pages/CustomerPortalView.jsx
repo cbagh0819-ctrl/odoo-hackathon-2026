@@ -1,11 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { apiRequest } from '../api';
+import { apiRequest, downloadInvoicePdf } from '../api';
 import { UserCheck, FileText, Printer, ShieldCheck } from 'lucide-react';
 
 export default function CustomerPortalView({ currentUser }) {
   const [subscriptions, setSubscriptions] = useState([]);
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [downloadingId, setDownloadingId] = useState(null);
+
+  const handleDownloadPdf = async (inv) => {
+    setDownloadingId(inv.id);
+    try {
+      await downloadInvoicePdf(inv.id, inv.invoice_number);
+    } catch (err) {
+      console.error('Download error, using fallback:', err);
+      window.open(`/api/billing/invoices/${inv.id}/pdf`, '_blank');
+    } finally {
+      setDownloadingId(null);
+    }
+  };
 
   const fetchCustomerData = async () => {
     try {
@@ -129,15 +142,15 @@ export default function CustomerPortalView({ currentUser }) {
                       </span>
                     </td>
                     <td className="py-3 px-4 text-right">
-                      <a
-                        href={`/api/billing/invoices/${inv.id}/print`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center px-2.5 py-1 bg-red-950/60 hover:bg-red-900 text-red-300 border border-red-800/60 rounded text-[11px] font-mono font-semibold"
+                      <button
+                        onClick={() => handleDownloadPdf(inv)}
+                        disabled={downloadingId === inv.id}
+                        className="inline-flex items-center px-2.5 py-1 bg-red-950/60 hover:bg-red-900 text-red-300 border border-red-800/60 rounded text-[11px] font-mono font-semibold transition cursor-pointer"
+                        title="Download Real PDF Invoice"
                       >
                         <Printer className="w-3 h-3 mr-1" />
-                        Download PDF
-                      </a>
+                        {downloadingId === inv.id ? 'Saving PDF...' : 'Download PDF'}
+                      </button>
                     </td>
                   </tr>
                 ))

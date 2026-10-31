@@ -58,3 +58,12 @@ def test_owasp_security_headers_injected():
     assert response.headers.get("X-XSS-Protection") == "1; mode=block"
     assert "max-age=" in response.headers.get("Strict-Transport-Security", "")
     assert response.headers.get("X-Firewall-Protection") == "Odoo-Perfumes-WAF/v2.4-Active"
+
+def test_real_pdf_invoice_download():
+    """Verify that downloading an invoice produces an authentic binary PDF file."""
+    response = client.get("/api/billing/invoices/1/pdf")
+    assert response.status_code == 200
+    assert response.headers.get("Content-Type") == "application/pdf"
+    assert "attachment; filename=" in response.headers.get("Content-Disposition", "")
+    assert response.content.startswith(b"%PDF"), "Must be a genuine PDF document"
+    assert len(response.content) > 1000, "PDF must have non-empty document content"
