@@ -31,7 +31,7 @@ export default function Navbar({ activeTab, setActiveTab, currentUser, onSwitchU
               B
             </div>
             <div>
-              <span className="text-xl font-bold text-[#714B67]">Brightloop</span>
+              <span className="text-xl font-bold text-[#714B67]">Odoo Perfumes</span>
               <span className="text-xs ml-1.5 px-2 py-0.5 bg-purple-100 text-[#714B67] rounded-full font-semibold">
                 Odoo ERP Edition
               </span>

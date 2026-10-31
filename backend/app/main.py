@@ -7,8 +7,8 @@ from .routes import auth, products, plans, rules, subscriptions, billing, paymen
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Brightloop Software - Subscription Management System",
-    description="Unified software platform to run plans, subscriptions, and recurring billing. Built for Odoo Hackathon 2026.",
+    title="Odoo Perfumes - Subscription Management System",
+    description="Unified software platform to run perfume subscriptions, recurring billing, and luxury plans. Built for Odoo Hackathon 2026.",
     version="1.0.0"
 )
 
@@ -35,7 +35,7 @@ app.include_router(store.router)
 @app.get("/")
 def root():
     return {
-        "system": "Brightloop Subscription Management Platform",
+        "system": "Odoo Perfumes Subscription Management Platform",
         "status": "online",
         "docs_url": "/docs"
     }

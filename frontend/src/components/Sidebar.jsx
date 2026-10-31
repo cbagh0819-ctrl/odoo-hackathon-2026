@@ -25,11 +25,11 @@ export default function Sidebar({ activeTab, setActiveTab, currentUser, onSwitch
     <aside className="sidebar" aria-label="Main navigation">
       
       {/* Brand Header */}
-      <a className="brand" href="#dashboard" onClick={(e) => { e.preventDefault(); setActiveTab('analytics'); }} aria-label="Brightloop home">
-        <span className="brand-mark">B</span>
+      <a className="brand" href="#dashboard" onClick={(e) => { e.preventDefault(); setActiveTab('analytics'); }} aria-label="Odoo Perfumes home">
+        <span className="brand-mark">O</span>
         <span className="brand-copy">
-          <strong>Brightloop</strong>
-          <small>Odoo ERP Edition</small>
+          <strong>Odoo Perfumes</strong>
+          <small>Luxury Fragrance Edition</small>
         </span>
       </a>
 

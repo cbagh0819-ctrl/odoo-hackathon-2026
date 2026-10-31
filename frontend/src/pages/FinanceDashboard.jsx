@@ -610,7 +610,7 @@ export default function FinanceDashboard({ setActiveTab }) {
 
       {/* 6. Footer */}
       <footer className="footer">
-        <span>© 2026 Brightloop · Odoo ERP Edition</span>
+        <span>© 2026 Odoo Perfumes · Odoo ERP Edition</span>
         <span>SUBSCRIPTION INTELLIGENCE <i></i> BUILT FOR CLARITY</span>
       </footer>
 
@@ -633,7 +633,7 @@ export default function FinanceDashboard({ setActiveTab }) {
             >
               ×
             </button>
-            <p className="eyebrow">BRIGHTLOOP / QUICK ACTION</p>
+            <p className="eyebrow">ODOO PERFUMES / QUICK ACTION</p>
             <h2 className="modal-title">New Subscription</h2>
             <p className="modal-copy">Create a subscription with automated recurring cycle and zero double-billing guard.</p>
             
@@ -710,7 +710,7 @@ export default function FinanceDashboard({ setActiveTab }) {
             >
               ×
             </button>
-            <p className="eyebrow">BRIGHTLOOP / QUICK ACTION</p>
+            <p className="eyebrow">ODOO PERFUMES / QUICK ACTION</p>
             <h2 className="modal-title">Create Invoice</h2>
             <p className="modal-copy">Issue an invoice to a customer with automatic line calculations and tax compliance.</p>
             

@@ -71,7 +71,7 @@ export default function App() {
       <div className="min-h-screen flex items-center justify-center bg-[#080405] text-zinc-400 font-mono text-xs">
         <div className="flex items-center space-x-3">
           <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-          <span>INITIALIZING BRIGHTLOOP LUXURY SUITE...</span>
+          <span>INITIALIZING ODOO PERFUMES LUXURY SUITE...</span>
         </div>
       </div>
     );
@@ -99,7 +99,7 @@ export default function App() {
           {/* Top Bar matching uploaded styles.css */}
           <header className="topbar">
             <div className="breadcrumb">
-              <span>BRIGHTLOOP</span>
+              <span>ODOO PERFUMES</span>
               <i>/</i>
               <strong id="crumbCurrent">{tabTitles[activeTab] || 'Dashboard'}</strong>
             </div>

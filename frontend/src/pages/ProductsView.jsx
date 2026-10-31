@@ -146,7 +146,7 @@ export default function ProductsView() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Brightloop Suite"
+                  placeholder="e.g. Odoo Perfumes Luxury Elixir"
                   className="w-full bg-black/60 border border-red-950/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-red-600"
                   value={newProd.name}
                   onChange={e => setNewProd({ ...newProd, name: e.target.value })}
