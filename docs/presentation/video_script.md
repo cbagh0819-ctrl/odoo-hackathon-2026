@@ -1,4 +1,8 @@
-# Hackathon Presentation & Video Demo (Max 3 Minutes)
+# Brightloop Software - Demo Script & QA Suite
+- Lead: Ankit Mandi (Member 4 - QA & Presentation Lead)
+- Scope: System verification, test assertions, and presentation walkthrough.
+- Status: Verified for Brightloop Subscription Management System.
+- # Hackathon Presentation & Video Demo (Max 3 Minutes)
 # Owned by Member 4 (QA, Demo Data & Video Lead)
 
 ## 3-Minute Video Structure:
