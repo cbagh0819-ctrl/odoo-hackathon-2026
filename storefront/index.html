@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    if (window.location.hostname.includes('github.io') && !window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
+      window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
+    }
+  </script>
   <meta name="theme-color" content="#060405" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <meta name="description" content="Odoo Perfume — Fragrance of Identity. Discover our full luxury collection of 20 artisanal fragrances and exclusive subscription plans." />
@@ -2051,7 +2056,17 @@
       if (!productsMap[id]) return;
       cart[id] = (cart[id] || 0) + 1;
       saveState();
-      renderCart();
+      
+    function openDashboard(e) {
+      if (e) e.preventDefault();
+      const isGitHub = window.location.hostname.includes('github.io');
+      const url = isGitHub
+        ? 'https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/'
+        : 'http://localhost:3000';
+      window.open(url, '_blank');
+    }
+
+    renderCart();
       showToast(`${productsMap[id].name} added to your bag`);
     }
 
@@ -2069,7 +2084,17 @@
       cart[id] = (cart[id] || 0) + Number(btn.dataset.delta);
       if (cart[id] <= 0) delete cart[id];
       saveState();
-      renderCart();
+      
+    function openDashboard(e) {
+      if (e) e.preventDefault();
+      const isGitHub = window.location.hostname.includes('github.io');
+      const url = isGitHub
+        ? 'https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/'
+        : 'http://localhost:3000';
+      window.open(url, '_blank');
+    }
+
+    renderCart();
     });
 
     // Wishlist Open
@@ -2226,26 +2251,25 @@
     async function dispatchStoreOrderToDashboard(orderData) {
       console.log('Dispatching order to Odoo Perfumes Dashboard:', orderData);
 
-      // 1. Send to Backend API if available
-      try {
-        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const endpoint = isLocal
-          ? (window.location.port === '8000' ? '/api/store/order' : 'http://localhost:8000/api/store/order')
-          : '/api/store/order';
-
-        const resp = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderData)
-        });
-        if (resp.ok) {
-          const res = await resp.json();
-          orderData.invoice_number = res.invoice_number;
-          orderData.subscription_number = res.subscription_number;
-          console.log('Order successfully synced to database:', res);
+      // 1. Send to Backend API if running full-stack local server
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      if (isLocal) {
+        try {
+          const endpoint = (window.location.port === '8000') ? '/api/store/order' : 'http://localhost:8000/api/store/order';
+          const resp = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+          });
+          if (resp.ok) {
+            const res = await resp.json();
+            orderData.invoice_number = res.invoice_number;
+            orderData.subscription_number = res.subscription_number;
+            console.log('Order synced to local SQLite backend:', res);
+          }
+        } catch (err) {
+          console.warn('Local backend API error:', err);
         }
-      } catch (err) {
-        console.warn('Backend API offline or cross-origin, continuing with browser storage sync:', err);
       }
 
       // 2. Persist to localStorage for static hosting & cross-window sync
@@ -2350,7 +2374,17 @@
           document.getElementById('receiptItem').textContent = `Bag Order (${cartQuantity()} Flacons)`;
           cart = {};
           saveState();
-          renderCart();
+          
+    function openDashboard(e) {
+      if (e) e.preventDefault();
+      const isGitHub = window.location.hostname.includes('github.io');
+      const url = isGitHub
+        ? 'https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/'
+        : 'http://localhost:3000';
+      window.open(url, '_blank');
+    }
+
+    renderCart();
         } else {
           document.getElementById('receiptItem').textContent = `${activeCheckoutItem.name} (${checkoutQty} x 100ml)`;
         }
@@ -2581,6 +2615,16 @@
       });
     }, { threshold: .08 });
     document.querySelectorAll('.reveal:not(.visible)').forEach(el => observer.observe(el));
+
+    
+    function openDashboard(e) {
+      if (e) e.preventDefault();
+      const isGitHub = window.location.hostname.includes('github.io');
+      const url = isGitHub
+        ? 'https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/'
+        : 'http://localhost:3000';
+      window.open(url, '_blank');
+    }
 
     renderCart();
   </script>

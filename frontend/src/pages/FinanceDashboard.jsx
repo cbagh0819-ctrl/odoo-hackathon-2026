@@ -122,6 +122,15 @@ export default function FinanceDashboard({ setActiveTab }) {
     };
   }, []);
 
+  const handleOpenStore = (e) => {
+    if (e) e.preventDefault();
+    const isGitHub = window.location.hostname.includes('github.io');
+    const targetUrl = isGitHub
+      ? 'https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/store/'
+      : (window.location.port === '3000' ? 'http://localhost:8000/store/' : './store/');
+    window.open(targetUrl, '_blank');
+  };
+
   const handleResetToZero = async () => {
     if (!window.confirm('Reset all dashboard metrics and transactions back to zero?')) return;
     try {
@@ -262,11 +271,9 @@ export default function FinanceDashboard({ setActiveTab }) {
           </div>
 
           {/* Open Shopping Website Button */}
-          <a
-            href="./store/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="shimmer-btn"
+          <button
+            onClick={handleOpenStore}
+            className="shimmer-btn pulse-glow"
             style={{
               height: '38px',
               padding: '0 14px',
@@ -280,13 +287,12 @@ export default function FinanceDashboard({ setActiveTab }) {
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              textDecoration: 'none',
               transition: 'all 0.25s'
             }}
             title="Open the live perfume shopping storefront in a new tab"
           >
             <span>🛍️</span> Open Shopping Website ↗
-          </a>
+          </button>
 
           {/* Reset to Zero Button */}
           <button
@@ -903,11 +909,9 @@ export default function FinanceDashboard({ setActiveTab }) {
                     <div style={{ fontSize: '12px', maxWidth: '420px', margin: '0 auto 16px', color: '#a19395' }}>
                       Orders placed on the Shopping Website will populate this ledger and update revenue in real-time.
                     </div>
-                    <a
-                      href="./store/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="shimmer-btn"
+                    <button
+                      onClick={handleOpenStore}
+                      className="shimmer-btn pulse-glow"
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -918,11 +922,12 @@ export default function FinanceDashboard({ setActiveTab }) {
                         color: '#fff',
                         fontSize: '12px',
                         fontWeight: '600',
-                        textDecoration: 'none'
+                        cursor: 'pointer',
+                        border: 'none'
                       }}
                     >
                       🛍️ Open Shopping Website to Order
-                    </a>
+                    </button>
                   </td>
                 </tr>
               ) : (
