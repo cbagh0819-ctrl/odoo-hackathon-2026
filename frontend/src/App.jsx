@@ -55,9 +55,20 @@ export default function App() {
     }
   }, []);
 
+  const tabTitles = {
+    store: 'Live Storefront',
+    analytics: 'Dashboard',
+    billing_day: 'Billing Operations',
+    subscriptions: 'Subscriptions',
+    invoices: 'Invoices & Payments',
+    products: 'Products & Catalog',
+    plans_rules: 'Settings',
+    portal: 'Customer Portal',
+  };
+
   if (initialLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#070102] text-zinc-400 font-mono text-xs">
+      <div className="min-h-screen flex items-center justify-center bg-[#080405] text-zinc-400 font-mono text-xs">
         <div className="flex items-center space-x-3">
           <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
           <span>INITIALIZING BRIGHTLOOP LUXURY SUITE...</span>
@@ -67,52 +78,89 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#070102] text-zinc-100 flex relative overflow-x-hidden selection:bg-red-600 selection:text-white">
+    <div className="min-h-screen bg-[#080405] text-[#f5f0ee] relative overflow-x-hidden selection:bg-red-600 selection:text-white">
       
-      {/* Pure CSS Luxury Crimson Atmospheric Glows */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-red-600/12 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] bg-red-950/30 rounded-full blur-[140px]" />
-        <div className="absolute top-1/2 right-1/4 w-[400px] h-[400px] bg-rose-900/10 rounded-full blur-[120px]" />
-      </div>
+      {/* Ambient Radial Glowing Orbs matching uploaded styles.css */}
+      <div className="ambient ambient-one"></div>
+      <div className="ambient ambient-two"></div>
 
-      {/* Left Vertical Luxury Sidebar */}
-      <Sidebar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        currentUser={currentUser}
-        onSwitchUser={switchUser}
-      />
+      <div className="shell">
+        {/* Left Vertical Luxury Sidebar */}
+        <Sidebar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          currentUser={currentUser}
+          onSwitchUser={switchUser}
+        />
 
-      {/* Main Content Viewport */}
-      <main className="flex-1 min-h-screen z-10 px-6 sm:px-10 py-6 overflow-y-auto">
-        {/* Real-time Purchase Alert Toast */}
-        {liveToast && (
-          <div className="fixed bottom-6 right-6 z-50 bg-black/90 text-white p-4 rounded-2xl shadow-2xl border border-red-600/60 backdrop-blur-xl flex items-center space-x-4 animate-slide-up max-w-sm">
-            <span className="text-3xl">🎉</span>
-            <div className="text-xs">
-              <div className="font-bold text-red-400 font-mono uppercase tracking-wider text-[10px]">
-                Live Subscription Received
-              </div>
-              <div className="font-medium text-white mt-0.5">
-                <strong>{liveToast.customer}</strong> subscribed online
-              </div>
-              <div className="text-emerald-400 font-semibold font-mono mt-1">
-                +₹{liveToast.total_paid?.toFixed(2)} &bull; MRR & Dashboard Updated!
+        {/* Main Content Area */}
+        <main className="main-area">
+          
+          {/* Top Bar matching uploaded styles.css */}
+          <header className="topbar">
+            <div className="breadcrumb">
+              <span>BRIGHTLOOP</span>
+              <i>/</i>
+              <strong id="crumbCurrent">{tabTitles[activeTab] || 'Dashboard'}</strong>
+            </div>
+
+            <div className="top-actions">
+              <label className="search-wrap" aria-label="Search dashboard">
+                <span>⌕</span>
+                <input id="globalSearch" type="search" placeholder="Search anything..." autoComplete="off" />
+                <kbd>⌘ K</kbd>
+              </label>
+
+              <button className="icon-button notification-button" id="notificationsButton" aria-label="Notifications">
+                ♧<i></i>
+              </button>
+
+              <span className="top-divider"></span>
+
+              <div className="persona-wrap">
+                <span className="persona-label">ACTIVE PERSONA</span>
+                <button 
+                  className="persona-button"
+                  onClick={() => switchUser(currentUser?.role === 'admin' ? 'staff@brightloop.com' : 'admin@brightloop.com')}
+                >
+                  <span>♛</span> {currentUser?.role === 'admin' ? 'Admin' : currentUser?.role || 'User'} <span className="chevron">⌄</span>
+                </button>
               </div>
             </div>
-          </div>
-        )}
+          </header>
 
-        {activeTab === 'store' && <LiveStoreView onPurchaseSuccess={handlePurchaseNotification} />}
-        {activeTab === 'analytics' && <FinanceDashboard setActiveTab={setActiveTab} />}
-        {activeTab === 'billing_day' && <BillingDayView />}
-        {activeTab === 'subscriptions' && <SubscriptionsView />}
-        {activeTab === 'invoices' && <InvoicesView />}
-        {activeTab === 'products' && <ProductsView />}
-        {activeTab === 'plans_rules' && <PlansAndRulesView currentUser={currentUser} />}
-        {activeTab === 'portal' && <CustomerPortalView currentUser={currentUser} />}
-      </main>
+          {/* Real-time Purchase Alert Toast */}
+          {liveToast && (
+            <div className="fixed bottom-6 right-6 z-50 bg-[#16070a] text-white p-4 rounded-xl shadow-2xl border border-red-600/60 backdrop-blur-xl flex items-center space-x-4 animate-slide-up max-w-sm">
+              <span className="text-3xl">🎉</span>
+              <div className="text-xs">
+                <div className="font-bold text-red-400 font-mono uppercase tracking-wider text-[10px]">
+                  Live Subscription Received
+                </div>
+                <div className="font-medium text-white mt-0.5">
+                  <strong>{liveToast.customer}</strong> subscribed online
+                </div>
+                <div className="text-emerald-400 font-semibold font-mono mt-1">
+                  +₹{liveToast.total_paid?.toFixed(2)} &bull; MRR & Dashboard Updated!
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Page Viewport */}
+          <div style={{ padding: '34px clamp(20px, 3vw, 48px) 30px' }}>
+            {activeTab === 'store' && <LiveStoreView onPurchaseSuccess={handlePurchaseNotification} />}
+            {activeTab === 'analytics' && <FinanceDashboard setActiveTab={setActiveTab} />}
+            {activeTab === 'billing_day' && <BillingDayView />}
+            {activeTab === 'subscriptions' && <SubscriptionsView />}
+            {activeTab === 'invoices' && <InvoicesView />}
+            {activeTab === 'products' && <ProductsView />}
+            {activeTab === 'plans_rules' && <PlansAndRulesView currentUser={currentUser} />}
+            {activeTab === 'portal' && <CustomerPortalView currentUser={currentUser} />}
+          </div>
+
+        </main>
+      </div>
 
     </div>
   );
