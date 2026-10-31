@@ -1,0 +1,2433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#060405" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="description" content="Odoo Perfume — Fragrance of Identity. Discover our full luxury collection of 20 artisanal fragrances and exclusive subscription plans." />
+  <title>Odoo Perfume — Fragrance of Identity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #060405;
+      --bg-panel: #0d080a;
+      --bg-card: #0c0708;
+      --red: #d92d42;
+      --red-bright: #ff334b;
+      --red-glow: rgba(255, 51, 75, 0.45);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-red: rgba(220, 38, 55, 0.65);
+      --gold: #dfb15b;
+      --gold-glow: rgba(223, 177, 91, 0.35);
+      --text: #f7f1ee;
+      --text-muted: #9e9190;
+      --serif: 'Cormorant Garamond', Georgia, serif;
+      --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --content: 1260px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--bg); }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: var(--sans);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body.no-scroll { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; }
+    button { color: inherit; border: 0; background: transparent; cursor: pointer; }
+    ::selection { background: var(--red-bright); color: white; }
+
+    .grain {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      opacity: .04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+    }
+
+    .container {
+      width: min(var(--content), calc(100% - 64px));
+      margin: 0 auto;
+    }
+
+    /* ============================================================
+       SITE HEADER
+    ============================================================ */
+    .site-header {
+      position: absolute;
+      z-index: 30;
+      inset: 0 0 auto;
+      height: 84px;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(6,4,5,.88) 0%, rgba(6,4,5,0) 100%);
+    }
+    .nav {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 190px;
+    }
+    .brand-mark {
+      color: #ffffff;
+      font-size: 26px;
+      line-height: 1;
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+      transform: translateY(-1px);
+    }
+    .brand-text { display: flex; flex-direction: column; }
+    .brand-name {
+      font-family: var(--serif);
+      font-size: 27px;
+      font-weight: 500;
+      color: #ffffff;
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+    .brand-sub {
+      font-family: var(--sans);
+      font-size: 8px;
+      font-weight: 500;
+      letter-spacing: 0.42em;
+      color: var(--text-muted);
+      margin-top: 5px;
+      text-align: center;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(20px, 3.2vw, 42px);
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .nav-link {
+      position: relative;
+      font-family: var(--sans);
+      font-size: 14.5px;
+      font-weight: 400;
+      color: #d1c5c3;
+      transition: color .2s ease;
+      padding: 6px 0;
+    }
+    .nav-link:hover { color: #ffffff; }
+    .nav-link.active { color: #ffffff; font-weight: 500; }
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -4px;
+      height: 2px;
+      background: var(--red-bright);
+      box-shadow: 0 0 8px var(--red-glow);
+      border-radius: 2px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 190px;
+      justify-content: flex-end;
+    }
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      color: #eae1df;
+      transition: color .2s, transform .2s;
+    }
+    .icon-btn:hover {
+      color: var(--red-bright);
+      transform: translateY(-1px);
+    }
+    .icon-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      fill: none;
+    }
+    .bag-count {
+      position: absolute;
+      top: 1px;
+      right: -2px;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--red-bright);
+      color: white;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 0 4px;
+      box-shadow: 0 0 8px rgba(255, 51, 75, 0.6);
+    }
+    .menu-toggle { display: none; }
+
+    /* ============================================================
+       HERO SECTION
+    ============================================================ */
+    .hero {
+      min-height: 580px;
+      height: min(650px, 86vh);
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      background-color: var(--bg);
+      background-image: url('assets/clean_hero_bg_2x.webp');
+      background-position: right center;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(90deg, #060405 0%, rgba(6,4,5,0.92) 26%, rgba(6,4,5,0.45) 48%, rgba(6,4,5,0.02) 74%, rgba(6,4,5,0.18) 100%),
+                  linear-gradient(0deg, #060405 0%, transparent 14%, transparent 88%, rgba(6,4,5,0.4) 100%);
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 580px;
+      padding-top: 50px;
+    }
+    .hero-eyebrow {
+      display: block;
+      color: #9f918f;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.38em;
+      font-weight: 500;
+      margin-bottom: 22px;
+    }
+    .hero-title {
+      margin: 0 0 18px 0;
+      font-family: var(--serif);
+      font-size: clamp(54px, 6.2vw, 86px);
+      font-weight: 500;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+    .hero-title .identity-text {
+      font-style: italic;
+      color: var(--red-bright);
+      text-shadow: 0 0 25px rgba(255, 51, 75, 0.7), 0 0 50px rgba(230, 30, 50, 0.35);
+      font-weight: 500;
+    }
+    .hero-subtitle {
+      max-width: 460px;
+      color: #c7b9b7;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: clamp(18px, 1.9vw, 22px);
+      line-height: 1.35;
+      margin: 0 0 32px 0;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .hero-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 30px;
+      border-radius: 9999px;
+      background: rgba(18, 6, 8, 0.72);
+      border: 1px solid var(--border-red);
+      color: #ffffff;
+      font-family: var(--sans);
+      font-size: 13.5px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      box-shadow: 0 0 18px rgba(220, 38, 55, 0.32), inset 0 0 10px rgba(220, 38, 55, 0.12);
+      backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+    }
+    .hero-cta-btn:hover {
+      background: rgba(220, 38, 55, 0.25);
+      border-color: #ff4d62;
+      box-shadow: 0 0 26px rgba(255, 50, 75, 0.55);
+      transform: translateY(-2px);
+    }
+    .hero-sub-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      border-radius: 9999px;
+      background: rgba(223, 177, 91, 0.08);
+      border: 1px solid rgba(223, 177, 91, 0.45);
+      color: #f7e7c4;
+      font-family: var(--sans);
+      font-size: 13.5px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .hero-sub-btn:hover {
+      background: rgba(223, 177, 91, 0.2);
+      border-color: var(--gold);
+      box-shadow: 0 0 20px var(--gold-glow);
+      transform: translateY(-2px);
+    }
+
+    /* ============================================================
+       PROMISE / BENEFITS STRIP
+    ============================================================ */
+    .promise-strip {
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(8, 5, 6, 0.98);
+      position: relative;
+      z-index: 5;
+    }
+    .promise-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .promise-item {
+      min-height: 82px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      padding: 16px 12px;
+      position: relative;
+    }
+    .promise-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 26%;
+      bottom: 26%;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .promise-icon {
+      color: #ded4d2;
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .promise-icon svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 1.6; fill: none; }
+    .promise-text strong { display: block; font-size: 13.5px; font-weight: 500; color: #ffffff; }
+    .promise-text small { display: block; margin-top: 2px; color: var(--text-muted); font-size: 11px; }
+
+    /* ============================================================
+       SHOP BY COLLECTION
+    ============================================================ */
+    .collections { padding: 56px 0 64px; position: relative; background: #060405; }
+    .collections-heading-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .collections-title-wrap { display: flex; align-items: center; gap: 20px; flex: 1; }
+    .collections-title {
+      margin: 0;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 32px;
+      font-weight: 400;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+    .collections-line {
+      flex: 1;
+      max-width: 220px;
+      height: 1.5px;
+      background: linear-gradient(90deg, var(--red) 0%, rgba(217, 45, 66, 0.4) 55%, transparent 100%);
+    }
+    .collections-view-all {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+      white-space: nowrap;
+    }
+    .collections-view-all:hover { color: #ffffff; }
+    .collections-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .collection-pill-card {
+      position: relative;
+      height: 98px;
+      border-radius: 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0 0 24px;
+      text-decoration: none;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      cursor: pointer;
+    }
+    .collection-pill-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(220, 38, 55, 0.45);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 20px rgba(220, 38, 55, 0.16);
+    }
+    .pill-title {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 400;
+      color: #ffffff;
+      z-index: 2;
+    }
+    .pill-art {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      height: 100%;
+      width: 58%;
+      object-fit: cover;
+      object-position: right center;
+      pointer-events: none;
+      z-index: 1;
+      transition: transform 0.4s ease;
+    }
+    .collection-pill-card:hover .pill-art { transform: scale(1.05); }
+
+    /* ============================================================
+       SUBSCRIPTION PLANS SECTION
+    ============================================================ */
+    .plans-section {
+      padding: 90px 0;
+      background: radial-gradient(ellipse at 50% 30%, rgba(35, 14, 18, 0.5), transparent 60%), #070406;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      position: relative;
+    }
+    .plans-header { text-align: center; max-width: 680px; margin: 0 auto 45px; }
+    .plans-kicker {
+      text-transform: uppercase;
+      letter-spacing: .38em;
+      font-size: 9.5px;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .plans-title {
+      margin: 0 0 14px;
+      font: 400 clamp(42px, 5vw, 68px)/1 var(--serif);
+      letter-spacing: -.02em;
+    }
+    .plans-title em { color: var(--gold); font-style: italic; }
+    .plans-desc {
+      color: var(--text-muted);
+      font: italic 18px var(--serif);
+      margin: 0 auto 30px;
+    }
+    
+    /* Interval Toggle */
+    .interval-toggle {
+      display: inline-flex;
+      background: rgba(18, 10, 12, 0.85);
+      border: 1px solid var(--border-subtle);
+      border-radius: 9999px;
+      padding: 4px;
+      gap: 4px;
+    }
+    .interval-btn {
+      padding: 9px 20px;
+      border-radius: 9999px;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.25s ease;
+      letter-spacing: 0.04em;
+    }
+    .interval-btn.active {
+      background: var(--red);
+      color: #ffffff;
+      box-shadow: 0 0 15px var(--red-glow);
+    }
+    .save-tag {
+      font-size: 9px;
+      background: rgba(223, 177, 91, 0.2);
+      color: var(--gold);
+      padding: 2px 7px;
+      border-radius: 99px;
+      margin-left: 6px;
+      font-weight: 700;
+    }
+
+    /* Plan Cards Grid */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      align-items: stretch;
+    }
+    .plan-card {
+      background: linear-gradient(160deg, #130a0d 0%, #0a0607 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .plan-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(220, 38, 55, 0.5);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(220, 38, 55, 0.15);
+    }
+    .plan-card.featured {
+      border-color: rgba(223, 177, 91, 0.6);
+      background: linear-gradient(160deg, #180e0a 0%, #0c0705 100%);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(223, 177, 91, 0.12);
+    }
+    .plan-card.featured:hover {
+      border-color: var(--gold);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 45px rgba(223, 177, 91, 0.25);
+    }
+    .plan-badge {
+      align-self: flex-start;
+      padding: 5px 12px;
+      border-radius: 99px;
+      font-size: 8.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.08);
+      color: #dfd3d2;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      margin-bottom: 18px;
+    }
+    .plan-card.featured .plan-badge {
+      background: rgba(223, 177, 91, 0.18);
+      color: #ffe6af;
+      border-color: rgba(223, 177, 91, 0.45);
+    }
+    .plan-img-wrap {
+      width: 100%;
+      aspect-ratio: 1 / 0.95;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 22px;
+      background: #090506;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .plan-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .plan-card:hover .plan-img-wrap img { transform: scale(1.05); }
+
+    .plan-name {
+      margin: 0 0 8px;
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 500;
+      color: #ffffff;
+    }
+    .plan-tagline {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin: 0 0 20px;
+      min-height: 38px;
+    }
+    .plan-price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .plan-price {
+      font-family: var(--sans);
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .plan-period {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .plan-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 32px;
+      flex: 1;
+    }
+    .plan-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13.5px;
+      color: #cfc5c4;
+      margin-bottom: 13px;
+      line-height: 1.4;
+    }
+    .plan-features li svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--red-bright);
+      stroke-width: 2.2;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .plan-card.featured .plan-features li svg { stroke: var(--gold); }
+    
+    .plan-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 9999px;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      cursor: pointer;
+      border: 1px solid var(--border-red);
+      background: rgba(220, 38, 55, 0.15);
+      color: #ffffff;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(220, 38, 55, 0.15);
+    }
+    .plan-btn:hover {
+      background: var(--red);
+      border-color: var(--red-bright);
+      box-shadow: 0 0 25px var(--red-glow);
+      transform: translateY(-2px);
+    }
+    .plan-card.featured .plan-btn {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #0b0604;
+      box-shadow: 0 0 20px var(--gold-glow);
+    }
+    .plan-card.featured .plan-btn:hover {
+      background: #f1c775;
+      box-shadow: 0 0 30px rgba(223, 177, 91, 0.45);
+    }
+
+    /* ============================================================
+       BESTSELLERS / SHOP SECTION (20 PRODUCTS)
+    ============================================================ */
+    .section { padding: 92px 0; position: relative; }
+    .shop-section { background: linear-gradient(180deg, #060405 0%, #0d080a 50%, #060405 100%); }
+    .section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 30px; }
+    .section-kicker { margin-bottom: 8px; text-transform: uppercase; letter-spacing: .34em; font-size: 9px; color: var(--red-bright); font-weight: 600; }
+    .section-title { margin: 0; font: 400 clamp(40px, 4.8vw, 62px)/.95 var(--serif); letter-spacing: -.025em; }
+    .section-title em { color: var(--red-bright); font-style: italic; }
+    .section-note { color: var(--text-muted); font: italic 17px var(--serif); margin-top: 10px; }
+    
+    .shop-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+    .filters { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .filter-btn {
+      border: 1px solid rgba(255,255,255,.12);
+      background: transparent;
+      padding: 8px 16px;
+      border-radius: 99px;
+      color: #b9abaa;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-size: 9px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      border-color: var(--red);
+      color: white;
+      background: rgba(172,19,39,.18);
+      box-shadow: 0 0 16px rgba(190,20,40,.12);
+    }
+    .product-count-pill {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* 4 Column Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .product-card {
+      min-width: 0;
+      position: relative;
+      background: linear-gradient(155deg, #140b0d 0%, #090607 70%);
+      border: 1px solid rgba(255,255,255,.08);
+      overflow: hidden;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      transition: transform .3s, border-color .3s, box-shadow .3s;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(226,63,79,.5);
+      box-shadow: 0 18px 45px rgba(0,0,0,.5), 0 0 25px rgba(190,20,40,.12);
+    }
+    .product-image {
+      position: relative;
+      aspect-ratio: 1.2 / 1;
+      overflow: hidden;
+      background: #0f0a0b;
+    }
+    .product-image::after {
+      content: '';
+      position: absolute;
+      inset: 60% 0 0;
+      background: linear-gradient(0deg, rgba(6,4,5,.7), transparent);
+      pointer-events: none;
+    }
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .6s cubic-bezier(.2,.7,.2,1);
+    }
+    .product-card:hover .product-image img { transform: scale(1.07); }
+    
+    .product-badge {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      z-index: 2;
+      padding: 5px 9px;
+      background: rgba(6,4,5,.8);
+      border: 1px solid rgba(255,255,255,.14);
+      color: #f1d9d8;
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      border-radius: 4px;
+      backdrop-filter: blur(8px);
+    }
+    .wish-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 3;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.2);
+      background: rgba(6,4,5,.75);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      color: #eee;
+      font-size: 15px;
+      transition: .2s;
+    }
+    .wish-btn:hover, .wish-btn.is-liked {
+      color: var(--red-bright);
+      border-color: var(--red);
+      background: rgba(18, 5, 8, 0.9);
+    }
+    .product-info {
+      padding: 18px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .product-type {
+      color: var(--red-bright);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      font-size: 8.5px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .product-name-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: baseline;
+      margin-top: 6px;
+    }
+    .product-name {
+      margin: 0;
+      font: 500 26px/.95 var(--serif);
+      color: #ffffff;
+    }
+    .product-price-box {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .product-price {
+      font: 700 15px var(--sans);
+      color: #ffffff;
+    }
+    .product-original-price {
+      font-size: 11px;
+      color: #7d706f;
+      text-decoration: line-through;
+    }
+    .product-desc {
+      color: var(--text-muted);
+      font: 13.5px/1.45 var(--serif);
+      margin: 10px 0 16px;
+      min-height: 39px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .product-actions-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .buy-now-btn {
+      flex: 1;
+      height: 36px;
+      border-radius: 9999px;
+      background: rgba(220, 38, 55, 0.16);
+      border: 1px solid var(--border-red);
+      color: #ffffff;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.25s ease;
+    }
+    .buy-now-btn:hover {
+      background: var(--red);
+      box-shadow: 0 0 16px var(--red-glow);
+    }
+    .add-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      background: rgba(255, 255, 255, 0.06);
+      color: white;
+      font-size: 18px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: .2s;
+    }
+    .add-btn:hover {
+      background: var(--red-bright);
+      border-color: var(--red-bright);
+      box-shadow: 0 0 15px var(--red-glow);
+    }
+    .empty-state { display: none; text-align: center; padding: 70px 20px; color: var(--text-muted); border: 1px dashed var(--border-subtle); border-radius: 4px; }
+
+    /* ============================================================
+       EDITORIAL / ABOUT STORY
+    ============================================================ */
+    .editorial { padding: 35px 0 95px; }
+    .editorial-panel {
+      min-height: 440px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      background: radial-gradient(ellipse at 75% 50%, rgba(153,19,35,.26), transparent 45%), linear-gradient(110deg, #13080a, #060405 65%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+    }
+    .editorial-panel::before {
+      content: '';
+      position: absolute;
+      width: 55%;
+      height: 140%;
+      right: -4%;
+      top: -20%;
+      background: url('assets/clean_hero_bg.webp') center right / cover;
+      opacity: .35;
+      filter: saturate(.85);
+      mask-image: linear-gradient(90deg, transparent, black 33%);
+    }
+    .editorial-copy { position: relative; z-index: 1; max-width: 580px; padding: 75px; }
+    .editorial-copy .section-title { font-size: clamp(42px,5vw,68px); }
+    .editorial-copy p { max-width: 420px; color: #b9abaa; font: 17px/1.6 var(--serif); margin: 18px 0 28px; }
+    .editorial-stamp { position: absolute; right: 8%; bottom: 34px; color: rgba(255,255,255,.25); font: italic 14px var(--serif); letter-spacing: .1em; }
+
+    /* ============================================================
+       NEWSLETTER & FOOTER
+    ============================================================ */
+    .newsletter { background: #0c0708; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); padding: 65px 0; }
+    .newsletter-inner { display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+    .newsletter-title { font: 400 38px var(--serif); margin: 0; }
+    .newsletter-copy { color: var(--text-muted); margin-top: 8px; font: 15px var(--serif); }
+    .newsletter-form { display: flex; width: min(480px, 100%); border-bottom: 1px solid rgba(255,255,255,.3); }
+    .newsletter-form input { min-width: 0; flex: 1; border: 0; outline: 0; color: white; background: transparent; padding: 14px 0; font-size: 13px; }
+    .newsletter-form button { border: 0; background: transparent; color: var(--red-bright); text-transform: uppercase; letter-spacing: .16em; font-size: 9.5px; font-weight: 600; cursor: pointer; padding: 0 0 0 14px; }
+    .form-message { color: var(--red-bright); font-size: 11px; margin-top: 10px; min-height: 14px; }
+    
+    footer { padding: 55px 0 28px; background: #050304; }
+    .footer-top { display: flex; justify-content: space-between; gap: 40px; padding-bottom: 45px; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .footer-brand { max-width: 290px; }
+    .footer-brand p { color: var(--text-muted); font: 15px/1.55 var(--serif); margin-top: 14px; }
+    .footer-links { display: flex; gap: clamp(35px,7vw,100px); }
+    .footer-col strong { display: block; text-transform: uppercase; letter-spacing: .2em; font-size: 9px; margin-bottom: 17px; color: #eee; }
+    .footer-col a { display: block; color: var(--text-muted); font: 14px var(--serif); margin: 9px 0; transition: color .2s; }
+    .footer-col a:hover { color: var(--red-bright); }
+    .footer-bottom { display: flex; justify-content: space-between; gap: 20px; padding-top: 22px; color: #726665; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
+
+    /* ============================================================
+       MODALS & DRAWERS
+    ============================================================ */
+    .overlay { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.75); opacity: 0; visibility: hidden; transition: .25s; backdrop-filter: blur(6px); }
+    .overlay.open { opacity: 1; visibility: visible; }
+    
+    /* Cart Drawer */
+    .cart-drawer { position: fixed; z-index: 60; inset: 0 0 0 auto; width: min(440px, 100%); background: #0c0708; border-left: 1px solid var(--border-red); transform: translateX(102%); transition: transform .35s cubic-bezier(.2,.8,.2,1); display: flex; flex-direction: column; }
+    .cart-drawer.open { transform: translateX(0); }
+    .drawer-head { display: flex; justify-content: space-between; align-items: center; padding: 25px 26px; border-bottom: 1px solid var(--border-subtle); }
+    .drawer-head h2 { font: 400 30px var(--serif); margin: 0; }
+    .drawer-close { border: 0; background: transparent; font-size: 26px; cursor: pointer; color: var(--text-muted); }
+    .cart-items { flex: 1; overflow-y: auto; padding: 10px 26px; }
+    .cart-empty { color: var(--text-muted); text-align: center; font: italic 18px var(--serif); padding: 60px 10px; }
+    .cart-item { display: grid; grid-template-columns: 74px 1fr auto; gap: 14px; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .cart-item img { width: 74px; height: 74px; object-fit: cover; border-radius: 6px; }
+    .cart-item h3 { margin: 0 0 4px; font: 500 20px var(--serif); }
+    .cart-item small { color: var(--text-muted); font-size: 11px; }
+    .qty-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+    .qty-row button { width: 22px; height: 22px; background: transparent; border: 1px solid rgba(255,255,255,.18); cursor: pointer; color: white; border-radius: 2px; }
+    .qty-row span { font-size: 11px; }
+    .cart-price { font-size: 13.5px; white-space: nowrap; color: #ffffff; }
+    .drawer-foot { padding: 22px 26px 28px; border-top: 1px solid var(--border-subtle); background: #090506; }
+    .subtotal { display: flex; justify-content: space-between; margin-bottom: 18px; font-size: 13px; }
+    .subtotal strong { font-size: 19px; color: #ffffff; }
+    .checkout-btn { width: 100%; border-radius: 9999px; min-height: 48px; background: var(--red); color: white; font-weight: 600; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, box-shadow 0.2s; }
+    .checkout-btn:hover { background: var(--red-bright); box-shadow: 0 0 20px var(--red-glow); }
+
+    /* CHECKOUT MODAL (BUY NOW) */
+    .modal {
+      position: fixed;
+      z-index: 70;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -46%) scale(0.96);
+      width: min(580px, calc(100% - 32px));
+      max-height: 90vh;
+      overflow-y: auto;
+      background: #0f080a;
+      border: 1px solid var(--border-red);
+      border-radius: 16px;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7), 0 0 35px rgba(220, 38, 55, 0.2);
+      padding: 32px 36px;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .modal.open {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .modal-head h2 {
+      margin: 0;
+      font: 400 28px var(--serif);
+      color: #ffffff;
+    }
+    .modal-head h2 em { color: var(--red-bright); font-style: italic; }
+    .modal-close { font-size: 24px; color: var(--text-muted); }
+    
+    .checkout-item-preview {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      padding: 14px;
+      background: #150b0e;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      margin-bottom: 22px;
+    }
+    .checkout-item-preview img {
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .checkout-item-info h4 { margin: 0 0 4px; font: 500 20px var(--serif); color: white; }
+    .checkout-item-info p { margin: 0; font-size: 11px; color: var(--text-muted); }
+    .checkout-item-price { margin-left: auto; text-align: right; }
+    .checkout-item-price strong { font-size: 16px; color: #ffffff; display: block; }
+    
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #c4b5b4; margin-bottom: 6px; font-weight: 500; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 11px 14px;
+      color: white;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus { border-color: var(--red); background: rgba(255, 255, 255, 0.07); }
+    
+    .payment-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .payment-method-card {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.02);
+      transition: all 0.2s;
+    }
+    .payment-method-card.selected {
+      border-color: var(--red);
+      background: rgba(220, 38, 55, 0.14);
+      box-shadow: 0 0 12px rgba(220, 38, 55, 0.2);
+    }
+    .payment-method-card input { accent-color: var(--red); }
+    .payment-method-card span { font-size: 12.5px; font-weight: 500; color: #ffffff; }
+
+    .promo-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .promo-btn {
+      padding: 0 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      color: white;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+    .promo-btn:hover { background: rgba(255, 255, 255, 0.15); }
+    
+    .order-totals {
+      background: #14090b;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 22px;
+      font-size: 13px;
+    }
+    .order-totals-row { display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--text-muted); }
+    .order-totals-row.final {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .order-totals-row.discount { color: var(--gold); }
+
+    .place-order-btn {
+      width: 100%;
+      height: 48px;
+      border-radius: 9999px;
+      background: var(--red);
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      box-shadow: 0 0 20px var(--red-glow);
+      transition: all 0.25s;
+    }
+    .place-order-btn:hover { background: var(--red-bright); transform: translateY(-1px); }
+
+    /* SUCCESS MODAL */
+    .success-icon-wrap {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(220, 38, 55, 0.16);
+      border: 2px solid var(--red-bright);
+      box-shadow: 0 0 30px var(--red-glow);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      color: var(--red-bright);
+      font-size: 32px;
+    }
+    .success-content { text-align: center; }
+    .success-content h3 { font: 400 34px var(--serif); margin: 0 0 8px; color: #ffffff; }
+    .success-content p { color: var(--text-muted); font-size: 14px; margin: 0 0 24px; line-height: 1.5; }
+    .receipt-box {
+      background: #130a0d;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-align: left;
+      margin-bottom: 24px;
+      font-size: 12.5px;
+    }
+    .receipt-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .receipt-row strong { color: white; }
+
+    /* Search Overlay */
+    .search-panel { position: fixed; z-index: 61; top: 0; left: 0; right: 0; background: #0c0708; border-bottom: 1px solid var(--border-red); padding: 30px max(40px, calc((100vw - var(--content))/2)); transform: translateY(-110%); transition: transform .3s; }
+    .search-panel.open { transform: translateY(0); }
+    .search-row { display: flex; gap: 20px; align-items: center; }
+    .search-row input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; border-bottom: 1px solid rgba(255,255,255,.2); padding: 14px 0; color: white; font: 26px var(--serif); }
+    .search-row input::placeholder { color: #6d6060; }
+    .search-close { border: 0; background: transparent; cursor: pointer; font-size: 26px; color: var(--text-muted); }
+
+    .toast {
+      position: fixed;
+      z-index: 80;
+      left: 50%;
+      bottom: 28px;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 12px 24px;
+      background: #160a0d;
+      border: 1px solid var(--border-red);
+      color: white;
+      font-size: 12px;
+      letter-spacing: .04em;
+      border-radius: 999px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.55), 0 0 20px rgba(220,38,55,.2);
+      transition: .25s;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%,0); }
+
+    .mobile-menu { display: none; }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       RESPONSIVE BREAKPOINTS
+    ============================================================ */
+    @media (max-width: 1100px) {
+      .product-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .plans-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    }
+
+    @media (max-width: 880px) {
+      .container { width: calc(100% - 40px); }
+      .collections-cards-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .plans-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+      .promise-grid { grid-template-columns: repeat(2, 1fr); }
+      .promise-item:nth-child(2)::after { display: none; }
+      .promise-item:nth-child(-n+2) { border-bottom: 1px solid rgba(255,255,255,.07); }
+    }
+
+    @media (max-width: 768px) {
+      .container { width: calc(100% - 30px); }
+      .site-header { height: 74px; }
+      .brand { min-width: 0; }
+      .brand-name { font-size: 22px; }
+      .brand-sub { font-size: 7.5px; }
+      .nav-links { display: none; }
+      .nav-actions { min-width: 0; gap: 8px; }
+      .nav-actions .icon-btn:not(.bag-button):not(.menu-toggle) { display: none; }
+      .menu-toggle { display: grid; }
+      
+      .mobile-menu {
+        display: flex;
+        position: absolute;
+        top: 74px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        padding: 12px 24px 24px;
+        background: rgba(8,5,6,.98);
+        border-bottom: 1px solid var(--border-subtle);
+        transform: translateY(-10px);
+        opacity: 0;
+        visibility: hidden;
+        transition: .25s ease;
+      }
+      .mobile-menu.open { transform: translateY(0); opacity: 1; visibility: visible; }
+      .mobile-menu a { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.07); font: 20px var(--serif); color: #ded4d2; }
+
+      .hero {
+        min-height: 520px;
+        height: auto;
+        padding: 90px 0 60px;
+        background-position: 72% center;
+      }
+      .hero-content { padding-top: 0; }
+      .hero-eyebrow { font-size: 10px; }
+      .hero-title { font-size: clamp(44px, 11vw, 62px); }
+      .hero-subtitle { font-size: 17px; margin-bottom: 26px; }
+
+      .collections { padding: 42px 0 54px; }
+      .collections-cards-grid { grid-template-columns: 1fr; gap: 10px; }
+      .collection-pill-card { height: 86px; }
+      .pill-title { font-size: 23px; }
+
+      .promise-grid { grid-template-columns: 1fr 1fr; }
+      .promise-item { min-height: 72px; padding: 12px 6px; gap: 10px; }
+      .promise-icon svg { width: 19px; height: 19px; }
+      .promise-text strong { font-size: 12px; }
+      .promise-text small { font-size: 9.5px; }
+
+      .section { padding: 64px 0; }
+      .section-heading { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 24px; }
+      .shop-controls { flex-direction: column; align-items: flex-start; }
+      .product-grid { grid-template-columns: 1fr; }
+      .editorial-copy { padding: 38px 24px; }
+      .newsletter-inner { flex-direction: column; align-items: flex-start; gap: 24px; }
+      .footer-top { flex-direction: column; }
+      .footer-links { gap: 40px; flex-wrap: wrap; }
+      .footer-bottom { flex-direction: column; gap: 8px; }
+      
+      .modal { padding: 24px 20px; width: calc(100% - 24px); }
+      .form-row { grid-template-columns: 1fr; }
+      .payment-options { grid-template-columns: 1fr; }
+    }
+
+    .nav-dashboard-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      background: rgba(223, 177, 91, 0.12);
+      border: 1px solid rgba(223, 177, 91, 0.5);
+      color: #ffdf94;
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 0 12px rgba(223, 177, 91, 0.12);
+      white-space: nowrap;
+    }
+    .nav-dashboard-link:hover {
+      background: rgba(223, 177, 91, 0.25);
+      border-color: #ffd700;
+      box-shadow: 0 0 20px rgba(223, 177, 91, 0.4);
+      transform: translateY(-1px);
+      color: #ffffff;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- SITE HEADER -->
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="Odoo Perfume home">
+        <span class="brand-mark">✦</span>
+        <span class="brand-text">
+          <span class="brand-name">Odoo Perfume</span>
+          <span class="brand-sub">PERFUMES</span>
+        </span>
+      </a>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a class="nav-link active" href="#home">Home</a>
+        <a class="nav-link" href="#shop">Shop</a>
+        <a class="nav-link" href="#collections">Collections</a>
+        <a class="nav-link" href="#plans">Plans</a>
+        <a class="nav-link" href="#about">About</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/" class="nav-dashboard-link" title="Open Odoo Subscription & WAF Dashboard">
+          <span>⚡ ERP Dashboard</span>
+          <span>&rarr;</span>
+        </a>
+        <button class="icon-btn" id="searchOpen" aria-label="Search products">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+        </button>
+        <button class="icon-btn" id="wishlistOpen" aria-label="View wishlist">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        <button class="icon-btn bag-button" id="cartOpen" aria-label="Open shopping bag">
+          <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="bag-count" id="bagCount">3</span>
+        </button>
+        <button class="icon-btn account-button" id="accountOpen" aria-label="Account">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Open menu">
+          <svg viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+      <a href="#home">Home</a>
+      <a href="#shop">Shop</a>
+      <a href="#collections">Collections</a>
+      <a href="#plans">Subscription Plans</a>
+      <a href="#about">About</a>
+      <a href="https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/" style="color:var(--gold);">⚡ ERP Dashboard &rarr;</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero" id="home">
+      <div class="container">
+        <div class="hero-content reveal visible">
+          <span class="hero-eyebrow">SIGNATURE SCENTS</span>
+          <h1 class="hero-title">
+            FRAGRANCE<br>
+            OF <span class="identity-text">IDENTITY</span>
+          </h1>
+          <p class="hero-subtitle">Luxury perfumes crafted to leave a lasting impression.</p>
+          <div class="hero-actions">
+            <a class="hero-cta-btn" href="#shop">Shop Collection &rarr;</a>
+            <a class="hero-sub-btn" href="#plans">✦ Scent Subscriptions</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROMISE / BENEFITS STRIP -->
+    <section class="promise-strip" aria-label="Shopping benefits">
+      <div class="container promise-grid">
+        <div class="promise-item">
+          <div class="promise-icon">
+            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div class="promise-text">
+            <strong>Free Shipping</strong>
+            <small>Above ₹999</small>
+          </div>
+        </div>
+
+        <div class="promise-item">
+          <div class="promise-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <div class="promise-text">
+            <strong>100% Authentic</strong>
+            <small>Guaranteed</small>
+          </div>
+        </div>
+
+        <div class="promise-item">
+          <div class="promise-icon">
+            <svg viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+          </div>
+          <div class="promise-text">
+            <strong>Luxury Packaging</strong>
+            <small>Gift Ready</small>
+          </div>
+        </div>
+
+        <div class="promise-item">
+          <div class="promise-icon">
+            <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          </div>
+          <div class="promise-text">
+            <strong>Easy Returns</strong>
+            <small>Within 7 Days</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOP BY COLLECTION -->
+    <section class="collections" id="collections">
+      <div class="container">
+        <div class="collections-heading-row reveal">
+          <div class="collections-title-wrap">
+            <h2 class="collections-title">Shop by Collection</h2>
+            <span class="collections-line"></span>
+          </div>
+          <a class="collections-view-all" href="#shop">View All 20 Fragrances &rarr;</a>
+        </div>
+        <div class="collections-cards-grid">
+          <div class="collection-pill-card reveal" data-filter-col="men">
+            <span class="pill-title">Men</span>
+            <img src="assets/faded_collection_men_art.png" alt="Men's collection" class="pill-art" loading="lazy">
+          </div>
+          <div class="collection-pill-card reveal" data-filter-col="women">
+            <span class="pill-title">Women</span>
+            <img src="assets/faded_collection_women_art.png" alt="Women's collection" class="pill-art" loading="lazy">
+          </div>
+          <div class="collection-pill-card reveal" data-filter-col="unisex">
+            <span class="pill-title">Unisex</span>
+            <img src="assets/faded_collection_unisex_art.png" alt="Unisex collection" class="pill-art" loading="lazy">
+          </div>
+          <div class="collection-pill-card reveal" data-filter-col="premium">
+            <span class="pill-title">Premium</span>
+            <img src="assets/faded_collection_premium_art.png" alt="Premium collection" class="pill-art" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUBSCRIPTION PLANS SECTION -->
+    <section class="plans-section" id="plans">
+      <div class="container">
+        <div class="plans-header reveal">
+          <div class="plans-kicker">MEMBERSHIP PRIVILEGES</div>
+          <h2 class="plans-title">The Scent <em>Club.</em></h2>
+          <p class="plans-desc">Curated by master perfumers. Fresh signature flacons delivered to your door with private cellar access.</p>
+          
+          <div class="interval-toggle" role="group" aria-label="Billing frequency">
+            <button class="interval-btn active" data-interval="monthly">Monthly</button>
+            <button class="interval-btn" data-interval="quarterly">Quarterly <span class="save-tag">SAVE 10%</span></button>
+            <button class="interval-btn" data-interval="annual">Annual <span class="save-tag">SAVE 20%</span></button>
+          </div>
+        </div>
+
+        <div class="plans-grid">
+          <!-- Silver Plan -->
+          <div class="plan-card reveal" data-plan="silver">
+            <span class="plan-badge">Discovery Tier</span>
+            <div class="plan-img-wrap">
+              <img src="assets/plans/silver-package.webp" alt="Silver package presentation" loading="lazy">
+            </div>
+            <h3 class="plan-name">Silver Discovery</h3>
+            <p class="plan-tagline">For curious noses exploring new olfactory identities.</p>
+            <div class="plan-price-row">
+              <span class="plan-price" id="silverPrice">₹2,490</span>
+              <span class="plan-period" id="silverPeriod">/ month</span>
+            </div>
+            <ul class="plan-features">
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> 1x 50ml Luxury Eau de Parfum each delivery</li>
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> 2x 10ml Refillable travel atomizers</li>
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> Curated seasonal scent notes & tasting passport</li>
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> 15% VIP boutique discount on full bottles</li>
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> Free standard insured delivery</li>
+            </ul>
+            <button class="plan-btn" data-subscribe="silver">Subscribe Silver Plan &rarr;</button>
+          </div>
+
+          <!-- Golden Plan (Featured) -->
+          <div class="plan-card featured reveal" data-plan="golden">
+            <span class="plan-badge">Most Popular ⭐</span>
+            <div class="plan-img-wrap">
+              <img src="assets/plans/golden-package.webp" alt="Golden package presentation" loading="lazy">
+            </div>
+            <h3 class="plan-name">Golden Connoisseur</h3>
+            <p class="plan-tagline">Our most coveted edition for passionate fragrance collectors.</p>
+            <div class="plan-price-row">
+              <span class="plan-price" id="goldenPrice">₹3,990</span>
+              <span class="plan-period" id="goldenPeriod">/ month</span>
+            </div>
+            <ul class="plan-features">
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> 1x 100ml Full-Size Eau de Parfum of your choice</li>
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> Heavy gold-plated engraved travel flacon</li>
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> 48-Hour early access to limited edition drops</li>
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> 20% Member privilege across the boutique</li>
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> Priority express shipping in luxury gift casing</li>
+            </ul>
+            <button class="plan-btn" data-subscribe="golden">Subscribe Golden Plan &rarr;</button>
+          </div>
+
+          <!-- Diamond Plan -->
+          <div class="plan-card reveal" data-plan="diamond">
+            <span class="plan-badge">Prestige Tier ✦</span>
+            <div class="plan-img-wrap">
+              <img src="assets/plans/diamond-package.webp" alt="Diamond package presentation" loading="lazy">
+            </div>
+            <h3 class="plan-name">Diamond Prestige</h3>
+            <p class="plan-tagline">The pinnacle of bespoke perfumery and master cellar reserves.</p>
+            <div class="plan-price-row">
+              <span class="plan-price" id="diamondPrice">₹6,490</span>
+              <span class="plan-period" id="diamondPeriod">/ month</span>
+            </div>
+            <ul class="plan-features">
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> 1x 100ml Bespoke Extrait de Parfum (35% oil)</li>
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> Private cellar reserves unreleased to the public</li>
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> Handcrafted monogrammed leather flacon vault</li>
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> 1-on-1 Scent consultation with Master Perfumer</li>
+              <li><svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"/></svg> 25% Lifetime discount & white-glove courier</li>
+            </ul>
+            <button class="plan-btn" data-subscribe="diamond">Subscribe Diamond Plan &rarr;</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOP / ALL 20 PERFUMES -->
+    <section class="section shop-section" id="shop">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div>
+            <div class="section-kicker">Curated for every identity</div>
+            <h2 class="section-title">The <em>Fragrance Vault.</em></h2>
+            <div class="section-note">20 Distinct signatures. Hand-poured with rare extraits and botanical oils.</div>
+          </div>
+          <a class="text-link" href="#plans">Explore Subscription Privileges <span>&rarr;</span></a>
+        </div>
+
+        <div class="shop-controls reveal">
+          <div class="filters" role="group" aria-label="Filter products">
+            <button class="filter-btn active" data-filter="all">All Fragrances (20)</button>
+            <button class="filter-btn" data-filter="men">For Him (10)</button>
+            <button class="filter-btn" data-filter="women">For Her (8)</button>
+            <button class="filter-btn" data-filter="unisex">Unisex (13)</button>
+            <button class="filter-btn" data-filter="premium">Premium Edit (9)</button>
+          </div>
+          <div class="product-count-pill" id="showingCount">Showing 20 of 20 fragrances</div>
+        </div>
+
+        <div class="product-grid" id="productGrid">
+          <!-- Dynamically populated or hydrated with all 20 products -->
+        </div>
+        <div class="empty-state" id="emptyState">No fragrances match that search query. Try another scent note or filter.</div>
+      </div>
+    </section>
+
+    <!-- ABOUT / EDITORIAL -->
+    <section class="editorial" id="about">
+      <div class="container">
+        <div class="editorial-panel reveal">
+          <div class="editorial-copy">
+            <div class="section-kicker">The art of presence</div>
+            <h2 class="section-title">Leave a trace.<br><em>Not a word.</em></h2>
+            <p>We believe fragrance is more than a finishing touch. It is memory, mood, and identity—distilled into a few unforgettable drops.</p>
+            <a class="hero-cta-btn" href="#shop">Discover The Vault <span class="arrow">&rarr;</span></a>
+          </div>
+          <div class="editorial-stamp">SCENT IS A FORM OF SELF EXPRESSION</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWSLETTER -->
+    <section class="newsletter">
+      <div class="container newsletter-inner">
+        <div>
+          <div class="section-kicker">A note from Odoo Perfume</div>
+          <h2 class="newsletter-title">A little fragrance in your inbox.</h2>
+          <div class="newsletter-copy">Early access, new drops, and stories worth keeping.</div>
+        </div>
+        <div style="width:min(480px,100%)">
+          <form class="newsletter-form" id="newsletterForm">
+            <input id="emailInput" type="email" placeholder="Your email address" aria-label="Your email address" required>
+            <button type="submit">Subscribe &rarr;</button>
+          </form>
+          <div class="form-message" id="formMessage" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="#home">
+            <span class="brand-mark">✦</span>
+            <span class="brand-text">
+              <span class="brand-name">Odoo Perfume</span>
+              <span class="brand-sub">PERFUMES</span>
+            </span>
+          </a>
+          <p>Fragrance of identity. Crafted for the moments that become memories.</p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-col">
+            <strong>Explore</strong>
+            <a href="#shop">Shop all 20</a>
+            <a href="#collections">Collections</a>
+            <a href="#plans">Subscriptions</a>
+            <a href="#about">About</a>
+          </div>
+          <div class="footer-col">
+            <strong>Support</strong>
+            <a href="#">Shipping & returns</a>
+            <a href="#">Contact concierge</a>
+            <a href="#">Fragrance care guide</a>
+          </div>
+          <div class="footer-col">
+            <strong>Platform Portal</strong>
+            <a href="https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/">Odoo ERP Dashboard ↗</a>
+            <a href="https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/">1-Click Evaluator Login</a>
+            <a href="https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/">Customer Self-Service</a>
+            <a href="https://github.com/cbagh0819-ctrl/odoo-hackathon-2026">GitHub Source Code ↗</a>
+          </div>
+          <div class="footer-col">
+            <strong>Follow</strong>
+            <a href="#">Instagram &rarr;</a>
+            <a href="#">Pinterest &rarr;</a>
+            <a href="#">YouTube &rarr;</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 ODOO PERFUMES</span>
+        <span>Made for the art of being remembered</span>
+        <span>India · INR ₹</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       MODALS & DRAWERS
+  ============================================================ -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- CART DRAWER -->
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping bag" aria-hidden="true">
+    <div class="drawer-head">
+      <h2>Your bag <span style="color:var(--red-bright)">.</span></h2>
+      <button class="drawer-close" id="cartClose" aria-label="Close bag">&times;</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">Your bag is waiting for a signature scent.</div>
+    </div>
+    <div class="drawer-foot">
+      <div class="subtotal">
+        <span>Subtotal</span>
+        <strong id="cartSubtotal">₹0</strong>
+      </div>
+      <button class="checkout-btn" id="cartCheckoutBtn">Proceed to Checkout &rarr;</button>
+      <p class="drawer-note">Insured express delivery & complimentary luxury gift wrapping included.</p>
+    </div>
+  </aside>
+
+  <!-- QUICK BUY / DIRECT CHECKOUT MODAL -->
+  <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+    <div class="modal-head">
+      <h2 id="checkoutTitle">Instant <em>Checkout</em></h2>
+      <button class="drawer-close modal-close" id="checkoutClose">&times;</button>
+    </div>
+
+    <!-- Selected Item Preview -->
+    <div class="checkout-item-preview" id="checkoutPreview">
+      <img src="assets/products/01-noir.jpg" id="checkoutItemImg" alt="Product preview">
+      <div class="checkout-item-info">
+        <h4 id="checkoutItemName">Noir</h4>
+        <p id="checkoutItemNotes">Woody · Amber · Intense · 100 ml</p>
+        <div class="qty-row" style="margin-top:6px;">
+          <button id="checkoutQtyMinus">−</button>
+          <span id="checkoutQtyVal">1</span>
+          <button id="checkoutQtyPlus">+</button>
+        </div>
+      </div>
+      <div class="checkout-item-price">
+        <strong id="checkoutItemTotal">₹4,990</strong>
+        <span style="font-size:10px; color:#85db85;">Free Express Shipping</span>
+      </div>
+    </div>
+
+    <!-- Customer & Delivery Form -->
+    <form id="checkoutForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="custName">Full Name</label>
+          <input type="text" id="custName" class="form-input" placeholder="e.g. Aryan Sharma" required value="Aryan Sharma">
+        </div>
+        <div class="form-group">
+          <label for="custPhone">Phone Number</label>
+          <input type="tel" id="custPhone" class="form-input" placeholder="+91 98765 43210" required value="+91 98765 43210">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="custEmail">Email Address (for order tracking)</label>
+        <input type="email" id="custEmail" class="form-input" placeholder="aryan@example.com" required value="aryan@example.com">
+      </div>
+      <div class="form-group">
+        <label for="custAddress">Delivery Address</label>
+        <input type="text" id="custAddress" class="form-input" placeholder="Apartment, Street address" required value="402, Signature Palms, Golf Course Road">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="custCity">City</label>
+          <input type="text" id="custCity" class="form-input" placeholder="City" required value="Gurugram">
+        </div>
+        <div class="form-group">
+          <label for="custPin">Pincode</label>
+          <input type="text" id="custPin" class="form-input" placeholder="Pincode" required value="122002">
+        </div>
+      </div>
+
+      <!-- Payment Method Selection -->
+      <div class="form-group">
+        <label>Select Payment Method</label>
+        <div class="payment-options">
+          <label class="payment-method-card selected">
+            <input type="radio" name="payMethod" value="upi" checked>
+            <span>⚡ UPI (GPay/PhonePe)</span>
+          </label>
+          <label class="payment-method-card">
+            <input type="radio" name="payMethod" value="card">
+            <span>💳 Card (Credit/Debit)</span>
+          </label>
+          <label class="payment-method-card">
+            <input type="radio" name="payMethod" value="netbanking">
+            <span>🏦 Net Banking</span>
+          </label>
+          <label class="payment-method-card">
+            <input type="radio" name="payMethod" value="cod">
+            <span>💵 Cash on Delivery</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Promo Code Field -->
+      <div class="promo-row">
+        <input type="text" id="promoInput" class="form-input" placeholder="Enter coupon code (try: ODOO10)" style="text-transform:uppercase;">
+        <button type="button" class="promo-btn" id="promoApplyBtn">Apply</button>
+      </div>
+
+      <!-- Order Totals -->
+      <div class="order-totals">
+        <div class="order-totals-row">
+          <span>Item Total</span>
+          <span id="orderSubtotal">₹4,990</span>
+        </div>
+        <div class="order-totals-row">
+          <span>Luxury Express Shipping</span>
+          <span style="color:#7ee787;">FREE</span>
+        </div>
+        <div class="order-totals-row discount" id="discountRow" style="display:none;">
+          <span id="discountLabel">Promo Discount (ODOO10)</span>
+          <span id="discountVal">-₹499</span>
+        </div>
+        <div class="order-totals-row final">
+          <span>Total Amount</span>
+          <span id="orderFinalTotal">₹4,990</span>
+        </div>
+      </div>
+
+      <button type="submit" class="place-order-btn" id="placeOrderBtn">Confirm & Place Order &rarr;</button>
+    </form>
+  </div>
+
+  <!-- ORDER SUCCESS RECEIPT MODAL -->
+  <div class="modal" id="orderSuccessModal" role="dialog" aria-modal="true">
+    <div class="success-icon-wrap">✓</div>
+    <div class="success-content">
+      <h3>Order Confirmed!</h3>
+      <p>Thank you for choosing Odoo Perfume. Your bespoke flacon is being hand-packaged in our luxury presentation vault.</p>
+      
+      <div class="receipt-box">
+        <div class="receipt-row"><span>Order Reference:</span> <strong id="receiptId">#ODOO-89241</strong></div>
+        <div class="receipt-row"><span>Product:</span> <strong id="receiptItem">Noir (100 ml)</strong></div>
+        <div class="receipt-row"><span>Amount Paid:</span> <strong id="receiptTotal">₹4,990</strong></div>
+        <div class="receipt-row"><span>Estimated Delivery:</span> <strong>3 - 5 Business Days</strong></div>
+        <div class="receipt-row"><span>Shipping To:</span> <strong id="receiptAddress">Gurugram, 122002</strong></div>
+      </div>
+
+            <div style="margin-top:16px; padding:12px; background:rgba(223,177,91,0.08); border:1px solid rgba(223,177,91,0.3); border-radius:8px; font-size:12px; color:#ffe8b8;">
+        <span>⚡ <strong>Real-Time ERP Sync:</strong> Your order has been registered. Track invoices and recurring billing on the <a href="https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/" style="color:#ffffff; text-decoration:underline; font-weight:700;">Odoo ERP Dashboard &rarr;</a></span>
+      </div>
+      <button class="place-order-btn" id="successDoneBtn" style="margin-top:14px;">Continue Exploring &rarr;</button>
+    </div>
+  </div>
+
+  <!-- SUBSCRIPTION MODAL -->
+  <div class="modal" id="subModal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <h2>Scent Club <em>Subscription</em></h2>
+      <button class="drawer-close modal-close" id="subClose">&times;</button>
+    </div>
+    <div class="checkout-item-preview">
+      <img src="assets/plans/golden-package.webp" id="subPreviewImg" alt="Plan preview">
+      <div class="checkout-item-info">
+        <h4 id="subPlanTitle">Golden Connoisseur</h4>
+        <p id="subPlanFreq">Monthly auto-curation · 100ml Full Flacon</p>
+      </div>
+      <div class="checkout-item-price">
+        <strong id="subPlanPrice">₹3,990</strong>
+        <span style="font-size:10px; color:var(--gold);">VIP Status Unlocked</span>
+      </div>
+    </div>
+    <form id="subForm">
+      <div class="form-group">
+        <label for="subScentPref">Initial Scent Profile Preference</label>
+        <select id="subScentPref" class="form-input">
+          <option value="woody">Dark Woods, Amber & Leather (Noir, Oud, Leather)</option>
+          <option value="floral">Luminous Rose, Jasmine & Musk (Bloom, Laven, Cherry)</option>
+          <option value="fresh">Coastal Aquatics & Bright Citrus (Ocean, Aqua, Frost, Citrus)</option>
+          <option value="spicy">Smoky Resin, Incense & Bourbon Vanilla (Mystic, Incense, Vanilla)</option>
+          <option value="surprise" selected>Master Perfumer's Mystery Curation (Recommended)</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Member Full Name</label>
+          <input type="text" class="form-input" required value="Aryan Sharma">
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" class="form-input" required value="+91 98765 43210">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Shipping Address</label>
+        <input type="text" class="form-input" required value="402, Signature Palms, Golf Course Road, Gurugram">
+      </div>
+      <div class="form-group">
+        <label>Payment Mode (Auto-Renewal, pause or cancel anytime)</label>
+        <div class="payment-options">
+          <label class="payment-method-card selected">
+            <input type="radio" name="subPay" value="upi" checked>
+            <span>⚡ UPI Auto-Pay</span>
+          </label>
+          <label class="payment-method-card">
+            <input type="radio" name="subPay" value="card">
+            <span>💳 Credit Card</span>
+          </label>
+        </div>
+      </div>
+      <button type="submit" class="place-order-btn" style="background:var(--gold); color:#0c0604; font-weight:800;">Activate VIP Membership &rarr;</button>
+    </form>
+  </div>
+
+  <!-- SEARCH OVERLAY -->
+  <div class="search-panel" id="searchPanel">
+    <div class="search-row">
+      <input id="searchInput" type="search" placeholder="Search 20 signature fragrances (e.g. Vanilla, Oud, Fresh, Wood)…" aria-label="Search fragrances">
+      <button class="search-close" id="searchClose" aria-label="Close search">&times;</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- ============================================================
+       SCRIPTS: PRODUCTS, CHECKOUT & SUBSCRIPTIONS
+  ============================================================ */ -->
+  <script>
+    // All 20 Luxury Perfumes Data
+    const productsData = [
+      { id: 'noir', name: 'Noir', category: 'men premium', notes: 'Woody · Amber · Intense', price: 4990, originalPrice: 5990, image: 'assets/products/01-noir.jpg', badge: 'Bestseller', desc: 'A dark, magnetic signature with a trail of warm woods, patchouli and smouldering amber.' },
+      { id: 'bloom', name: 'Bloom', category: 'women', notes: 'Floral · Rose · Musk', price: 3890, originalPrice: 4590, image: 'assets/products/02-bloom.jpg', badge: 'New Arrival', desc: 'Soft petals and luminous musk, crafted for effortless romance and luminous grace.' },
+      { id: 'ocean', name: 'Ocean', category: 'unisex men', notes: 'Aquatic · Citrus · Cedar', price: 4290, originalPrice: 4990, image: 'assets/products/03-ocean.jpg', badge: 'Fresh Favourite', desc: 'A crisp, open-air scent with sea salt, coastal breeze, and a sun-bleached cedar finish.' },
+      { id: 'oud', name: 'Oud', category: 'unisex premium', notes: 'Oud · Spice · Saffron', price: 5490, originalPrice: 6490, image: 'assets/products/04-oud.jpg', badge: 'Limited Edition', desc: 'Smouldering Cambodian resin and precious woods infused with royal saffron.' },
+      { id: 'frost', name: 'Frost', category: 'unisex men', notes: 'Crisp Bergamot · Mint · White Musk', price: 3990, originalPrice: 4690, image: 'assets/products/05-frost.jpg', badge: 'Trending', desc: 'An icy burst of glacial freshness with crushed mint leaves and frosted juniper berry.' },
+      { id: 'mystic', name: 'Mystic', category: 'women premium', notes: 'Incense · Dark Patchouli · Vanilla', price: 4890, originalPrice: 5790, image: 'assets/products/06-mystic.jpg', badge: 'Exclusive', desc: 'An enigmatic veil of smoky amber, midnight patchouli, and intoxicating black vanilla.' },
+      { id: 'laven', name: 'Laven', category: 'women unisex', notes: 'French Lavender · Tonka · Cardamom', price: 4190, originalPrice: 4890, image: 'assets/products/07-laven.jpg', badge: 'Calming Blend', desc: 'Sun-drenched Provencal lavender rounded with creamy tonka bean and spiced warmth.' },
+      { id: 'leather', name: 'Leather', category: 'men premium', notes: 'Tuscan Leather · Smoked Birch · Tobacco', price: 5290, originalPrice: 6290, image: 'assets/products/08-leather.jpg', badge: 'Signature Bold', desc: 'Rich saddle leather and aged tobacco leaf layered over smouldering birchwood.' },
+      { id: 'cherry', name: 'Cherry', category: 'women', notes: 'Black Cherry · Bitter Almond · Amber', price: 4790, originalPrice: 5490, image: 'assets/products/09-cherry.jpg', badge: 'Sensual Edit', desc: 'Ripe dark cherries soaked in bitter almond liqueur with a warm amber embrace.' },
+      { id: 'forest', name: 'Forest', category: 'men unisex', notes: 'Cedarwood · Pine Needle · Vetiver', price: 4490, originalPrice: 5190, image: 'assets/products/10-forest.jpg', badge: 'Earthy Reserve', desc: 'The misty stillness of ancient pine groves and damp moss on sunlit bark.' },
+      { id: 'midnight', name: 'Midnight', category: 'men premium', notes: 'Black Pepper · Iris · Sandalwood', price: 5190, originalPrice: 6190, image: 'assets/products/11-midnight.jpg', badge: 'Night Signature', desc: 'A striking nocturne of cracked peppercorns, powdery black iris, and Mysore sandalwood.' },
+      { id: 'vanilla', name: 'Vanilla', category: 'women unisex', notes: 'Bourbon Vanilla · Orchid · Tonka', price: 3990, originalPrice: 4690, image: 'assets/products/12-vanilla.jpg', badge: 'Sweet Gourmand', desc: 'Warm Madagascan vanilla pods spun with golden caramel and night-blooming orchid.' },
+      { id: 'rosewood', name: 'Rosewood', category: 'women unisex', notes: 'Brazilian Rosewood · Pink Pepper · Amber', price: 4690, originalPrice: 5390, image: 'assets/products/13-rosewood.jpg', badge: 'Artisanal', desc: 'Precious rosewood infused with delicate pink peppercorns and glowing resin.' },
+      { id: 'incense', name: 'Incense', category: 'unisex premium', notes: 'Frankincense · Myrrh · Cashmeran', price: 5390, originalPrice: 6390, image: 'assets/products/14-incense.jpg', badge: 'Sacred Blend', desc: 'Spiritual resin, sacred myrrh, and soft cashmere wood that lingers for hours.' },
+      { id: 'citrus', name: 'Citrus', category: 'unisex men', notes: 'Blood Orange · Grapefruit · Neroli', price: 3790, originalPrice: 4390, image: 'assets/products/15-citrus.jpg', badge: 'Radiant Zest', desc: 'Sparkling Mediterranean citrus zest kissed with sun-warmed orange blossoms.' },
+      { id: 'aqua', name: 'Aqua', category: 'men unisex', notes: 'Marine Breeze · Sea Salt · Driftwood', price: 4390, originalPrice: 5090, image: 'assets/products/16-aqua.jpg', badge: 'Crisp Coastal', desc: 'Sunlit waves, mineral sea foam, and bleached coastal driftwood.' },
+      { id: 'spice', name: 'Spice', category: 'men premium', notes: 'Cinnamon Bark · Clove · Guaiac Wood', price: 4690, originalPrice: 5490, image: 'assets/products/17-spice.jpg', badge: 'Warm Oriental', desc: 'Spiced rum, crushed cloves, and glowing embers of smoked guaiac wood.' },
+      { id: 'eclipse', name: 'Eclipse', category: 'unisex premium', notes: 'Blackcurrant · Smoked Amber · Patchouli', price: 5590, originalPrice: 6590, image: 'assets/products/18-eclipse.jpg', badge: 'Celestial Edition', desc: 'Dark syrupy cassis fruit plunged into brooding smoked amber and velvet night.' },
+      { id: 'pure', name: 'Pure', category: 'women unisex', notes: 'White Lotus · Clean Cotton · Ambergris', price: 3890, originalPrice: 4590, image: 'assets/products/19-pure.jpg', badge: 'Clean Linen', desc: 'A pristine cocoon of freshly washed white linen, water lotus, and skin musk.' },
+      { id: 'signature', name: 'Signature', category: 'unisex premium men women', notes: 'Royal Saffron · Damascus Rose · Oud Royale', price: 5990, originalPrice: 7290, image: 'assets/products/20-signature.jpg', badge: 'Masterpiece ✦', desc: 'The pinnacle of Odoo perfumery: Damascus rose steeped in liquid gold saffron and 20-year aged oud.' }
+    ];
+
+    const productsMap = {};
+    productsData.forEach(p => { productsMap[p.id] = p; });
+
+    const money = value => '₹' + Math.round(value).toLocaleString('en-IN');
+
+    // Shopping Bag & Wishlist state
+    let cart = {};
+    let wishlist = new Set();
+    const storedCart = localStorage.getItem('odoo-perfume-cart');
+    if (storedCart) {
+      try { cart = JSON.parse(storedCart); } catch { cart = { noir: 1, bloom: 1, ocean: 1 }; }
+    } else {
+      cart = { noir: 1, bloom: 1, ocean: 1 };
+    }
+    try { wishlist = new Set(JSON.parse(localStorage.getItem('odoo-perfume-wishlist') || '[]')); } catch { wishlist = new Set(); }
+
+    const overlay = document.getElementById('overlay');
+    const cartDrawer = document.getElementById('cartDrawer');
+    const cartItems = document.getElementById('cartItems');
+    const bagCount = document.getElementById('bagCount');
+    const toast = document.getElementById('toast');
+    let toastTimer;
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    function saveState() {
+      localStorage.setItem('odoo-perfume-cart', JSON.stringify(cart));
+      localStorage.setItem('odoo-perfume-wishlist', JSON.stringify([...wishlist]));
+    }
+
+    // Render Product Cards in Grid
+    const productGrid = document.getElementById('productGrid');
+    function renderProductCards() {
+      productGrid.innerHTML = productsData.map(p => {
+        const discountPct = Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100);
+        const isWish = wishlist.has(p.id);
+        return `
+          <article class="product-card reveal visible" data-category="${p.category}" data-name="${p.id}">
+            <div class="product-image">
+              <img src="${p.image}" alt="${p.name} luxury perfume flacon" loading="lazy">
+              <span class="product-badge">${p.badge}</span>
+              <button class="wish-btn ${isWish ? 'is-liked' : ''}" aria-label="Wishlist ${p.name}" data-wish="${p.id}">
+                ${isWish ? '♥' : '♡'}
+              </button>
+            </div>
+            <div class="product-info">
+              <div class="product-type">${p.notes}</div>
+              <div class="product-name-row">
+                <h3 class="product-name">${p.name}</h3>
+                <div class="product-price-box">
+                  <span class="product-price">${money(p.price)}</span>
+                  <span class="product-original-price">${money(p.originalPrice)}</span>
+                </div>
+              </div>
+              <p class="product-desc">${p.desc}</p>
+              <div class="product-actions-row">
+                <button class="buy-now-btn" data-buy-now="${p.id}">⚡ Buy Now</button>
+                <button class="add-btn" data-add="${p.id}" aria-label="Add ${p.name} to bag">+</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+      attachProductEventListeners();
+    }
+    renderProductCards();
+
+    // Attach Listeners to Product Buttons
+    function attachProductEventListeners() {
+      document.querySelectorAll('[data-add]').forEach(btn => {
+        btn.onclick = () => addToCart(btn.dataset.add);
+      });
+      document.querySelectorAll('[data-buy-now]').forEach(btn => {
+        btn.onclick = () => openDirectCheckout(btn.dataset.buyNow);
+      });
+      document.querySelectorAll('[data-wish]').forEach(btn => {
+        btn.onclick = () => {
+          const id = btn.dataset.wish;
+          if (wishlist.has(id)) {
+            wishlist.delete(id);
+            btn.classList.remove('is-liked');
+            btn.textContent = '♡';
+            showToast(`${productsMap[id].name} removed from wishlist`);
+          } else {
+            wishlist.add(id);
+            btn.classList.add('is-liked');
+            btn.textContent = '♥';
+            showToast(`${productsMap[id].name} saved to wishlist`);
+          }
+          saveState();
+        };
+      });
+    }
+
+    // Shopping Bag Functions
+    function cartQuantity() {
+      return Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+    }
+    function cartTotal() {
+      return Object.entries(cart).reduce((sum, [id, qty]) => sum + (productsMap[id]?.price || 0) * qty, 0);
+    }
+    function renderCart() {
+      const qty = cartQuantity();
+      bagCount.textContent = qty;
+      bagCount.style.display = qty > 0 ? 'grid' : 'none';
+      document.getElementById('cartSubtotal').textContent = money(cartTotal());
+      if (!qty) {
+        cartItems.innerHTML = '<div class="cart-empty">Your bag is waiting for a signature scent.</div>';
+        return;
+      }
+      cartItems.innerHTML = Object.entries(cart).filter(([id, count]) => productsMap[id] && count > 0).map(([id, count]) => {
+        const p = productsMap[id];
+        return `
+          <div class="cart-item">
+            <img src="${p.image}" alt="${p.name} perfume">
+            <div>
+              <h3>${p.name}</h3>
+              <small>Eau de parfum · 100 ml</small>
+              <div class="qty-row">
+                <button data-qty="${id}" data-delta="-1" aria-label="Decrease ${p.name}">−</button>
+                <span>${count}</span>
+                <button data-qty="${id}" data-delta="1" aria-label="Increase ${p.name}">+</button>
+              </div>
+            </div>
+            <strong class="cart-price">${money(p.price * count)}</strong>
+          </div>
+        `;
+      }).join('');
+    }
+    function openCart() {
+      cartDrawer.classList.add('open');
+      overlay.classList.add('open');
+      document.body.classList.add('no-scroll');
+      cartDrawer.setAttribute('aria-hidden','false');
+    }
+    function closePanels() {
+      cartDrawer.classList.remove('open');
+      document.getElementById('checkoutModal').classList.remove('open');
+      document.getElementById('orderSuccessModal').classList.remove('open');
+      document.getElementById('subModal').classList.remove('open');
+      overlay.classList.remove('open');
+      document.body.classList.remove('no-scroll');
+      cartDrawer.setAttribute('aria-hidden','true');
+    }
+    function addToCart(id) {
+      if (!productsMap[id]) return;
+      cart[id] = (cart[id] || 0) + 1;
+      saveState();
+      renderCart();
+      showToast(`${productsMap[id].name} added to your bag`);
+    }
+
+    document.getElementById('cartOpen').addEventListener('click', openCart);
+    document.getElementById('cartClose').addEventListener('click', closePanels);
+    overlay.addEventListener('click', closePanels);
+    document.getElementById('checkoutClose').addEventListener('click', closePanels);
+    document.getElementById('subClose').addEventListener('click', closePanels);
+    document.getElementById('successDoneBtn').addEventListener('click', closePanels);
+
+    cartItems.addEventListener('click', e => {
+      const btn = e.target.closest('[data-qty]');
+      if (!btn) return;
+      const id = btn.dataset.qty;
+      cart[id] = (cart[id] || 0) + Number(btn.dataset.delta);
+      if (cart[id] <= 0) delete cart[id];
+      saveState();
+      renderCart();
+    });
+
+    // Wishlist Open
+    document.getElementById('wishlistOpen').addEventListener('click', () => {
+      const names = [...wishlist].map(id => productsMap[id]?.name).filter(Boolean);
+      showToast(names.length ? 'Wishlist: ' + names.join(', ') : 'Your wishlist is empty');
+    });
+
+        document.getElementById('accountOpen').addEventListener('click', () => {
+      showToast('Opening Odoo Evaluator & Staff Dashboard (ADMIN/1234)…');
+      setTimeout(() => {
+        window.location.href = 'https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/';
+      }, 700);
+    });
+
+    // ============================================================
+    // DIRECT CHECKOUT (BUY NOW & CART CHECKOUT FLOWS)
+    // ============================================================
+    let activeCheckoutItem = null;
+    let checkoutQty = 1;
+    let appliedDiscountPct = 0;
+    let isCartCheckout = false;
+
+    const checkoutModal = document.getElementById('checkoutModal');
+    const checkoutItemImg = document.getElementById('checkoutItemImg');
+    const checkoutItemName = document.getElementById('checkoutItemName');
+    const checkoutItemNotes = document.getElementById('checkoutItemNotes');
+    const checkoutItemTotal = document.getElementById('checkoutItemTotal');
+    const checkoutQtyVal = document.getElementById('checkoutQtyVal');
+    const orderSubtotal = document.getElementById('orderSubtotal');
+    const discountRow = document.getElementById('discountRow');
+    const discountVal = document.getElementById('discountVal');
+    const orderFinalTotal = document.getElementById('orderFinalTotal');
+
+    function updateCheckoutCalculations() {
+      let sub = 0;
+      if (isCartCheckout) {
+        sub = cartTotal();
+      } else if (activeCheckoutItem) {
+        sub = activeCheckoutItem.price * checkoutQty;
+      }
+      const disc = appliedDiscountPct > 0 ? (sub * appliedDiscountPct) / 100 : 0;
+      const final = sub - disc;
+
+      if (!isCartCheckout) {
+        checkoutQtyVal.textContent = checkoutQty;
+      }
+      checkoutItemTotal.textContent = money(sub);
+      orderSubtotal.textContent = money(sub);
+
+      if (appliedDiscountPct > 0) {
+        discountRow.style.display = 'flex';
+        discountVal.textContent = `-${money(disc)}`;
+      } else {
+        discountRow.style.display = 'none';
+      }
+      orderFinalTotal.textContent = money(final);
+    }
+
+    function openDirectCheckout(productId) {
+      isCartCheckout = false;
+      activeCheckoutItem = productsMap[productId] || productsData[0];
+      checkoutQty = 1;
+      appliedDiscountPct = 0;
+
+      checkoutItemImg.src = activeCheckoutItem.image;
+      checkoutItemName.textContent = activeCheckoutItem.name;
+      checkoutItemNotes.textContent = `${activeCheckoutItem.notes} · 100 ml Flacon`;
+      
+      document.getElementById('checkoutQtyMinus').style.display = 'inline-block';
+      document.getElementById('checkoutQtyPlus').style.display = 'inline-block';
+
+      updateCheckoutCalculations();
+
+      checkoutModal.classList.add('open');
+      overlay.classList.add('open');
+      document.body.classList.add('no-scroll');
+    }
+
+    function openBagCheckout() {
+      if (cartQuantity() === 0) {
+        showToast('Your shopping bag is empty. Please add a fragrance first.');
+        return;
+      }
+      isCartCheckout = true;
+      cartDrawer.classList.remove('open');
+      appliedDiscountPct = 0;
+
+      const activeIds = Object.entries(cart).filter(([id, count]) => productsMap[id] && count > 0);
+      const firstId = activeIds[0][0];
+      const primaryProduct = productsMap[firstId];
+
+      checkoutItemImg.src = primaryProduct.image;
+      checkoutItemName.textContent = `Shopping Bag (${cartQuantity()} Items)`;
+      const namesList = activeIds.map(([id, count]) => `${productsMap[id].name} (×${count})`).join(', ');
+      checkoutItemNotes.textContent = namesList;
+
+      checkoutQtyVal.textContent = cartQuantity();
+      document.getElementById('checkoutQtyMinus').style.display = 'none';
+      document.getElementById('checkoutQtyPlus').style.display = 'none';
+
+      updateCheckoutCalculations();
+
+      checkoutModal.classList.add('open');
+      overlay.classList.add('open');
+      document.body.classList.add('no-scroll');
+    }
+
+    // Checkout from Bag
+    document.getElementById('cartCheckoutBtn').addEventListener('click', openBagCheckout);
+
+    document.getElementById('checkoutQtyPlus').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (isCartCheckout) return;
+      checkoutQty++;
+      updateCheckoutCalculations();
+    });
+    document.getElementById('checkoutQtyMinus').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (isCartCheckout) return;
+      if (checkoutQty > 1) {
+        checkoutQty--;
+        updateCheckoutCalculations();
+      }
+    });
+
+    // Payment selection styling
+    document.querySelectorAll('.payment-method-card').forEach(card => {
+      card.addEventListener('click', () => {
+        card.closest('.payment-options').querySelectorAll('.payment-method-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        card.querySelector('input').checked = true;
+      });
+    });
+
+    // Promo code apply
+    document.getElementById('promoApplyBtn').addEventListener('click', () => {
+      const code = document.getElementById('promoInput').value.trim().toUpperCase();
+      if (code === 'ODOO10' || code === 'LUXURY') {
+        appliedDiscountPct = 10;
+        updateCheckoutCalculations();
+        showToast('Code ODOO10 applied: 10% instant discount!');
+      } else if (code) {
+        showToast('Invalid coupon. Try: ODOO10');
+      }
+    });
+
+    // Order Submission
+    document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const placeBtn = document.getElementById('placeOrderBtn');
+      placeBtn.textContent = 'Verifying & Securing Payment…';
+      placeBtn.disabled = true;
+
+      setTimeout(() => {
+        placeBtn.textContent = 'Confirm & Place Order →';
+        placeBtn.disabled = false;
+        checkoutModal.classList.remove('open');
+
+        // Populate receipt
+        const randNum = Math.floor(10000 + Math.random() * 90000);
+        document.getElementById('receiptId').textContent = `#ODOO-${randNum}`;
+        if (isCartCheckout) {
+          document.getElementById('receiptItem').textContent = `Bag Order (${cartQuantity()} Flacons)`;
+          cart = {};
+          saveState();
+          renderCart();
+        } else {
+          document.getElementById('receiptItem').textContent = `${activeCheckoutItem.name} (${checkoutQty} x 100ml)`;
+        }
+        document.getElementById('receiptTotal').textContent = orderFinalTotal.textContent;
+        const city = document.getElementById('custCity').value || 'New Delhi';
+        const pin = document.getElementById('custPin').value || '110001';
+        document.getElementById('receiptAddress').textContent = `${city}, ${pin}`;
+
+        document.getElementById('orderSuccessModal').classList.add('open');
+      }, 1000);
+    });
+
+    // ============================================================
+    // SUBSCRIPTION PLANS
+    // ============================================================
+    const planPrices = {
+      silver: { monthly: 2490, quarterly: 2240, annual: 1990 },
+      golden: { monthly: 3990, quarterly: 3590, annual: 3190 },
+      diamond: { monthly: 6490, quarterly: 5840, annual: 5190 }
+    };
+    let currentInterval = 'monthly';
+
+    function updatePlanPricing() {
+      const silver = planPrices.silver[currentInterval];
+      const golden = planPrices.golden[currentInterval];
+      const diamond = planPrices.diamond[currentInterval];
+
+      const periodText = currentInterval === 'monthly' ? '/ month' : currentInterval === 'quarterly' ? '/ mo (billed quarterly)' : '/ mo (billed annually)';
+
+      document.getElementById('silverPrice').textContent = money(silver);
+      document.getElementById('goldenPrice').textContent = money(golden);
+      document.getElementById('diamondPrice').textContent = money(diamond);
+
+      document.getElementById('silverPeriod').textContent = periodText;
+      document.getElementById('goldenPeriod').textContent = periodText;
+      document.getElementById('diamondPeriod').textContent = periodText;
+    }
+
+    document.querySelectorAll('.interval-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.interval-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentInterval = btn.dataset.interval;
+        updatePlanPricing();
+      });
+    });
+
+    // Open Subscription Modal
+    const subModal = document.getElementById('subModal');
+    const subPreviewImg = document.getElementById('subPreviewImg');
+    const subPlanTitle = document.getElementById('subPlanTitle');
+    const subPlanFreq = document.getElementById('subPlanFreq');
+    const subPlanPrice = document.getElementById('subPlanPrice');
+
+    const planMeta = {
+      silver: { title: 'Silver Discovery', img: 'assets/plans/silver-package.webp', freq: '50ml flacon + 2 travel atomizers' },
+      golden: { title: 'Golden Connoisseur', img: 'assets/plans/golden-package.webp', freq: '100ml full bottle + gold engraved atomizer' },
+      diamond: { title: 'Diamond Prestige', img: 'assets/plans/diamond-package.webp', freq: '100ml bespoke extrait + private cellar access' }
+    };
+
+    document.querySelectorAll('[data-subscribe]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const planKey = btn.dataset.subscribe;
+        const meta = planMeta[planKey];
+        const price = planPrices[planKey][currentInterval];
+
+        subPreviewImg.src = meta.img;
+        subPlanTitle.textContent = meta.title;
+        subPlanFreq.textContent = `${currentInterval.toUpperCase()} delivery · ${meta.freq}`;
+        subPlanPrice.textContent = `${money(price)} / mo`;
+
+        subModal.classList.add('open');
+        overlay.classList.add('open');
+        document.body.classList.add('no-scroll');
+      });
+    });
+
+    document.getElementById('subForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      closePanels();
+      showToast('🎉 Welcome to The Scent Club! Your VIP membership flacon is scheduled for delivery.');
+    });
+
+    // ============================================================
+    // FILTERING & SEARCH
+    // ============================================================
+    const filterButtons = [...document.querySelectorAll('.filter-btn')];
+    let activeFilter = 'all';
+    let searchTerm = '';
+
+    function updateProducts() {
+      let shown = 0;
+      document.querySelectorAll('.product-card').forEach(card => {
+        const categories = card.dataset.category.split(' ');
+        const name = card.dataset.name;
+        const matchesFilter = activeFilter === 'all' || categories.includes(activeFilter);
+        const p = productsMap[name];
+        const words = (p.name + ' ' + p.notes + ' ' + p.desc + ' ' + card.innerText).toLowerCase();
+        const matchesSearch = !searchTerm || words.includes(searchTerm.toLowerCase());
+        card.style.display = matchesFilter && matchesSearch ? '' : 'none';
+        if (matchesFilter && matchesSearch) shown++;
+      });
+      document.getElementById('emptyState').style.display = shown ? 'none' : 'block';
+      document.getElementById('showingCount').textContent = `Showing ${shown} of 20 fragrances`;
+    }
+
+    filterButtons.forEach(btn => btn.addEventListener('click', () => {
+      activeFilter = btn.dataset.filter;
+      filterButtons.forEach(b => b.classList.toggle('active', b === btn));
+      updateProducts();
+    }));
+
+    // Collection Cards filter trigger
+    document.querySelectorAll('[data-filter-col]').forEach(card => {
+      card.addEventListener('click', () => {
+        const cat = card.dataset.filterCol;
+        activeFilter = cat;
+        filterButtons.forEach(b => b.classList.toggle('active', b.dataset.filter === cat));
+        updateProducts();
+        document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Search overlay
+    const searchPanel = document.getElementById('searchPanel');
+    const searchInput = document.getElementById('searchInput');
+    function openSearch() {
+      searchPanel.classList.add('open');
+      setTimeout(() => searchInput.focus(), 180);
+    }
+    function closeSearch() {
+      searchPanel.classList.remove('open');
+      searchInput.value = '';
+      searchTerm = '';
+      updateProducts();
+    }
+    document.getElementById('searchOpen').addEventListener('click', openSearch);
+    document.getElementById('searchClose').addEventListener('click', closeSearch);
+    searchInput.addEventListener('input', () => {
+      searchTerm = searchInput.value.trim();
+      updateProducts();
+    });
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        closeSearch();
+        document.getElementById('shop').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+
+    const viewAllLink = document.querySelector('.collections-view-all');
+    if (viewAllLink) {
+      viewAllLink.addEventListener('click', () => {
+        activeFilter = 'all';
+        filterButtons.forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+        updateProducts();
+      });
+    }
+
+    // Mobile menu
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    });
+    document.querySelectorAll('.mobile-menu a').forEach(a => {
+      a.addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'));
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        closePanels();
+        closeSearch();
+        document.getElementById('mobileMenu').classList.remove('open');
+      }
+    });
+
+    // Newsletter submit
+    document.getElementById('newsletterForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const email = document.getElementById('emailInput').value.trim();
+      document.getElementById('formMessage').textContent = `Thank you — ${email} has been added to our VIP scent list.`;
+      e.target.reset();
+    });
+
+    // Intersection Observer for scroll animations
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: .08 });
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => observer.observe(el));
+
+    renderCart();
+  </script>
+</body>
+</html>
