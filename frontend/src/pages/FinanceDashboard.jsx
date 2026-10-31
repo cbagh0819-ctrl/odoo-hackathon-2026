@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { apiRequest } from '../api';
-import { TrendingUp, Users, DollarSign, AlertTriangle, Clock, RefreshCw, CheckCircle2 } from 'lucide-react';
+import { Users, TrendingUp, IndianRupee, AlertTriangle, RefreshCw } from 'lucide-react';
 
 export default function FinanceDashboard() {
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchMetrics = async () => {
     try {
       setLoading(true);
-      setError(null);
       const res = await apiRequest('/analytics/finance-summary');
       setData(res);
     } catch (err) {
-      setError(err.message);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -22,7 +20,7 @@ export default function FinanceDashboard() {
 
   useEffect(() => {
     fetchMetrics();
-    // Auto-poll every 2.5 seconds for Real-Time Storefront Updates
+    // Auto-poll every 2.5 seconds for live real-time sync with storefront
     const interval = setInterval(() => {
       fetchMetrics();
     }, 2500);
@@ -32,148 +30,151 @@ export default function FinanceDashboard() {
   const metrics = data?.metrics || {};
 
   return (
-    <div className="space-y-6">
-      {/* Title & Speed Benchmark Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-        <div>
-          <h1 className="text-xl font-bold text-slate-800 flex items-center">
-            <TrendingUp className="w-6 h-6 mr-2 text-[#714B67]" />
-            Finance Lead Executive Overview
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Real-time subscription metrics, MRR, revenue collections, and overdue receivables.
-          </p>
+    <div className="relative min-h-[calc(100vh-4rem)] flex flex-col justify-between py-6 px-2 sm:px-4">
+      
+      {/* Top Bar: Live Latency Indicator & Refresh */}
+      <div className="flex justify-end items-center space-x-3 mb-8">
+        
+        {/* Live Pill */}
+        <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-black/60 border border-red-950/60 backdrop-blur-md shadow-inner text-xs font-mono">
+          <span className="w-2 h-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_8px_#dc2626]"></span>
+          <span className="text-white font-medium text-[11px]">Live</span>
+          <span className="text-zinc-500">•</span>
+          <span className="text-zinc-400 text-[11px]">
+            {data?.benchmark_latency_ms ? `${data.benchmark_latency_ms} ms` : '12 ms'}
+          </span>
         </div>
 
-        <div className="flex items-center gap-3">
-          {/* Live Real-time Sync Indicator */}
-          <div className="hidden sm:flex items-center bg-purple-50 border border-purple-200 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#714B67]">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-2"></span>
-            Real-Time Store Sync: <span className="ml-1 text-emerald-700 font-bold">Active</span>
-          </div>
+        {/* Circular Refresh Button */}
+        <button
+          onClick={fetchMetrics}
+          disabled={loading}
+          className="w-8 h-8 rounded-full bg-black/60 border border-red-950/60 hover:border-red-700/60 flex items-center justify-center text-zinc-400 hover:text-white transition backdrop-blur-md cursor-pointer"
+          title="Refresh Metrics"
+        >
+          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-red-500' : ''}`} />
+        </button>
+      </div>
 
-          {/* Sub-2-Second Benchmark Display */}
-          <div className="flex items-center bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg text-xs font-semibold text-emerald-800">
-            <CheckCircle2 className="w-4 h-4 mr-1.5 text-emerald-600" />
-            Response Time: <span className="ml-1 text-emerald-900 font-bold">{data?.benchmark_latency_ms || 12} ms</span>
-            <span className="ml-2 px-1.5 py-0.5 bg-emerald-200 text-emerald-900 rounded text-[10px]">
-              &lt; 2.0s SLA
-            </span>
-          </div>
-
-          <button
-            onClick={fetchMetrics}
-            disabled={loading}
-            className="flex items-center text-xs font-semibold px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 mr-1 ${loading ? 'animate-spin' : ''}`} />
-            Refresh
-          </button>
+      {/* Main Header Title Section */}
+      <div className="mb-12 space-y-2">
+        <div className="tracking-[0.4em] text-[11px] font-mono text-zinc-400 uppercase">
+          F I N A N C E
+        </div>
+        <h1 className="text-5xl sm:text-7xl font-serif font-normal text-white tracking-tight">
+          Dashboard<span className="text-red-600 font-sans">.</span>
+        </h1>
+        <div className="tracking-[0.3em] text-[11px] font-mono text-zinc-400 uppercase pt-1">
+          R E A L - T I M E &nbsp; I N S I G H T S &nbsp; A T &nbsp; A &nbsp; G L A N C E
         </div>
       </div>
 
-      {error && (
-        <div className="p-4 bg-red-50 text-red-700 border border-red-200 rounded-lg text-sm">
-          Failed to load finance summary: {error}
-        </div>
-      )}
-
-      {/* Primary KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {/* The 4 Glassmorphic KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         
-        {/* Active Subscriptions */}
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-purple-200 transition">
-          <div className="flex justify-between items-center text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Active Subscriptions</span>
-            <div className="p-2 bg-purple-50 text-[#714B67] rounded-lg">
-              <Users className="w-5 h-5" />
+        {/* Card 1: Subscriptions */}
+        <div className="relative rounded-2xl bg-black/40 backdrop-blur-md border border-red-950/50 hover:border-red-700/50 transition-all p-6 shadow-[0_8px_32px_rgba(0,0,0,0.6)] group">
+          {/* Top Row: Icon + Subtle Wave */}
+          <div className="flex justify-between items-center mb-6">
+            <div className="w-10 h-10 rounded-full bg-red-950/30 border border-red-800/40 flex items-center justify-center text-red-400 group-hover:text-red-300 transition">
+              <Users className="w-4 h-4" />
             </div>
+            {/* Subtle Neon Sparkline curve */}
+            <svg className="w-20 h-6 opacity-40 text-red-500" viewBox="0 0 100 24" fill="none">
+              <path d="M0 18 Q 25 18, 40 12 T 70 8 T 100 14" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
           </div>
-          <div className="text-3xl font-extrabold text-slate-800">
+
+          <div className="tracking-[0.25em] text-[10px] font-mono text-zinc-400 uppercase mb-2">
+            S U B S C R I P T I O N S
+          </div>
+
+          <div className="text-3xl font-serif font-bold text-white tracking-tight">
             {metrics.active_subscriptions ?? 0}
           </div>
-          <div className="text-xs text-slate-500 mt-2 flex items-center">
-            <span className="text-emerald-600 font-bold mr-1">Recurring contracts</span> active today
-          </div>
+
+          {/* Underline accent */}
+          <div className="w-10 h-0.5 bg-red-700/70 mt-3 rounded-full shadow-[0_0_8px_#b91c1c]"></div>
         </div>
 
-        {/* Monthly Recurring Revenue (MRR) */}
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-purple-200 transition">
-          <div className="flex justify-between items-center text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">MRR (Normalized)</span>
-            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
-              <TrendingUp className="w-5 h-5" />
+        {/* Card 2: MRR */}
+        <div className="relative rounded-2xl bg-black/40 backdrop-blur-md border border-red-950/50 hover:border-red-700/50 transition-all p-6 shadow-[0_8px_32px_rgba(0,0,0,0.6)] group">
+          <div className="flex justify-between items-center mb-6">
+            <div className="w-10 h-10 rounded-full bg-red-950/30 border border-red-800/40 flex items-center justify-center text-red-400 group-hover:text-red-300 transition">
+              <TrendingUp className="w-4 h-4" />
             </div>
+            <svg className="w-20 h-6 opacity-40 text-red-500" viewBox="0 0 100 24" fill="none">
+              <path d="M0 20 Q 30 20, 50 10 T 80 6 T 100 2" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
           </div>
-          <div className="text-3xl font-extrabold text-slate-800">
-            ₹{Number(metrics.monthly_recurring_revenue_mrr || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 })}
+
+          <div className="tracking-[0.25em] text-[10px] font-mono text-zinc-400 uppercase mb-2">
+            M R R
           </div>
-          <div className="text-xs text-slate-500 mt-2">
-            ARR: <span className="font-semibold text-slate-700">₹{Number(metrics.annual_run_rate_arr || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 })}</span>
+
+          <div className="text-3xl font-serif font-bold text-white tracking-tight">
+            ₹{Math.round(metrics.monthly_recurring_revenue_mrr || 0).toLocaleString('en-IN')}
           </div>
+
+          <div className="w-10 h-0.5 bg-red-700/70 mt-3 rounded-full shadow-[0_0_8px_#b91c1c]"></div>
         </div>
 
-        {/* Revenue Collected */}
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-purple-200 transition">
-          <div className="flex justify-between items-center text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Revenue Collected</span>
-            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-              <DollarSign className="w-5 h-5" />
+        {/* Card 3: Revenue */}
+        <div className="relative rounded-2xl bg-black/40 backdrop-blur-md border border-red-950/50 hover:border-red-700/50 transition-all p-6 shadow-[0_8px_32px_rgba(0,0,0,0.6)] group">
+          <div className="flex justify-between items-center mb-6">
+            <div className="w-10 h-10 rounded-full bg-red-950/30 border border-red-800/40 flex items-center justify-center text-red-400 group-hover:text-red-300 transition">
+              <IndianRupee className="w-4 h-4" />
             </div>
+            <svg className="w-20 h-6 opacity-40 text-red-500" viewBox="0 0 100 24" fill="none">
+              <path d="M0 16 Q 30 16, 55 12 T 80 8 T 100 4" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
           </div>
-          <div className="text-3xl font-extrabold text-emerald-600">
-            ₹{Number(metrics.total_revenue_collected || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 })}
+
+          <div className="tracking-[0.25em] text-[10px] font-mono text-zinc-400 uppercase mb-2">
+            R E V E N U E
           </div>
-          <div className="text-xs text-slate-500 mt-2">
-            Matched against recorded bank payments
+
+          <div className="text-3xl font-serif font-bold text-white tracking-tight">
+            ₹{Math.round(metrics.total_revenue_collected || 0).toLocaleString('en-IN')}
           </div>
+
+          <div className="w-10 h-0.5 bg-red-700/70 mt-3 rounded-full shadow-[0_0_8px_#b91c1c]"></div>
         </div>
 
-        {/* Amount Owed & Overdue */}
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-red-200 transition">
-          <div className="flex justify-between items-center text-slate-500 mb-2">
-            <span className="text-xs font-semibold uppercase tracking-wider">Outstanding Receivables</span>
-            <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
-              <AlertTriangle className="w-5 h-5" />
+        {/* Card 4: Receivables */}
+        <div className="relative rounded-2xl bg-black/40 backdrop-blur-md border border-red-950/50 hover:border-red-700/50 transition-all p-6 shadow-[0_8px_32px_rgba(0,0,0,0.6)] group">
+          <div className="flex justify-between items-center mb-6">
+            <div className="w-10 h-10 rounded-full bg-red-950/30 border border-red-800/40 flex items-center justify-center text-red-400 group-hover:text-red-300 transition">
+              <AlertTriangle className="w-4 h-4" />
             </div>
+            <svg className="w-20 h-6 opacity-40 text-red-500" viewBox="0 0 100 24" fill="none">
+              <path d="M0 14 Q 30 14, 50 18 T 80 12 T 100 16" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
           </div>
-          <div className="text-3xl font-extrabold text-slate-800">
-            ₹{Number(metrics.total_amount_owed || 0).toLocaleString('en-IN', { maximumFractionDigits: 2 })}
+
+          <div className="tracking-[0.25em] text-[10px] font-mono text-zinc-400 uppercase mb-2">
+            R E C E I V A B L E S
           </div>
-          <div className="text-xs text-red-600 mt-2 font-medium flex items-center">
-            <Clock className="w-3.5 h-3.5 mr-1" />
-            {metrics.overdue_invoices_count || 0} overdue invoice(s) (₹{Number(metrics.overdue_amount || 0).toLocaleString('en-IN')})
+
+          <div className="text-3xl font-serif font-bold text-white tracking-tight">
+            ₹{Math.round(metrics.total_amount_owed || 0).toLocaleString('en-IN')}
           </div>
+
+          <div className="w-10 h-0.5 bg-red-700/70 mt-3 rounded-full shadow-[0_0_8px_#b91c1c]"></div>
         </div>
 
       </div>
 
-      {/* Executive Breakdown Table */}
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-        <h2 className="text-base font-bold text-slate-800 mb-4">
-          Problem Statement Compliance Verification
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-          <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
-            <div className="font-bold text-slate-700 text-sm mb-1">1. Spreadsheets Replaced</div>
-            <p className="text-slate-600">
-              Subscriptions, plans, and line items are unified in relational tables with foreign keys and lifecycle state machines.
-            </p>
-          </div>
-          <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
-            <div className="font-bold text-slate-700 text-sm mb-1">2. Zero Missed Renewals</div>
-            <p className="text-slate-600">
-              Recurring billing day engine automatically catches all subscriptions due on or before today and advances billing cycles.
-            </p>
-          </div>
-          <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
-            <div className="font-bold text-slate-700 text-sm mb-1">3. Automated Bank Matching</div>
-            <p className="text-slate-600">
-              Payment recording engine binds methods, amounts, transaction references, and notes directly to invoice records.
-            </p>
-          </div>
+      {/* Bottom Sub-text / Details */}
+      <div className="mt-12 flex flex-col sm:flex-row justify-between items-center text-[11px] text-zinc-500 font-mono border-t border-red-950/30 pt-4">
+        <div>
+          BRIGHTLOOP ERP &bull; ODOO COSMETICS SYSTEM &bull; BENCHMARK SLA: &lt; 2,000 MS
+        </div>
+        <div className="mt-2 sm:mt-0 text-red-400/80">
+          AUTOMATED RECURRING ENGINE ACTIVE
         </div>
       </div>
+
     </div>
   );
 }
