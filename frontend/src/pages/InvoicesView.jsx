@@ -85,9 +85,6 @@ export default function InvoicesView() {
             <FileText className="w-5 h-5 mr-2.5 text-red-500" />
             Invoices & Payment Reconciliation
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
-            Match payments to invoices with method, amount, date, and note. Chase overdue receivables.
-          </p>
         </div>
 
         {/* Filter Pills */}

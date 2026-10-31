@@ -38,13 +38,10 @@ export default function PlansAndRulesView({ currentUser }) {
         <div className="tracking-[0.3em] text-[10px] font-mono text-zinc-400 uppercase mb-1">
           RECURRING CONFIGURATION
         </div>
-        <h2 className="text-2xl font-serif text-white font-medium flex items-center mb-1">
+        <h2 className="text-2xl font-serif text-white font-medium flex items-center mb-6">
           <Calendar className="w-5 h-5 mr-2.5 text-red-500" />
           Subscription Plans & Termination Rules
         </h2>
-        <p className="text-xs text-zinc-400 mb-6">
-          Admin decides billing frequency (daily, weekly, monthly, yearly), minimum quantities, and lifecycle rules.
-        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {plans.map(p => (

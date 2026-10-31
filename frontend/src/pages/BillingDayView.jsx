@@ -65,10 +65,6 @@ export default function BillingDayView() {
               <Calendar className="w-5 h-5 mr-2.5 text-red-500" />
               Automated "Billing Day" Engine
             </h1>
-            <p className="text-xs text-zinc-400 mt-1.5 max-w-2xl leading-relaxed">
-              Per Brightloop specification: Subscriptions due are invoiced in batch. Pre-filled with customer details,
-              taxes, and auto-discounts with <strong className="text-red-400">zero double-billing or skipped billing</strong>.
-            </p>
           </div>
 
           {/* Action Trigger */}
