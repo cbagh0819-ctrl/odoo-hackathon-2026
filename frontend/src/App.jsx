@@ -6,7 +6,6 @@ import SubscriptionsView from './pages/SubscriptionsView';
 import InvoicesView from './pages/InvoicesView';
 import ProductsView from './pages/ProductsView';
 import PlansAndRulesView from './pages/PlansAndRulesView';
-import CosmeticsStorefront from './pages/CosmeticsStorefront';
 import CustomerPortalView from './pages/CustomerPortalView';
 import { apiRequest, setAuthToken, setCurrentUser, getCurrentUser } from './api';
 
@@ -14,12 +13,6 @@ export default function App() {
   const [currentUser, setUser] = useState(getCurrentUser());
   const [activeTab, setActiveTab] = useState('analytics');
   const [initialLoading, setInitialLoading] = useState(true);
-  const [liveToast, setLiveToast] = useState(null);
-
-  const handlePurchaseNotification = (order) => {
-    setLiveToast(order);
-    setTimeout(() => setLiveToast(null), 7000);
-  };
 
   const switchUser = async (email) => {
     try {
@@ -38,7 +31,7 @@ export default function App() {
       setUser(res.user);
 
       if (res.user.role === 'customer') {
-        setActiveTab('store');
+        setActiveTab('portal');
       } else if (activeTab === 'portal') {
         setActiveTab('analytics');
       }
@@ -69,7 +62,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#070102] text-zinc-100 flex relative overflow-x-hidden selection:bg-red-600 selection:text-white">
       
-      {/* Pure CSS Luxury Crimson Atmospheric Glows (No Ghost Images) */}
+      {/* Pure CSS Luxury Crimson Atmospheric Glows */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-red-600/12 rounded-full blur-[150px]" />
         <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] bg-red-950/30 rounded-full blur-[140px]" />
@@ -86,27 +79,7 @@ export default function App() {
 
       {/* Main Content Viewport */}
       <main className="flex-1 min-h-screen z-10 px-6 sm:px-10 py-6 overflow-y-auto">
-        
-        {/* Real-Time Toast Alert */}
-        {liveToast && (
-          <div className="fixed bottom-6 right-6 z-50 bg-black/90 text-white p-4 rounded-2xl shadow-2xl border border-red-600/60 backdrop-blur-xl flex items-center space-x-4 animate-slide-up max-w-sm">
-            <span className="text-3xl">💄</span>
-            <div className="text-xs">
-              <div className="font-bold text-red-400 font-mono uppercase tracking-wider text-[10px]">
-                Live Subscription Received
-              </div>
-              <div className="font-medium text-white mt-0.5">
-                <strong>{liveToast.customer}</strong> ordered {liveToast.product_name}
-              </div>
-              <div className="text-emerald-400 font-semibold font-mono mt-1">
-                +₹{liveToast.total_paid?.toFixed(2)} &bull; MRR Updated Live!
-              </div>
-            </div>
-          </div>
-        )}
-
         {activeTab === 'analytics' && <FinanceDashboard />}
-        {activeTab === 'store' && <CosmeticsStorefront onPurchaseSuccess={handlePurchaseNotification} />}
         {activeTab === 'billing_day' && <BillingDayView />}
         {activeTab === 'subscriptions' && <SubscriptionsView />}
         {activeTab === 'invoices' && <InvoicesView />}

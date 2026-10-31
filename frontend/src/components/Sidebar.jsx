@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   BarChart3, Calendar, Layers, FileText, Package, Settings, 
-  ShoppingBag, ChevronRight, ShieldCheck, Check
+  ChevronRight, ShieldCheck, Check
 } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab, currentUser, onSwitchUser }) {
@@ -14,7 +14,6 @@ export default function Sidebar({ activeTab, setActiveTab, currentUser, onSwitch
     { id: 'invoices', label: 'Invoices', icon: FileText },
     { id: 'products', label: 'Products', icon: Package },
     { id: 'plans_rules', label: 'Settings', icon: Settings },
-    { id: 'store', label: 'Storefront', icon: ShoppingBag, badge: 'Live' },
   ];
 
   const roles = [
