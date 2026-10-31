@@ -95,9 +95,6 @@ export default function ProductsView() {
               <h2 className="text-base font-serif font-bold text-white mt-3 group-hover:text-red-200 transition">
                 {prod.name}
               </h2>
-              <p className="text-xs text-zinc-400 mt-1.5 line-clamp-2">
-                {prod.notes || 'No notes specified.'}
-              </p>
 
               <div className="mt-4 pt-3 border-t border-red-950/40 flex justify-between items-center text-xs font-mono">
                 <div>

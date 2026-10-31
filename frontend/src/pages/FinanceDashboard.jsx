@@ -165,16 +165,6 @@ export default function FinanceDashboard() {
 
       </div>
 
-      {/* Bottom Sub-text / Details */}
-      <div className="mt-12 flex flex-col sm:flex-row justify-between items-center text-[11px] text-zinc-500 font-mono border-t border-red-950/30 pt-4">
-        <div>
-          BRIGHTLOOP ERP &bull; ODOO COSMETICS SYSTEM &bull; BENCHMARK SLA: &lt; 2,000 MS
-        </div>
-        <div className="mt-2 sm:mt-0 text-red-400/80">
-          AUTOMATED RECURRING ENGINE ACTIVE
-        </div>
-      </div>
-
     </div>
   );
 }

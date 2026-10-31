@@ -41,9 +41,6 @@ export default function CustomerPortalView({ currentUser }) {
             <h1 className="text-2xl font-serif text-white font-medium mt-1">
               Welcome, {currentUser?.name || 'Valued Client'}
             </h1>
-            <p className="text-xs text-zinc-400 mt-1">
-              View your active subscriptions, next billing schedule, and download invoice receipts.
-            </p>
           </div>
 
           <div className="bg-black/60 border border-red-950/60 px-4 py-2 rounded-xl text-xs font-mono">
@@ -96,9 +93,6 @@ export default function CustomerPortalView({ currentUser }) {
             <FileText className="w-5 h-5 mr-2 text-red-500" />
             My Invoices & Receipts
           </h2>
-          <p className="text-xs text-zinc-400 mt-0.5">
-            Download your receipts directly without having to email support.
-          </p>
         </div>
 
         <div className="overflow-x-auto">

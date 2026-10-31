@@ -91,13 +91,10 @@ export default function PlansAndRulesView({ currentUser }) {
         
         {/* Tax Rules */}
         <div className="bg-black/50 backdrop-blur-xl border border-red-950/60 p-6 rounded-2xl shadow-2xl">
-          <h2 className="text-lg font-serif text-white font-medium flex items-center mb-1">
+          <h2 className="text-lg font-serif text-white font-medium flex items-center mb-4">
             <Percent className="w-4 h-4 mr-2 text-red-500" />
             Automatic Tax Rules
           </h2>
-          <p className="text-xs text-zinc-400 mb-4">
-            Taxes calculated automatically from rules the admin has set.
-          </p>
 
           <div className="space-y-3 font-mono">
             {taxes.map(t => (
@@ -116,7 +113,7 @@ export default function PlansAndRulesView({ currentUser }) {
 
         {/* Discount Rules */}
         <div className="bg-black/50 backdrop-blur-xl border border-red-950/60 p-6 rounded-2xl shadow-2xl">
-          <div className="flex justify-between items-center mb-1">
+          <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-serif text-white font-medium flex items-center">
               <Tag className="w-4 h-4 mr-2 text-emerald-400" />
               Admin Discount Engine
@@ -125,9 +122,6 @@ export default function PlansAndRulesView({ currentUser }) {
               Auto-Applied
             </span>
           </div>
-          <p className="text-xs text-zinc-400 mb-4">
-            Admin creates discounts with purchase limits. Applied automatically to upcoming invoices.
-          </p>
 
           <div className="space-y-3 font-mono">
             {discounts.map(d => (

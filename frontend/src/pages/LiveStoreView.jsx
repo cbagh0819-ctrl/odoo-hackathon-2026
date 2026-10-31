@@ -104,9 +104,6 @@ export default function LiveStoreView({ onPurchaseSuccess }) {
             <Store className="w-6 h-6 mr-2.5 text-red-500" />
             Live Store<span className="text-red-600 font-sans">.</span>
           </h1>
-          <p className="text-xs text-zinc-400 mt-1 font-mono">
-            Customers subscribe online &bull; Orders automatically update the Dashboard in real time
-          </p>
         </div>
 
         <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-red-950/60 border border-red-800/60 text-xs font-mono">
@@ -144,7 +141,7 @@ export default function LiveStoreView({ onPurchaseSuccess }) {
             <div className="flex justify-between items-center">
               <h2 className="text-lg font-serif text-white font-medium flex items-center">
                 <Package className="w-5 h-5 mr-2 text-red-500" />
-                1. Select Subscription Package & Variant
+                Select Package & Variant
               </h2>
               <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 bg-red-950 text-red-300 border border-red-800 rounded-full">
                 Recurring
@@ -155,9 +152,6 @@ export default function LiveStoreView({ onPurchaseSuccess }) {
               <div className="text-base font-serif font-bold text-white">
                 {selectedProduct?.name || 'Luxe Radiance Serum Subscription Box'}
               </div>
-              <p className="text-xs text-zinc-400">
-                Premium curated package billed automatically on recurring cycles.
-              </p>
               <div className="text-xl font-serif font-bold text-red-400">
                 Base Price: ₹{basePrice.toFixed(2)}
               </div>
@@ -207,7 +201,7 @@ export default function LiveStoreView({ onPurchaseSuccess }) {
           {/* Delivery Frequency */}
           <div className="bg-black/50 backdrop-blur-xl border border-red-950/60 rounded-2xl p-6 shadow-2xl space-y-4">
             <h2 className="text-lg font-serif text-white font-medium">
-              2. Choose Billing Frequency
+              Billing Frequency
             </h2>
             <div className="grid grid-cols-3 gap-3 font-mono">
               {[
@@ -241,7 +235,7 @@ export default function LiveStoreView({ onPurchaseSuccess }) {
           {addOnProducts.length > 0 && (
             <div className="bg-black/50 backdrop-blur-xl border border-red-950/60 rounded-2xl p-6 shadow-2xl space-y-4">
               <h2 className="text-lg font-serif text-white font-medium">
-                3. Optional Add-ons (Switch On/Off)
+                Optional Add-ons
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono">
                 {addOnProducts.map(addon => {
@@ -278,7 +272,6 @@ export default function LiveStoreView({ onPurchaseSuccess }) {
         <div className="bg-black/60 backdrop-blur-xl border border-red-950/60 rounded-2xl p-6 shadow-2xl h-fit space-y-5 sticky top-6 font-mono">
           <div className="border-b border-red-950/40 pb-3">
             <h2 className="text-lg font-serif font-bold text-white">Order Summary</h2>
-            <span className="text-[10px] text-zinc-400">Recurring Subscription Checkout</span>
           </div>
 
           {/* Price Breakdown */}

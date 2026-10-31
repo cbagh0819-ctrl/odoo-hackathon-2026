@@ -111,10 +111,7 @@ export default function BillingDayView() {
       <div className="bg-black/50 backdrop-blur-xl border border-red-950/60 rounded-2xl overflow-hidden shadow-2xl">
         <div className="p-5 border-b border-red-950/40 flex justify-between items-center">
           <div>
-            <h2 className="font-serif font-medium text-white text-base">Invoices Generated from Subscriptions</h2>
-            <p className="text-[11px] text-zinc-400 mt-0.5">
-              Draft ➔ Confirmed ➔ Paid pipeline. Team can confirm, cancel, print, or record payments.
-            </p>
+            <h2 className="font-serif font-medium text-white text-base">Generated Invoices</h2>
           </div>
           <span className="text-xs font-mono font-semibold px-2.5 py-1 bg-red-950/50 text-red-300 border border-red-900/50 rounded-full">
             {invoices.length} Total
