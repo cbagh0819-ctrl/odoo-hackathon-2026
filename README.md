@@ -4,6 +4,12 @@
 
 ---
 
+### 🌐 Live Hosted Website:
+👉 **[https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/](https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/)**  
+*(Live hosted on GitHub Pages: includes the full Luxury Brand Website, Fragrance Vault, 1-Click Evaluator Login (ADMIN/1234), Real-Time Dashboard, and Downloadable PDF Invoices).*
+
+---
+
 ## 🏆 Project Overview
 **Odoo Perfumes** is an enterprise-grade subscription and recurring billing management platform built specifically for the Odoo Hackathon 2026. Designed around real-world ERP operations, the system automates recurring invoicing, enforces strict idempotency against double-billing, supports dynamic product variants with surcharge rules, integrates an active Web Application Firewall (WAF), and delivers verified sub-second response times across high-volume transactions.
 
