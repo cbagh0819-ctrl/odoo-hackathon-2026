@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiRequest } from '../api';
-import { Package, Plus, Tag, Check, Sparkles } from 'lucide-react';
+import { Package, Plus, Tag, Check } from 'lucide-react';
 
 export default function ProductsView() {
   const [products, setProducts] = useState([]);
@@ -60,20 +60,23 @@ export default function ProductsView() {
     <div className="space-y-6">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-black/50 backdrop-blur-xl border border-red-950/60 p-6 rounded-2xl shadow-2xl">
         <div>
-          <h1 className="text-xl font-bold text-slate-800 flex items-center">
-            <Package className="w-6 h-6 mr-2 text-[#714B67]" />
+          <div className="tracking-[0.3em] text-[10px] font-mono text-zinc-400 uppercase mb-1">
+            CATALOG REPOSITORY
+          </div>
+          <h1 className="text-2xl font-serif text-white font-medium flex items-center">
+            <Package className="w-5 h-5 mr-2.5 text-red-500" />
             Products & Variants Catalog
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Per PDF: Set up products with name, type, sales price, cost price, and variants (e.g. choosing Odoo brand adds +₹560).
+          <p className="text-xs text-zinc-400 mt-1">
+            Per PDF: Products with sales/cost prices and variants (e.g. Odoo brand variant adds +₹560).
           </p>
         </div>
 
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center px-4 py-2 bg-[#714B67] hover:bg-[#5c3c54] text-white text-xs sm:text-sm font-semibold rounded-lg shadow-sm transition cursor-pointer"
+          className="flex items-center px-4 py-2.5 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 text-white text-xs font-semibold rounded-xl shadow-[0_0_15px_rgba(220,38,38,0.25)] transition cursor-pointer"
         >
           <Plus className="w-4 h-4 mr-1.5" />
           Add Product
@@ -81,43 +84,47 @@ export default function ProductsView() {
       </div>
 
       {/* Grid of Products */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map(prod => (
-          <div key={prod.id} className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-purple-300 transition flex flex-col justify-between">
+          <div key={prod.id} className="bg-black/50 backdrop-blur-xl border border-red-950/60 hover:border-red-700/60 transition-all rounded-2xl p-6 shadow-2xl flex flex-col justify-between group">
             <div>
               <div className="flex justify-between items-start">
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-slate-100 text-slate-700 rounded">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 bg-red-950/60 text-red-300 border border-red-900/50 rounded">
                   {prod.product_type}
                 </span>
-                <span className="text-xs font-semibold text-slate-400">ID #{prod.id}</span>
+                <span className="text-xs font-mono text-zinc-500">#{prod.id}</span>
               </div>
 
-              <h2 className="text-base font-bold text-slate-800 mt-2">{prod.name}</h2>
-              <p className="text-xs text-slate-500 mt-1">{prod.notes || 'No notes provided.'}</p>
+              <h2 className="text-base font-serif font-bold text-white mt-3 group-hover:text-red-200 transition">
+                {prod.name}
+              </h2>
+              <p className="text-xs text-zinc-400 mt-1.5 line-clamp-2">
+                {prod.notes || 'No notes specified.'}
+              </p>
 
-              <div className="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
+              <div className="mt-4 pt-3 border-t border-red-950/40 flex justify-between items-center text-xs font-mono">
                 <div>
-                  <span className="text-slate-400 block text-[10px]">Sales Price</span>
-                  <span className="font-bold text-slate-800 text-sm">₹{prod.sales_price?.toFixed(2)}</span>
+                  <span className="text-zinc-500 block text-[10px]">SALES PRICE</span>
+                  <span className="font-bold text-white text-sm">₹{prod.sales_price?.toFixed(2)}</span>
                 </div>
                 <div className="text-right">
-                  <span className="text-slate-400 block text-[10px]">Cost Price</span>
-                  <span className="font-semibold text-slate-600">₹{prod.cost_price?.toFixed(2)}</span>
+                  <span className="text-zinc-500 block text-[10px]">COST PRICE</span>
+                  <span className="font-semibold text-zinc-400">₹{prod.cost_price?.toFixed(2)}</span>
                 </div>
               </div>
 
               {/* Variants Section */}
               {prod.variants && prod.variants.length > 0 && (
-                <div className="mt-4 pt-3 border-t border-slate-100">
-                  <span className="text-[11px] font-bold text-slate-600 block mb-1.5 flex items-center">
-                    <Tag className="w-3 h-3 mr-1 text-[#714B67]" />
-                    Available Variants:
+                <div className="mt-4 pt-3 border-t border-red-950/40">
+                  <span className="text-[10px] font-mono uppercase text-zinc-400 tracking-wider block mb-2 flex items-center">
+                    <Tag className="w-3 h-3 mr-1 text-red-400" />
+                    Configured Variants:
                   </span>
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     {prod.variants.map(v => (
-                      <div key={v.id} className="text-xs bg-purple-50 text-purple-900 border border-purple-100 px-2.5 py-1 rounded flex justify-between items-center">
-                        <span className="font-medium">{v.variant_name}</span>
-                        <span className="font-bold text-[#714B67]">+₹{v.price_extra}</span>
+                      <div key={v.id} className="text-xs font-mono bg-red-950/30 text-red-200 border border-red-900/40 px-3 py-1.5 rounded-lg flex justify-between items-center">
+                        <span className="truncate mr-2">{v.variant_name}</span>
+                        <span className="font-bold text-red-400 flex-shrink-0">+₹{v.price_extra}</span>
                       </div>
                     ))}
                   </div>
@@ -125,28 +132,28 @@ export default function ProductsView() {
               )}
             </div>
 
-            <div className="mt-4 pt-2 text-[11px] text-slate-400 flex items-center justify-between">
-              <span className="text-emerald-600 flex items-center">
-                <Check className="w-3 h-3 mr-1" /> Active in Catalog
+            <div className="mt-5 pt-3 border-t border-red-950/40 text-[11px] font-mono text-emerald-400 flex items-center justify-between">
+              <span className="flex items-center">
+                <Check className="w-3.5 h-3.5 mr-1" /> Active in Platform
               </span>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Modal */}
+      {/* Add Product Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-slate-900/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 text-xs space-y-4">
-            <h2 className="text-base font-bold text-slate-800">Add New Product & Variant</h2>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-[#0f0305] border border-red-900/60 rounded-2xl shadow-2xl max-w-md w-full p-6 text-xs space-y-4 font-mono">
+            <h2 className="text-base font-serif font-bold text-white">Add New Product & Variant</h2>
             <form onSubmit={handleCreateProduct} className="space-y-3">
               <div>
-                <label className="block text-slate-600 font-semibold mb-1">Product Name</label>
+                <label className="block text-zinc-400 mb-1">Product Name</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Brightloop Accounting Plus"
-                  className="w-full border border-slate-300 rounded p-2 text-xs"
+                  placeholder="e.g. Brightloop Suite"
+                  className="w-full bg-black/60 border border-red-950/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-red-600"
                   value={newProd.name}
                   onChange={e => setNewProd({ ...newProd, name: e.target.value })}
                 />
@@ -154,25 +161,25 @@ export default function ProductsView() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-600 font-semibold mb-1">Type</label>
+                  <label className="block text-zinc-400 mb-1">Type</label>
                   <select
-                    className="w-full border border-slate-300 rounded p-2 text-xs"
+                    className="w-full bg-black/60 border border-red-950/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-red-600"
                     value={newProd.product_type}
                     onChange={e => setNewProd({ ...newProd, product_type: e.target.value })}
                   >
                     <option value="Software">Software</option>
                     <option value="Service">Service</option>
                     <option value="Add-on">Add-on</option>
+                    <option value="Beauty Box">Beauty Box</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-slate-600 font-semibold mb-1">Sales Price (₹)</label>
+                  <label className="block text-zinc-400 mb-1">Sales Price (₹)</label>
                   <input
                     type="number"
                     step="0.01"
                     required
-                    placeholder="1500"
-                    className="w-full border border-slate-300 rounded p-2 text-xs font-bold"
+                    className="w-full bg-black/60 border border-red-950/60 rounded-xl p-2.5 text-xs text-white font-bold focus:outline-none focus:border-red-600"
                     value={newProd.sales_price}
                     onChange={e => setNewProd({ ...newProd, sales_price: e.target.value })}
                   />
@@ -181,23 +188,22 @@ export default function ProductsView() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-600 font-semibold mb-1">Cost Price (₹)</label>
+                  <label className="block text-zinc-400 mb-1">Cost Price (₹)</label>
                   <input
                     type="number"
                     step="0.01"
                     required
-                    placeholder="500"
-                    className="w-full border border-slate-300 rounded p-2 text-xs"
+                    className="w-full bg-black/60 border border-red-950/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-red-600"
                     value={newProd.cost_price}
                     onChange={e => setNewProd({ ...newProd, cost_price: e.target.value })}
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-600 font-semibold mb-1">Variant Extra (₹)</label>
+                  <label className="block text-zinc-400 mb-1">Variant Price Extra (₹)</label>
                   <input
                     type="number"
                     step="0.01"
-                    className="w-full border border-slate-300 rounded p-2 text-xs font-bold text-purple-700"
+                    className="w-full bg-black/60 border border-red-950/60 rounded-xl p-2.5 text-xs font-bold text-red-400 focus:outline-none focus:border-red-600"
                     value={newProd.variants[0].price_extra}
                     onChange={e => {
                       const v = [...newProd.variants];
@@ -208,28 +214,17 @@ export default function ProductsView() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-slate-600 font-semibold mb-1">Notes</label>
-                <textarea
-                  rows="2"
-                  placeholder="Notes about availability, deployment, etc."
-                  className="w-full border border-slate-300 rounded p-2 text-xs"
-                  value={newProd.notes}
-                  onChange={e => setNewProd({ ...newProd, notes: e.target.value })}
-                />
-              </div>
-
-              <div className="flex justify-end space-x-2 pt-3 border-t border-slate-200">
+              <div className="flex justify-end space-x-2 pt-4 border-t border-red-950/40">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded"
+                  className="px-4 py-2 text-zinc-400 hover:text-white rounded"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-[#714B67] text-white font-semibold rounded hover:bg-[#5c3c54]"
+                  className="px-5 py-2 bg-gradient-to-r from-red-700 to-red-600 text-white font-semibold rounded-xl"
                 >
                   Save Product
                 </button>

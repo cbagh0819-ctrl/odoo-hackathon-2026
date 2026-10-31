@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiRequest } from '../api';
-import { Calendar, Play, CheckCircle2, ShieldAlert, FileText, Printer, CreditCard } from 'lucide-react';
+import { Calendar, Play, CheckCircle2, FileText, Printer } from 'lucide-react';
 
 export default function BillingDayView() {
   const [running, setRunning] = useState(false);
@@ -55,38 +55,40 @@ export default function BillingDayView() {
     <div className="space-y-6">
       
       {/* Billing Day Action Card */}
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+      <div className="bg-black/50 backdrop-blur-xl border border-red-950/60 rounded-2xl p-6 shadow-2xl">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-xl font-bold text-slate-800 flex items-center">
-              <Calendar className="w-6 h-6 mr-2 text-[#714B67]" />
+            <div className="tracking-[0.3em] text-[10px] font-mono text-zinc-400 uppercase mb-1">
+              AUTOMATION SUITE
+            </div>
+            <h1 className="text-2xl font-serif text-white font-medium flex items-center">
+              <Calendar className="w-5 h-5 mr-2.5 text-red-500" />
               Automated "Billing Day" Engine
             </h1>
-            <p className="text-sm text-slate-500 mt-1 max-w-2xl">
-              Per Brightloop specification: It's billing day, and subscriptions are due at once.
-              Nobody types invoices by hand. Invoices are pre-filled with customer details, product lines,
-              taxes, and automatic discounts with <strong>zero double-billing or skipped billing</strong>.
+            <p className="text-xs text-zinc-400 mt-1.5 max-w-2xl leading-relaxed">
+              Per Brightloop specification: Subscriptions due are invoiced in batch. Pre-filled with customer details,
+              taxes, and auto-discounts with <strong className="text-red-400">zero double-billing or skipped billing</strong>.
             </p>
           </div>
 
           {/* Action Trigger */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
-            <div className="flex items-center bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5 text-xs">
-              <span className="text-slate-500 font-medium mr-2">Billing Date:</span>
+            <div className="flex items-center bg-black/60 border border-red-950/60 rounded-xl px-3 py-1.5 text-xs">
+              <span className="text-zinc-400 font-mono text-[11px] mr-2">Billing Date:</span>
               <input
                 type="date"
                 value={targetDate}
                 onChange={(e) => setTargetDate(e.target.value)}
-                className="bg-white border border-slate-300 rounded px-2 py-1 font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                className="bg-transparent border-none text-white font-mono text-xs focus:outline-none focus:ring-0 cursor-pointer"
               />
             </div>
 
             <button
               onClick={handleRunBillingDay}
               disabled={running}
-              className="flex items-center justify-center px-5 py-2.5 bg-[#714B67] hover:bg-[#5a3b52] text-white font-semibold rounded-lg shadow-sm transition disabled:opacity-50 text-sm cursor-pointer"
+              className="flex items-center justify-center px-5 py-2.5 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 text-white font-semibold rounded-xl shadow-[0_0_18px_rgba(220,38,38,0.25)] transition disabled:opacity-50 text-xs cursor-pointer"
             >
-              <Play className={`w-4 h-4 mr-2 ${running ? 'animate-spin' : ''}`} />
+              <Play className={`w-3.5 h-3.5 mr-2 ${running ? 'animate-spin' : ''}`} />
               {running ? 'Running Batch...' : 'Execute Billing Day'}
             </button>
           </div>
@@ -94,17 +96,15 @@ export default function BillingDayView() {
 
         {/* Batch Execution Results Banner */}
         {runResult && (
-          <div className="mt-5 p-4 bg-purple-50 border border-purple-200 rounded-lg flex items-start space-x-3">
-            <CheckCircle2 className="w-5 h-5 text-[#714B67] mt-0.5 flex-shrink-0" />
-            <div className="text-xs text-slate-700">
-              <div className="font-bold text-[#714B67] text-sm">
+          <div className="mt-5 p-4 bg-red-950/30 border border-red-700/50 rounded-xl flex items-start space-x-3">
+            <CheckCircle2 className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
+            <div className="text-xs text-zinc-300">
+              <div className="font-bold text-white text-sm">
                 Billing Run Completed Successfully
               </div>
               <div>{runResult.message}</div>
-              <div className="mt-1 text-slate-500 flex items-center gap-3">
-                <span className="font-semibold text-emerald-700">
-                  Idempotency Guarantee: Subscriptions due were processed; active ones already billed were not duplicated.
-                </span>
+              <div className="mt-1 text-emerald-400 font-mono text-[11px]">
+                Idempotency Verified: 0 duplicate invoices created.
               </div>
             </div>
           </div>
@@ -112,22 +112,22 @@ export default function BillingDayView() {
       </div>
 
       {/* Generated Invoices Table */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-5 border-b border-slate-200 flex justify-between items-center">
+      <div className="bg-black/50 backdrop-blur-xl border border-red-950/60 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="p-5 border-b border-red-950/40 flex justify-between items-center">
           <div>
-            <h2 className="font-bold text-slate-800 text-base">Invoices Generated from Subscriptions</h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <h2 className="font-serif font-medium text-white text-base">Invoices Generated from Subscriptions</h2>
+            <p className="text-[11px] text-zinc-400 mt-0.5">
               Draft ➔ Confirmed ➔ Paid pipeline. Team can confirm, cancel, print, or record payments.
             </p>
           </div>
-          <span className="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full">
-            {invoices.length} Invoices Total
+          <span className="text-xs font-mono font-semibold px-2.5 py-1 bg-red-950/50 text-red-300 border border-red-900/50 rounded-full">
+            {invoices.length} Total
           </span>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-slate-600">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold">
+          <table className="w-full text-left text-xs text-zinc-300">
+            <thead className="bg-red-950/20 border-b border-red-950/40 text-zinc-400 font-mono uppercase text-[10px] tracking-wider">
               <tr>
                 <th className="py-3 px-4">Invoice #</th>
                 <th className="py-3 px-4">Sub ID</th>
@@ -140,47 +140,47 @@ export default function BillingDayView() {
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-red-950/30">
               {invoices.length === 0 ? (
                 <tr>
-                  <td colSpan="9" className="py-8 text-center text-slate-400">
-                    No invoices found. Click "Execute Billing Day" above to generate recurring invoices.
+                  <td colSpan="9" className="py-10 text-center text-zinc-500 font-mono">
+                    No invoices generated yet. Click "Execute Billing Day" above.
                   </td>
                 </tr>
               ) : (
                 invoices.map((inv) => (
-                  <tr key={inv.id} className="hover:bg-slate-50 transition">
-                    <td className="py-3 px-4 font-bold text-slate-800">
+                  <tr key={inv.id} className="hover:bg-white/[0.02] transition">
+                    <td className="py-3.5 px-4 font-mono font-bold text-white">
                       {inv.invoice_number}
                     </td>
-                    <td className="py-3 px-4 font-medium text-slate-600">
+                    <td className="py-3.5 px-4 font-mono text-zinc-400">
                       SUB-{inv.subscription_id}
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3.5 px-4 text-zinc-400">
                       <div>{inv.issue_date?.slice(0, 10)}</div>
-                      <div className="text-[10px] text-slate-400">Due: {inv.due_date?.slice(0, 10)}</div>
+                      <div className="text-[10px] text-zinc-500">Due: {inv.due_date?.slice(0, 10)}</div>
                     </td>
-                    <td className="py-3 px-4">₹{inv.subtotal?.toFixed(2)}</td>
-                    <td className="py-3 px-4 text-slate-600">+₹{inv.tax_amount?.toFixed(2)}</td>
-                    <td className="py-3 px-4 text-emerald-600">-₹{inv.discount_amount?.toFixed(2)}</td>
-                    <td className="py-3 px-4 font-bold text-slate-900">
+                    <td className="py-3.5 px-4 font-mono">₹{inv.subtotal?.toFixed(2)}</td>
+                    <td className="py-3.5 px-4 font-mono text-zinc-400">+₹{inv.tax_amount?.toFixed(2)}</td>
+                    <td className="py-3.5 px-4 font-mono text-emerald-400">-₹{inv.discount_amount?.toFixed(2)}</td>
+                    <td className="py-3.5 px-4 font-mono font-bold text-white">
                       ₹{inv.total_amount?.toFixed(2)}
                     </td>
-                    <td className="py-3 px-4">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                        inv.status === 'Paid' ? 'bg-emerald-100 text-emerald-800' :
-                        inv.status === 'Confirmed' ? 'bg-blue-100 text-blue-800' :
-                        inv.status === 'Canceled' ? 'bg-red-100 text-red-800' :
-                        'bg-slate-100 text-slate-700'
+                    <td className="py-3.5 px-4">
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold font-mono ${
+                        inv.status === 'Paid' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' :
+                        inv.status === 'Confirmed' ? 'bg-blue-950 text-blue-400 border border-blue-800' :
+                        inv.status === 'Canceled' ? 'bg-red-950 text-red-400 border border-red-800' :
+                        'bg-zinc-800 text-zinc-300'
                       }`}>
                         {inv.status}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-right space-x-2">
+                    <td className="py-3.5 px-4 text-right space-x-2">
                       {inv.status === 'Draft' && (
                         <button
                           onClick={() => handleConfirmInvoice(inv.id)}
-                          className="px-2 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded text-[11px] font-medium"
+                          className="px-2.5 py-1 bg-blue-950/80 text-blue-300 hover:bg-blue-900 border border-blue-800/60 rounded-lg text-[11px] font-medium"
                         >
                           Confirm
                         </button>
@@ -189,7 +189,7 @@ export default function BillingDayView() {
                         href={`/api/billing/invoices/${inv.id}/print`}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-[11px] font-medium"
+                        className="inline-flex items-center px-2.5 py-1 bg-red-950/60 hover:bg-red-900 text-red-300 border border-red-800/60 rounded-lg text-[11px] font-medium"
                       >
                         <Printer className="w-3 h-3 mr-1" />
                         Print / PDF

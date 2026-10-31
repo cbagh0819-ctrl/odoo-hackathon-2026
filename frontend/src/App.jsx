@@ -67,15 +67,14 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#070102] text-zinc-100 flex relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#070102] text-zinc-100 flex relative overflow-x-hidden selection:bg-red-600 selection:text-white">
       
-      {/* Background Graphic & Crimson Atmospheric Glow */}
-      <div 
-        className="fixed inset-0 pointer-events-none z-0 opacity-45 bg-cover bg-center"
-        style={{ backgroundImage: `url('/dashboard_bg.png')` }}
-      />
-      <div className="fixed inset-0 pointer-events-none z-0 bg-gradient-to-t from-[#070102] via-[#070102]/60 to-transparent" />
-      <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-red-600/10 rounded-full blur-[140px] pointer-events-none z-0" />
+      {/* Pure CSS Luxury Crimson Atmospheric Glows (No Ghost Images) */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-red-600/12 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] bg-red-950/30 rounded-full blur-[140px]" />
+        <div className="absolute top-1/2 right-1/4 w-[400px] h-[400px] bg-rose-900/10 rounded-full blur-[120px]" />
+      </div>
 
       {/* Left Vertical Luxury Sidebar */}
       <Sidebar

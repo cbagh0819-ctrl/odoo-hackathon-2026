@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiRequest } from '../api';
-import { Sparkles, Check, Heart, Shield, Package, ArrowRight, Zap, RefreshCw } from 'lucide-react';
+import { Sparkles, Check, Package, Zap } from 'lucide-react';
 
 export default function CosmeticsStorefront({ onPurchaseSuccess }) {
   const [products, setProducts] = useState([]);
@@ -21,11 +21,9 @@ export default function CosmeticsStorefront({ onPurchaseSuccess }) {
       try {
         const res = await apiRequest('/products');
         setProducts(res);
-        // Find the main subscription box
         const mainBox = res.find(p => p.name.includes('Luxe Radiance')) || res[0];
         if (mainBox) {
           setSelectedProduct(mainBox);
-          // Auto-select Odoo variant if available
           const odooVar = (mainBox.variants || []).find(v => v.attribute_value === 'Odoo');
           if (odooVar) {
             setSelectedVariantId(odooVar.id);
@@ -48,7 +46,6 @@ export default function CosmeticsStorefront({ onPurchaseSuccess }) {
     );
   };
 
-  // Calculate live total
   let basePrice = selectedProduct?.sales_price || 1200;
   let variantExtra = 0;
   if (selectedProduct && selectedVariantId) {
@@ -98,76 +95,75 @@ export default function CosmeticsStorefront({ onPurchaseSuccess }) {
     <div className="space-y-8 max-w-6xl mx-auto">
       
       {/* Cosmetics Hero Header */}
-      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-pink-900 via-[#714B67] to-purple-950 text-white p-8 sm:p-12 shadow-lg">
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-red-950 via-[#2e050c] to-black border border-red-900/60 text-white p-8 sm:p-12 shadow-2xl">
         <div className="max-w-2xl relative z-10 space-y-3">
-          <div className="inline-flex items-center px-3 py-1 rounded-full bg-pink-500/20 border border-pink-400/30 text-pink-200 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5 mr-1.5 text-pink-300" />
-            Odoo Cosmetics &bull; Luxury Beauty Subscriptions
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-red-950/80 border border-red-700/60 text-red-300 text-xs font-mono font-semibold">
+            <Sparkles className="w-3.5 h-3.5 mr-1.5 text-red-400" />
+            Odoo Cosmetics &bull; Luxury Skincare Subscription
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-serif font-normal tracking-tight leading-tight">
             Radiant, Organic Skincare Delivered to Your Doorstep.
           </h1>
-          <p className="text-pink-100 text-sm sm:text-base leading-relaxed">
-            Fresh botanical serums, peptide creams, and beauty routines customized for you.
-            Billed effortlessly on subscription powered by <strong>Odoo Recurring Billing Engine</strong>.
+          <p className="text-zinc-300 text-xs sm:text-sm leading-relaxed">
+            Fresh botanical serums and beauty routines billed effortlessly via the <strong>Odoo Recurring Engine</strong>.
           </p>
         </div>
       </div>
 
       {orderSuccess && (
-        <div className="p-6 bg-emerald-50 border-2 border-emerald-400 rounded-xl shadow-md text-emerald-900 flex items-start space-x-4 animate-bounce-once">
-          <div className="p-3 bg-emerald-200 rounded-full">
-            <Check className="w-6 h-6 text-emerald-800" />
+        <div className="p-6 bg-emerald-950/60 border border-emerald-600/80 rounded-2xl shadow-2xl text-emerald-300 flex items-start space-x-4">
+          <div className="p-3 bg-emerald-900/80 rounded-xl">
+            <Check className="w-6 h-6 text-emerald-400" />
           </div>
-          <div className="text-xs space-y-1">
-            <div className="text-base font-bold text-emerald-900">
+          <div className="text-xs space-y-1 font-mono">
+            <div className="text-base font-bold text-white font-serif">
               🎉 Thank you, {orderSuccess.customer}! Your Subscription is Active!
             </div>
-            <div>Subscription Number: <strong className="font-mono">{orderSuccess.subscription_number}</strong></div>
-            <div>Invoice Issued: <strong className="font-mono">{orderSuccess.invoice_number}</strong> (Paid ₹{orderSuccess.total_paid.toFixed(2)})</div>
-            <div className="text-emerald-700 font-semibold pt-1">
-              ⚡ Notice: The Admin Finance Dashboard MRR & Active Subscriptions have updated in real time!
+            <div>Subscription Number: <strong className="text-emerald-400">{orderSuccess.subscription_number}</strong></div>
+            <div>Invoice Issued: <strong className="text-emerald-400">{orderSuccess.invoice_number}</strong> (Paid ₹{orderSuccess.total_paid.toFixed(2)})</div>
+            <div className="text-emerald-400 font-semibold pt-1">
+              ⚡ The Admin Finance Dashboard MRR & Active Subscriptions have updated in real time!
             </div>
           </div>
         </div>
       )}
 
-      {/* Main Interactive Subscription Box Customizer */}
+      {/* Main Interactive Customizer */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Step 1 & 2: Customization (2 Cols) */}
+        {/* Customization (2 Cols) */}
         <div className="lg:col-span-2 space-y-6">
           
           {/* Box Selection & Variant */}
-          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+          <div className="bg-black/50 backdrop-blur-xl border border-red-950/60 rounded-2xl p-6 shadow-2xl space-y-4">
             <div className="flex justify-between items-center">
-              <h2 className="text-lg font-bold text-slate-800 flex items-center">
-                <Package className="w-5 h-5 mr-2 text-[#714B67]" />
+              <h2 className="text-lg font-serif text-white font-medium flex items-center">
+                <Package className="w-5 h-5 mr-2 text-red-500" />
                 1. Choose Your Beauty Box & Brand Variant
               </h2>
-              <span className="text-xs font-semibold px-2.5 py-0.5 bg-pink-100 text-pink-800 rounded-full">
+              <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 bg-red-950 text-red-300 border border-red-800 rounded-full">
                 Curated Monthly
               </span>
             </div>
 
-            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
-              <div className="text-base font-bold text-slate-800">
+            <div className="p-4 bg-black/40 border border-red-950/50 rounded-xl space-y-2">
+              <div className="text-base font-serif font-bold text-white">
                 {selectedProduct?.name || 'Luxe Radiance Serum Subscription Box'}
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-zinc-400">
                 Includes Pure Vitamin-C Youth Serum, Botanical Hyaluronic Acid, and Gua Sha Rose Quartz Stone.
               </p>
-              <div className="text-xl font-extrabold text-[#714B67]">
+              <div className="text-xl font-serif font-bold text-red-400">
                 Base Price: ₹{basePrice.toFixed(2)}
               </div>
             </div>
 
             {/* Brand Variant Selector (Specific Problem Statement Requirement: Odoo adds 560!) */}
             <div className="space-y-2 pt-2">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+              <label className="block text-xs font-mono uppercase text-zinc-400 tracking-wider">
                 Select Formula / Brand Variant:
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono">
                 {selectedProduct?.variants?.map(v => {
                   const isSelected = selectedVariantId === v.id;
                   const isOdoo = v.attribute_value === 'Odoo';
@@ -177,22 +173,22 @@ export default function CosmeticsStorefront({ onPurchaseSuccess }) {
                       onClick={() => setSelectedVariantId(v.id)}
                       className={`cursor-pointer p-4 rounded-xl border-2 transition ${
                         isSelected 
-                          ? 'border-[#714B67] bg-purple-50 shadow-sm' 
-                          : 'border-slate-200 hover:border-slate-300 bg-white'
+                          ? 'border-red-600 bg-red-950/40 shadow-[0_0_15px_rgba(220,38,38,0.3)]' 
+                          : 'border-red-950/60 bg-black/40 hover:border-red-800'
                       }`}
                     >
                       <div className="flex justify-between items-start">
-                        <span className="font-bold text-slate-800 text-xs">{v.variant_name}</span>
+                        <span className="font-bold text-white text-xs">{v.variant_name}</span>
                         {isOdoo && (
-                          <span className="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.5 rounded font-bold">
+                          <span className="text-[9px] bg-red-950 text-red-300 border border-red-800 px-1.5 py-0.5 rounded font-bold">
                             ★ Premium
                           </span>
                         )}
                       </div>
-                      <div className="text-sm font-extrabold text-[#714B67] mt-2">
+                      <div className="text-sm font-bold text-red-400 mt-2">
                         {v.price_extra > 0 ? `+₹${v.price_extra} / cycle` : 'Included in base'}
                       </div>
-                      <div className="text-[11px] text-slate-500 mt-1">
+                      <div className="text-[10px] text-zinc-500 mt-1">
                         {isOdoo ? 'Certified Organic Odoo Botanical Blend' : 'Standard Laboratory Formula'}
                       </div>
                     </div>
@@ -204,11 +200,11 @@ export default function CosmeticsStorefront({ onPurchaseSuccess }) {
           </div>
 
           {/* Delivery Frequency */}
-          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-            <h2 className="text-lg font-bold text-slate-800">
+          <div className="bg-black/50 backdrop-blur-xl border border-red-950/60 rounded-2xl p-6 shadow-2xl space-y-4">
+            <h2 className="text-lg font-serif text-white font-medium">
               2. Select Delivery Frequency (Subscription Plan)
             </h2>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-3 font-mono">
               {[
                 { id: 'weekly', label: 'Weekly Glam', desc: 'Every 7 days' },
                 { id: 'monthly', label: 'Monthly Routine', desc: 'Most Popular', badge: '15% Off' },
@@ -220,14 +216,14 @@ export default function CosmeticsStorefront({ onPurchaseSuccess }) {
                   onClick={() => setFrequency(f.id)}
                   className={`p-4 rounded-xl border-2 text-center transition cursor-pointer ${
                     frequency === f.id
-                      ? 'border-[#714B67] bg-purple-50'
-                      : 'border-slate-200 hover:border-slate-300 bg-white'
+                      ? 'border-red-600 bg-red-950/40 shadow-[0_0_12px_rgba(220,38,38,0.25)]'
+                      : 'border-red-950/60 bg-black/40 hover:border-red-800'
                   }`}
                 >
-                  <div className="font-bold text-xs text-slate-800">{f.label}</div>
-                  <div className="text-[11px] text-slate-500 mt-1">{f.desc}</div>
+                  <div className="font-bold text-xs text-white">{f.label}</div>
+                  <div className="text-[10px] text-zinc-400 mt-1">{f.desc}</div>
                   {f.badge && (
-                    <span className="inline-block mt-2 text-[10px] font-bold px-2 py-0.5 bg-pink-100 text-pink-700 rounded-full">
+                    <span className="inline-block mt-2 text-[9px] font-bold px-2 py-0.5 bg-red-950 text-red-300 border border-red-800 rounded-full">
                       {f.badge}
                     </span>
                   )}
@@ -237,14 +233,11 @@ export default function CosmeticsStorefront({ onPurchaseSuccess }) {
           </div>
 
           {/* Optional Add-ons Switcher */}
-          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
-            <h2 className="text-lg font-bold text-slate-800">
+          <div className="bg-black/50 backdrop-blur-xl border border-red-950/60 rounded-2xl p-6 shadow-2xl space-y-4">
+            <h2 className="text-lg font-serif text-white font-medium">
               3. Customize With Skincare Add-ons (Switch On/Off)
             </h2>
-            <p className="text-xs text-slate-500">
-              Per PDF: Add-ons customers can switch on and off freely.
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono">
               {addOnProducts.map(addon => {
                 const isChecked = selectedAddons.includes(addon.id);
                 return (
@@ -253,18 +246,18 @@ export default function CosmeticsStorefront({ onPurchaseSuccess }) {
                     onClick={() => toggleAddon(addon.id)}
                     className={`cursor-pointer p-3.5 rounded-xl border-2 flex items-center justify-between transition ${
                       isChecked 
-                        ? 'border-emerald-500 bg-emerald-50/50' 
-                        : 'border-slate-200 hover:border-slate-300 bg-white'
+                        ? 'border-emerald-600 bg-emerald-950/30' 
+                        : 'border-red-950/60 bg-black/40 hover:border-red-800'
                     }`}
                   >
                     <div>
-                      <div className="font-bold text-slate-800 text-xs">{addon.name}</div>
-                      <div className="text-xs text-emerald-700 font-semibold mt-0.5">+₹{addon.sales_price}</div>
+                      <div className="font-bold text-white text-xs">{addon.name}</div>
+                      <div className="text-xs text-emerald-400 font-semibold mt-0.5">+₹{addon.sales_price}</div>
                     </div>
-                    <div className={`w-6 h-6 rounded-lg flex items-center justify-center border ${
-                      isChecked ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-slate-300 bg-white'
+                    <div className={`w-5 h-5 rounded-lg flex items-center justify-center border ${
+                      isChecked ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-zinc-700 bg-black/40'
                     }`}>
-                      {isChecked && <Check className="w-4 h-4 stroke-[3]" />}
+                      {isChecked && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                     </div>
                   </div>
                 );
@@ -274,73 +267,73 @@ export default function CosmeticsStorefront({ onPurchaseSuccess }) {
 
         </div>
 
-        {/* Step 3: Checkout Drawer (1 Col) */}
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-md h-fit space-y-5 sticky top-24">
-          <div className="border-b border-slate-200 pb-3">
-            <h2 className="text-lg font-bold text-slate-800">Order Summary</h2>
-            <span className="text-xs text-slate-500">Recurring Subscription Checkout</span>
+        {/* Checkout Drawer (1 Col) */}
+        <div className="bg-black/60 backdrop-blur-xl border border-red-950/60 rounded-2xl p-6 shadow-2xl h-fit space-y-5 sticky top-24 font-mono">
+          <div className="border-b border-red-950/40 pb-3">
+            <h2 className="text-lg font-serif font-bold text-white">Order Summary</h2>
+            <span className="text-[10px] text-zinc-400">Recurring Subscription Checkout</span>
           </div>
 
           {/* Price Breakdown */}
           <div className="space-y-2 text-xs">
-            <div className="flex justify-between text-slate-600">
-              <span>{selectedProduct?.name || 'Beauty Box'}</span>
+            <div className="flex justify-between text-zinc-300">
+              <span className="truncate mr-2">{selectedProduct?.name || 'Beauty Box'}</span>
               <span>₹{basePrice.toFixed(2)}</span>
             </div>
             {variantExtra > 0 && (
-              <div className="flex justify-between text-purple-700 font-semibold">
-                <span>★ Odoo Organic Edition Variant</span>
+              <div className="flex justify-between text-red-300 font-semibold">
+                <span>★ Odoo Organic Edition</span>
                 <span>+₹{variantExtra.toFixed(2)}</span>
               </div>
             )}
             {addonsTotal > 0 && (
-              <div className="flex justify-between text-emerald-700 font-semibold">
+              <div className="flex justify-between text-emerald-400 font-semibold">
                 <span>Selected Skincare Add-ons</span>
                 <span>+₹{addonsTotal.toFixed(2)}</span>
               </div>
             )}
-            <div className="flex justify-between text-slate-500 pt-1">
+            <div className="flex justify-between text-zinc-500 pt-1">
               <span>Subtotal:</span>
               <span>₹{subtotal.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between text-slate-500">
+            <div className="flex justify-between text-zinc-500">
               <span>Standard GST (18%):</span>
               <span>₹{tax.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between text-base font-extrabold text-[#714B67] pt-2 border-t border-slate-200">
+            <div className="flex justify-between text-base font-extrabold text-white pt-2 border-t border-red-950/40 font-serif">
               <span>Total Per {frequency.toUpperCase()}:</span>
-              <span>₹{grandTotal.toFixed(2)}</span>
+              <span className="text-red-400">₹{grandTotal.toFixed(2)}</span>
             </div>
           </div>
 
           {/* Customer Details Form */}
-          <form onSubmit={handleCheckout} className="space-y-3 pt-3 border-t border-slate-200 text-xs">
+          <form onSubmit={handleCheckout} className="space-y-3 pt-3 border-t border-red-950/40 text-xs">
             <div>
-              <label className="block text-slate-600 font-semibold mb-1">Customer Full Name</label>
+              <label className="block text-zinc-400 mb-1">Customer Full Name</label>
               <input
                 type="text"
                 required
-                className="w-full border border-slate-300 rounded p-2 text-xs font-medium"
+                className="w-full bg-black/60 border border-red-950/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-red-600"
                 value={customerName}
                 onChange={e => setCustomerName(e.target.value)}
               />
             </div>
 
             <div>
-              <label className="block text-slate-600 font-semibold mb-1">Email (Account & Invoices)</label>
+              <label className="block text-zinc-400 mb-1">Email (Account & Invoices)</label>
               <input
                 type="email"
                 required
-                className="w-full border border-slate-300 rounded p-2 text-xs font-medium"
+                className="w-full bg-black/60 border border-red-950/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-red-600"
                 value={customerEmail}
                 onChange={e => setCustomerEmail(e.target.value)}
               />
             </div>
 
             <div>
-              <label className="block text-slate-600 font-semibold mb-1">Payment Method</label>
+              <label className="block text-zinc-400 mb-1">Payment Method</label>
               <select
-                className="w-full border border-slate-300 rounded p-2 text-xs font-medium"
+                className="w-full bg-black/60 border border-red-950/60 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-red-600"
                 value={paymentMethod}
                 onChange={e => setPaymentMethod(e.target.value)}
               >
@@ -353,15 +346,11 @@ export default function CosmeticsStorefront({ onPurchaseSuccess }) {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3 px-4 bg-[#714B67] hover:bg-[#5b3c53] text-white font-bold rounded-xl shadow-md transition flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50 text-sm"
+              className="w-full py-3.5 px-4 bg-gradient-to-r from-red-700 to-red-600 hover:from-red-600 hover:to-red-500 text-white font-bold rounded-xl shadow-[0_0_20px_rgba(220,38,38,0.3)] transition flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50 text-xs"
             >
-              <Zap className={`w-4 h-4 text-pink-300 ${submitting ? 'animate-spin' : ''}`} />
+              <Zap className={`w-3.5 h-3.5 text-red-200 ${submitting ? 'animate-spin' : ''}`} />
               <span>{submitting ? 'Processing Subscription...' : `Subscribe Now (₹${grandTotal.toFixed(2)})`}</span>
             </button>
-
-            <p className="text-[11px] text-center text-slate-400 mt-2">
-              🔒 Instant activation &bull; Powered by Odoo Recurring Engine
-            </p>
           </form>
 
         </div>
