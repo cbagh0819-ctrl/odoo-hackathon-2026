@@ -45,8 +45,33 @@ export async function apiRequest(endpoint, options = {}) {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({ detail: response.statusText }));
-    throw new Error(errorData.detail || errorData.message || 'API request failed');
+    const error = new Error(errorData.error || errorData.detail || errorData.message || 'API request failed');
+    error.status = response.status;
+    error.data = errorData;
+    throw error;
   }
 
   return response.json();
+}
+
+export async function getFirewallStatus() {
+  return apiRequest('/firewall/status');
+}
+
+export async function getFirewallIncidents() {
+  return apiRequest('/firewall/incidents');
+}
+
+export async function testFirewallProbe(payload) {
+  const response = await fetch('/api/firewall/test-probe', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const data = await response.json().catch(() => ({}));
+  return { status: response.status, ok: response.ok, data };
+}
+
+export async function clearFirewallIncidents() {
+  return apiRequest('/firewall/clear-incidents', { method: 'POST' });
 }

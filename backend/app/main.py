@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import Base, engine
 from .routes import auth, products, plans, rules, subscriptions, billing, payments, analytics, store
+from .security_firewall import WebApplicationFirewallMiddleware, router as firewall_router
 
 # Initialize database schema
 Base.metadata.create_all(bind=engine)
@@ -21,6 +22,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Enterprise Web Application Firewall (WAF) & OWASP Security Shield
+app.add_middleware(WebApplicationFirewallMiddleware)
+
 # Register route modules
 app.include_router(auth.router)
 app.include_router(products.router)
@@ -31,6 +35,7 @@ app.include_router(billing.router)
 app.include_router(payments.router)
 app.include_router(analytics.router)
 app.include_router(store.router)
+app.include_router(firewall_router)
 
 @app.get("/")
 def root():

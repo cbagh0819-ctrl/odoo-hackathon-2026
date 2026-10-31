@@ -9,6 +9,7 @@ import {
   Store, 
   Users, 
   User, 
+  ShieldCheck,
   Check, 
   LogOut 
 } from 'lucide-react';
@@ -45,6 +46,7 @@ export default function Sidebar({ activeTab, setActiveTab, currentUser, onSwitch
       { id: 'invoices', label: 'Invoices', icon: FileText },
       { id: 'products', label: 'Products', icon: Package },
       { id: 'staff_mgmt', label: 'Staff & Members', icon: Users },
+      { id: 'firewall', label: 'Firewall & WAF', icon: ShieldCheck },
       { id: 'plans_rules', label: 'Settings', icon: Settings },
     ];
   }

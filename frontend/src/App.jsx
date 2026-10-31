@@ -11,6 +11,7 @@ import PlansAndRulesView from './pages/PlansAndRulesView';
 import CustomerPortalView from './pages/CustomerPortalView';
 import LiveStoreView from './pages/LiveStoreView';
 import StaffManagementView from './pages/StaffManagementView';
+import FirewallSecurityView from './pages/FirewallSecurityView';
 import { apiRequest, setAuthToken, setCurrentUser, getCurrentUser, clearAuth } from './api';
 
 export default function App() {
@@ -66,7 +67,7 @@ export default function App() {
     if (currentUser?.role === 'customer' && activeTab !== 'portal' && activeTab !== 'store') {
       setActiveTab('portal');
     }
-    if (currentUser?.role === 'staff' && activeTab === 'staff_mgmt') {
+    if (currentUser?.role === 'staff' && (activeTab === 'staff_mgmt' || activeTab === 'firewall')) {
       setActiveTab('analytics');
     }
   }, [currentUser, activeTab]);
@@ -79,6 +80,7 @@ export default function App() {
     invoices: 'Invoices & Payments',
     products: 'Products & Catalog',
     staff_mgmt: 'Staff & Members',
+    firewall: 'Enterprise WAF & Security Shield',
     plans_rules: 'Settings',
     portal: 'Customer Portal',
   };
@@ -194,6 +196,7 @@ export default function App() {
             {activeTab === 'invoices' && currentUser?.role !== 'customer' && <InvoicesView />}
             {activeTab === 'products' && currentUser?.role !== 'customer' && <ProductsView />}
             {activeTab === 'staff_mgmt' && currentUser?.role === 'admin' && <StaffManagementView currentUser={currentUser} />}
+            {activeTab === 'firewall' && currentUser?.role === 'admin' && <FirewallSecurityView />}
             {activeTab === 'plans_rules' && currentUser?.role === 'admin' && <PlansAndRulesView currentUser={currentUser} />}
             {activeTab === 'portal' && <CustomerPortalView currentUser={currentUser} />}
           </div>
