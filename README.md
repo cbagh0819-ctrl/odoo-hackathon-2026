@@ -6,10 +6,11 @@
 
 ### 🌐 Live Hosted Platform & Brand Storefront:
 
-| Experience | Live URL | Features & Highlights |
-| :--- | :--- | :--- |
-| 🌸 **Luxury Perfume Brand Storefront** | [**Launch Perfume Store**](https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/store.html) | • 20 artisan fragrances with real-time pricing<br>• 3 luxury subscription plans (Silver, Golden, Diamond)<br>• Instant Bag drawer & One-Click Checkout<br>• Real-time ERP sync banner & bidirectional portal |
-| ⚡ **Odoo ERP & Subscription Dashboard** | [**Launch ERP Dashboard**](https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/) | • 1-Click Evaluator Login (ADMIN / 1234)<br>• Recurring billing engine & quotes generation<br>• Dynamic variant pricing & tax calculations<br>• Active WAF Security Shield & live PDF invoice generation |
+| Experience | Live Hosted URL | Localhost Quickstart | Features & Highlights |
+| :--- | :--- | :--- | :--- |
+| 🌸 **Luxury Perfume Brand Storefront** | [**Launch Storefront ↗**](https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/store/) | [http://localhost:8000/store](http://localhost:8000/store) | • 20 artisan fragrances with real-time pricing<br>• 3 luxury VIP subscription plans<br>• Instant Bag drawer & One-Click Checkout<br>• Real-time ERP sync & bidirectional access |
+| ⚡ **Odoo ERP & Subscription Dashboard** | [**Launch ERP Dashboard ↗**](https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/) | [http://localhost:3000](http://localhost:3000) | • 1-Click Evaluator Login (ADMIN / 1234)<br>• Recurring billing engine & batch Billing Day<br>• Zero-double-billing idempotency engine<br>• Active WAF Security Shield & live PDF invoices |
+| 📚 **Interactive OpenAPI / Swagger Docs** | — | [http://localhost:8000/docs](http://localhost:8000/docs) | • Interactive FastAPI Swagger documentation<br>• Live schema exploration & test endpoints |
 
 *Both portals are fully deployed on GitHub Pages and connected bidirectionally with one-click access pills.*
 
@@ -70,6 +71,13 @@
 - Real-time MRR, ARR, and Cash Collection Health visualizations.
 - Interactive date-range revenue analytics (7-day, 30-day, 90-day Bézier curves).
 - One-click Billing Day execution and quick subscription generation modals.
+
+### 9. Zero-State Dashboard & Real-Time Cross-Window Synchronization
+- **Zero-State Base**: Dashboard defaults to ₹0 revenue, 0 active subscriptions, and 0 invoices for a transparent evaluator demonstration.
+- **Bi-directional Live Bus**: Features BroadcastChannel('odoo_perfumes_sync') and localStorage event bus.
+- **Instant Reactive Updates**: Placing an order on the Storefront (/store/ or localhost:8000/store) triggers an instant real-time sync into the Dashboard (localhost:3000) without requiring a browser reload.
+- **Reset to 0 Button**: A single click on [↺ Reset to 0] in the dashboard header instantly flushes the state for repeated judge evaluations.
+
 
 ---
 
