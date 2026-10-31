@@ -8,25 +8,57 @@ export default function FinanceDashboard({ setActiveTab }) {
   const [billingLoading, setBillingLoading] = useState(false);
   const [chartRange, setChartRange] = useState(30);
   const [toastMsg, setToastMsg] = useState(null);
+  
+  // Floating reactions physics state
+  const [floatingReactions, setFloatingReactions] = useState([]);
+  
+  // Interactive reaction counters
+  const [reactions, setReactions] = useState({
+    lightning: 142,
+    diamond: 89,
+    fire: 24,
+    rose: 315,
+    sparkles: 99
+  });
 
   // Modal states
   const [modalType, setModalType] = useState(null); // 'sub', 'inv', or null
   const [subForm, setSubForm] = useState({
     customer: 'Acme Corporation',
-    plan: 'Professional Monthly Plan',
+    plan: 'Rose & Ambergris Luxury Elixir',
     cycle: 'Monthly',
     amount: '12800'
   });
   const [invForm, setInvForm] = useState({
-    customer: 'Aster Labs Pvt. Ltd.',
+    customer: 'Aster Fragrance Labs',
     amount: '18500',
     due: '07 Nov 2026',
     status: 'Pending'
   });
 
+  // Hover state for interactive chart points
+  const [activeChartPoint, setActiveChartPoint] = useState(null);
+
   const showToast = (title, detail = '') => {
     setToastMsg({ title, detail });
     setTimeout(() => setToastMsg(null), 3800);
+  };
+
+  const spawnReaction = (emoji, e) => {
+    const rect = e?.currentTarget?.getBoundingClientRect();
+    const x = rect ? rect.left + rect.width / 2 + (Math.random() * 30 - 15) : window.innerWidth / 2;
+    const y = rect ? rect.top : window.innerHeight / 2;
+    
+    const id = Date.now() + Math.random();
+    setFloatingReactions(prev => [...prev, { id, emoji, x, y }]);
+    setTimeout(() => {
+      setFloatingReactions(prev => prev.filter(r => r.id !== id));
+    }, 1200);
+  };
+
+  const handleReactionClick = (key, emoji, e) => {
+    setReactions(prev => ({ ...prev, [key]: prev[key] + 1 }));
+    spawnReaction(emoji, e);
   };
 
   const fetchMetrics = async () => {
@@ -52,10 +84,16 @@ export default function FinanceDashboard({ setActiveTab }) {
     return () => clearInterval(interval);
   }, []);
 
-  // 1. EXECUTE BILLING DAY
-  const handleExecuteBilling = async () => {
+  // 1. EXECUTE BILLING DAY WITH SHOWER REACTION
+  const handleExecuteBilling = async (e) => {
     try {
       setBillingLoading(true);
+      // Trigger multiple celebration reactions
+      const emojis = ['⚡', '💎', '🌹', '🔥', '✨', '🍾'];
+      for (let i = 0; i < 6; i++) {
+        setTimeout(() => spawnReaction(emojis[i % emojis.length], e), i * 150);
+      }
+
       const res = await apiRequest('/billing/run-billing-day', { method: 'POST' });
       await fetchMetrics();
       showToast(
@@ -74,48 +112,38 @@ export default function FinanceDashboard({ setActiveTab }) {
   // 2. CREATE NEW SUBSCRIPTION
   const handleCreateSubscription = async (e) => {
     e.preventDefault();
-    try {
-      // Create local item & optimistic update
-      showToast('Subscription Created', `${subForm.customer} subscribed to ${subForm.plan} (₹${Number(subForm.amount).toLocaleString('en-IN')})`);
-      setModalType(null);
-      await fetchMetrics();
-    } catch (err) {
-      showToast('Subscription Created', `${subForm.customer} registered`);
-      setModalType(null);
-    }
+    spawnReaction('💎', e);
+    showToast('Subscription Created', `${subForm.customer} subscribed to ${subForm.plan} (₹${Number(subForm.amount).toLocaleString('en-IN')})`);
+    setModalType(null);
+    await fetchMetrics();
   };
 
   // 3. CREATE NEW INVOICE
   const handleCreateInvoice = async (e) => {
     e.preventDefault();
-    try {
-      const newInv = {
-        invoice_number: `INV-2026-${String(85 + invoicesList.length).padStart(3, '0')}`,
-        customer_name: invForm.customer,
-        issue_date: '31 Oct 2026',
-        due_date: invForm.due,
-        total_amount: Number(invForm.amount),
-        status: invForm.status
-      };
-      setInvoicesList([newInv, ...invoicesList]);
-      showToast('Invoice Created', `${newInv.invoice_number} for ${invForm.customer} (₹${Number(invForm.amount).toLocaleString('en-IN')})`);
-      setModalType(null);
-      await fetchMetrics();
-    } catch (err) {
-      showToast('Invoice Created', invForm.customer);
-      setModalType(null);
-    }
+    spawnReaction('✨', e);
+    const newInv = {
+      invoice_number: `INV-2026-${String(85 + invoicesList.length).padStart(3, '0')}`,
+      customer_name: invForm.customer,
+      issue_date: '31 Oct 2026',
+      due_date: invForm.due,
+      total_amount: Number(invForm.amount),
+      status: invForm.status
+    };
+    setInvoicesList([newInv, ...invoicesList]);
+    showToast('Invoice Issued', `${newInv.invoice_number} for ${invForm.customer} (₹${Number(invForm.amount).toLocaleString('en-IN')})`);
+    setModalType(null);
+    await fetchMetrics();
   };
 
   const metrics = data?.metrics || {};
 
-  // Sample default invoices if list is empty
   const defaultInvoices = [
-    { invoice_number: 'INV-2026-084', customer_name: 'Aster Labs Pvt. Ltd.', issue_date: '24 Oct 2026', due_date: '31 Oct 2026', total_amount: 24500, status: 'Pending' },
-    { invoice_number: 'INV-2026-083', customer_name: 'Northstar Studio', issue_date: '22 Oct 2026', due_date: '29 Oct 2026', total_amount: 12800, status: 'Overdue' },
-    { invoice_number: 'INV-2026-082', customer_name: 'Morrow & Co.', issue_date: '20 Oct 2026', due_date: '27 Oct 2026', total_amount: 18900, status: 'Paid' },
-    { invoice_number: 'INV-2026-081', customer_name: 'Cedar Works', issue_date: '18 Oct 2026', due_date: '25 Oct 2026', total_amount: 9600, status: 'Paid' },
-    { invoice_number: 'INV-2026-080', customer_name: 'Orbit Media', issue_date: '16 Oct 2026', due_date: '23 Oct 2026', total_amount: 7200, status: 'Overdue' }
+    { invoice_number: 'INV-2026-084', customer_name: 'Aster Fragrance Labs', issue_date: '24 Oct 2026', due_date: '31 Oct 2026', total_amount: 24500, status: 'Pending' },
+    { invoice_number: 'INV-2026-083', customer_name: 'Northstar Scent Studio', issue_date: '22 Oct 2026', due_date: '29 Oct 2026', total_amount: 12800, status: 'Overdue' },
+    { invoice_number: 'INV-2026-082', customer_name: 'Morrow & Oud Co.', issue_date: '20 Oct 2026', due_date: '27 Oct 2026', total_amount: 18900, status: 'Paid' },
+    { invoice_number: 'INV-2026-081', customer_name: 'Cedar Amber Works', issue_date: '18 Oct 2026', due_date: '25 Oct 2026', total_amount: 9600, status: 'Paid' },
+    { invoice_number: 'INV-2026-080', customer_name: 'Orbit Perfumery', issue_date: '16 Oct 2026', due_date: '23 Oct 2026', total_amount: 7200, status: 'Overdue' }
   ];
 
   const displayInvoices = invoicesList.length > 0 ? invoicesList : defaultInvoices;
@@ -149,34 +177,44 @@ export default function FinanceDashboard({ setActiveTab }) {
   }[chartRange];
 
   const money = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
-
   const currentLatency = data?.benchmark_latency_ms || 12.8;
 
   return (
-    <div className="page-content" style={{ padding: '0 0 30px 0', maxWidth: '100%' }}>
+    <div className="page-content" style={{ padding: '0 0 30px 0', maxWidth: '100%', position: 'relative' }}>
       
+      {/* Dynamic Floating Reaction Elements */}
+      {floatingReactions.map(r => (
+        <span 
+          key={r.id} 
+          className="reaction-floating"
+          style={{ left: `${r.x}px`, top: `${r.y}px` }}
+        >
+          {r.emoji}
+        </span>
+      ))}
+
       {/* Toast Notification Container */}
       {toastMsg && (
         <div className="toast-region">
-          <div className="toast">
+          <div className="toast" style={{ borderLeft: '3px solid #ef4654' }}>
             {toastMsg.title}
             {toastMsg.detail && <small>{toastMsg.detail}</small>}
           </div>
         </div>
       )}
 
-      {/* 1. Header / Page Intro with Primary Action Tools */}
+      {/* 1. Header / Page Intro with Action Tools */}
       <div className="page-intro" style={{ flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <p className="eyebrow intro-eyebrow">FINANCE / OVERVIEW</p>
           <h1>Dashboard<span className="red-dot">.</span></h1>
-          <p className="intro-subtitle">Real-time insights at a glance.</p>
+          <p className="intro-subtitle">Real-time luxury perfume subscription intelligence.</p>
         </div>
 
         <div className="intro-tools" style={{ flexWrap: 'wrap', gap: '10px' }}>
           
-          {/* Live Pill */}
-          <div className="live-pill">
+          {/* Live Latency Radar Pill */}
+          <div className="live-pill" style={{ cursor: 'pointer' }} onClick={(e) => spawnReaction('⚡', e)}>
             <span className="pulse"></span>
             <span>LIVE</span>
             <b>{currentLatency} ms</b>
@@ -184,7 +222,7 @@ export default function FinanceDashboard({ setActiveTab }) {
 
           {/* Refresh Button */}
           <button 
-            className="refresh-button" 
+            className="refresh-button shimmer-btn" 
             onClick={() => {
               fetchMetrics();
               showToast('Metrics Refreshed', `Live latency benchmark: ${currentLatency} ms`);
@@ -196,7 +234,8 @@ export default function FinanceDashboard({ setActiveTab }) {
 
           {/* Quick Action: + New Subscription */}
           <button
-            onClick={() => setModalType('sub')}
+            onClick={(e) => { spawnReaction('💎', e); setModalType('sub'); }}
+            className="shimmer-btn"
             style={{
               height: '38px',
               padding: '0 14px',
@@ -207,20 +246,19 @@ export default function FinanceDashboard({ setActiveTab }) {
               fontSize: '12px',
               fontWeight: '500',
               cursor: 'pointer',
-              transition: '0.2s',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px'
+              gap: '6px',
+              transition: 'all 0.25s'
             }}
-            onMouseOver={(e) => { e.currentTarget.style.borderColor = 'rgba(239,70,84,0.6)'; e.currentTarget.style.background = 'rgba(239,70,84,0.12)'; }}
-            onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
           >
             <span>＋</span> New Subscription
           </button>
 
           {/* Quick Action: + Create Invoice */}
           <button
-            onClick={() => setModalType('inv')}
+            onClick={(e) => { spawnReaction('✨', e); setModalType('inv'); }}
+            className="shimmer-btn"
             style={{
               height: '38px',
               padding: '0 14px',
@@ -231,21 +269,20 @@ export default function FinanceDashboard({ setActiveTab }) {
               fontSize: '12px',
               fontWeight: '500',
               cursor: 'pointer',
-              transition: '0.2s',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px'
+              gap: '6px',
+              transition: 'all 0.25s'
             }}
-            onMouseOver={(e) => { e.currentTarget.style.borderColor = 'rgba(239,70,84,0.6)'; e.currentTarget.style.background = 'rgba(239,70,84,0.12)'; }}
-            onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; }}
           >
             <span>＋</span> Create Invoice
           </button>
 
-          {/* Primary Core Hackathon Action: ⚡ Execute Billing Day */}
+          {/* Primary Action Button: ⚡ Execute Billing Day */}
           <button
             onClick={handleExecuteBilling}
             disabled={billingLoading}
+            className="shimmer-btn pulse-glow"
             style={{
               height: '38px',
               padding: '0 18px',
@@ -261,18 +298,68 @@ export default function FinanceDashboard({ setActiveTab }) {
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              boxShadow: '0 0 20px rgba(214,32,53,0.35)',
               transition: '0.25s'
             }}
           >
-            <span>{billingLoading ? '↻' : '⚡'}</span>
+            <span style={{ display: 'inline-block', transform: billingLoading ? 'rotate(360deg)' : 'none', transition: '0.5s' }}>
+              {billingLoading ? '↻' : '⚡'}
+            </span>
             <span>{billingLoading ? 'Executing Engine...' : 'Execute Billing Day'}</span>
           </button>
 
         </div>
       </div>
 
-      {/* 2. THE < 2.0s SLA COMPLIANCE VERIFICATION PANEL */}
+      {/* 2. INTERACTIVE REACTIONS STRIP */}
+      <div 
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          flexWrap: 'wrap',
+          marginBottom: '18px',
+          padding: '6px 14px',
+          borderRadius: '30px',
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px solid rgba(255,255,255,0.06)'
+        }}
+      >
+        <span style={{ fontSize: '10px', font: 'var(--mono)', color: '#8f8186', letterSpacing: '1px', marginRight: '6px' }}>
+          REACTIONS:
+        </span>
+        
+        <button className="reaction-pill" onClick={(e) => handleReactionClick('lightning', '⚡', e)}>
+          <span>⚡</span>
+          <span>SLA Benchmark</span>
+          <b style={{ color: '#ff9da4' }}>{reactions.lightning}</b>
+        </button>
+
+        <button className="reaction-pill" onClick={(e) => handleReactionClick('diamond', '💎', e)}>
+          <span>💎</span>
+          <span>Luxury Tier</span>
+          <b style={{ color: '#76dca8' }}>{reactions.diamond}</b>
+        </button>
+
+        <button className="reaction-pill" onClick={(e) => handleReactionClick('fire', '🔥', e)}>
+          <span>🔥</span>
+          <span>Zero Double-Bill</span>
+          <b style={{ color: '#f59e0b' }}>{reactions.fire}</b>
+        </button>
+
+        <button className="reaction-pill" onClick={(e) => handleReactionClick('rose', '🌹', e)}>
+          <span>🌹</span>
+          <span>Damask Oud</span>
+          <b style={{ color: '#f43f5e' }}>{reactions.rose}</b>
+        </button>
+
+        <button className="reaction-pill" onClick={(e) => handleReactionClick('sparkles', '✨', e)}>
+          <span>✨</span>
+          <span>Auto-Renew</span>
+          <b style={{ color: '#38bdf8' }}>{reactions.sparkles}</b>
+        </button>
+      </div>
+
+      {/* 3. THE < 2.0s SLA COMPLIANCE VERIFICATION PANEL */}
       <section 
         style={{
           border: '1px solid rgba(214,72,84,0.32)',
@@ -290,15 +377,16 @@ export default function FinanceDashboard({ setActiveTab }) {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div 
+            className="animate-float"
             style={{
-              width: '42px',
-              height: '42px',
-              borderRadius: '10px',
+              width: '44px',
+              height: '44px',
+              borderRadius: '11px',
               background: 'rgba(239,70,84,0.18)',
               border: '1px solid rgba(239,70,84,0.4)',
               display: 'grid',
               placeItems: 'center',
-              fontSize: '20px',
+              fontSize: '22px',
               color: '#ff8b95',
               boxShadow: '0 0 15px rgba(239,70,84,0.2)'
             }}
@@ -307,13 +395,13 @@ export default function FinanceDashboard({ setActiveTab }) {
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span className="eyebrow" style={{ color: '#ff9da4' }}>HACKATHON REQUIREMENT VERIFIED</span>
+              <span className="eyebrow" style={{ color: '#ff9da4' }}>ODOO PERFUMES • HACKATHON SLA VERIFIED</span>
               <span style={{ fontSize: '9px', font: 'var(--mono)', background: 'rgba(74,222,128,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.35)', padding: '2px 7px', borderRadius: '12px' }}>
                 ● &lt; 2.0s SLA COMPLIANT
               </span>
             </div>
             <h3 style={{ font: '500 16px var(--sans)', margin: '4px 0 2px', color: '#ffffff' }}>
-              Performance SLA Benchmark: <span style={{ color: '#76dca8', font: 'var(--mono)' }}>{currentLatency} ms</span> response time
+              Response Time Benchmark: <span style={{ color: '#76dca8', font: 'var(--mono)' }}>{currentLatency} ms</span> response time
             </h3>
             <p style={{ margin: 0, fontSize: '11px', color: '#a79a9d' }}>
               Exceeds the 2,000 ms SLA requirement by <strong>156x</strong> • Automated Recurring Engine with Zero Double-Billing.
@@ -324,7 +412,7 @@ export default function FinanceDashboard({ setActiveTab }) {
         {/* SLA Progress Bar Gauge */}
         <div style={{ minWidth: '220px', flex: '0 1 260px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', font: 'var(--mono)', color: '#b9a9ad', marginBottom: '5px' }}>
-            <span>Latency: {currentLatency} ms</span>
+            <span>Measured: {currentLatency} ms</span>
             <span style={{ color: '#76dca8' }}>Limit: 2,000 ms (0.6%)</span>
           </div>
           <div style={{ height: '7px', background: 'rgba(255,255,255,0.08)', borderRadius: '4px', overflow: 'hidden', position: 'relative' }}>
@@ -341,7 +429,7 @@ export default function FinanceDashboard({ setActiveTab }) {
         </div>
       </section>
 
-      {/* 3. Metrics Grid (4 Cinematic Cards with SVG Sparks) */}
+      {/* 4. Metrics Grid (4 Cinematic Cards with SVG Sparks) */}
       <section className="metrics-grid" aria-label="Finance metrics">
         
         {/* Card 1: Active Subscriptions */}
@@ -433,7 +521,131 @@ export default function FinanceDashboard({ setActiveTab }) {
         </article>
       </section>
 
-      {/* 4. Insights Grid: Revenue Overview & Collection Health */}
+      {/* 5. LUXURY PERFUME GRAPHICS & OLFACTORY SUBSCRIPTION TIERS SECTION */}
+      <section 
+        style={{
+          margin: '20px 0',
+          border: '1px solid rgba(214,72,84,0.25)',
+          borderRadius: '12px',
+          background: 'linear-gradient(145deg, rgba(24,8,12,0.85), rgba(10,4,6,0.92))',
+          padding: '22px 24px',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '20px',
+          alignItems: 'center'
+        }}
+      >
+        {/* Graphic: Animated Luxury Perfume Bottle */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div 
+            className="animate-float"
+            style={{
+              width: '90px',
+              height: '110px',
+              position: 'relative',
+              filter: 'drop-shadow(0 0 25px rgba(239,70,84,0.4))'
+            }}
+          >
+            {/* Perfume Flask SVG Graphic */}
+            <svg viewBox="0 0 100 130" width="100%" height="100%">
+              {/* Golden Atomizer Cap */}
+              <rect x="42" y="5" width="16" height="14" rx="2" fill="#d4af37" />
+              <rect x="47" y="19" width="6" height="6" fill="#aa8c2c" />
+              {/* Bottle Collar */}
+              <rect x="36" y="25" width="28" height="6" rx="2" fill="#e5c158" />
+              {/* Crystal Glass Body */}
+              <rect x="20" y="31" width="60" height="90" rx="14" fill="rgba(255,255,255,0.06)" stroke="rgba(239,70,84,0.6)" strokeWidth="2" />
+              {/* Glowing Crimson Fragrance Liquid */}
+              <rect x="24" y="52" width="52" height="65" rx="10" fill="url(#perfumeJuice)" />
+              {/* Reflection Highlight */}
+              <path d="M28 40 L28 110" stroke="rgba(255,255,255,0.3)" strokeWidth="2" strokeLinecap="round" />
+              {/* Emblem */}
+              <circle cx="50" cy="80" r="12" fill="none" stroke="#d4af37" strokeWidth="1.2" />
+              <text x="50" y="84" textAnchor="middle" fill="#d4af37" fontSize="10" fontFamily="serif" fontWeight="bold">O</text>
+              <defs>
+                <linearGradient id="perfumeJuice" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ef4451" stopOpacity="0.85" />
+                  <stop offset="100%" stopColor="#7a0a19" stopOpacity="0.95" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+          <div>
+            <p className="eyebrow" style={{ color: '#d4af37' }}>OLFACTORY SUBSCRIPTION ARCHITECTURE</p>
+            <h3 style={{ font: '500 20px var(--serif)', color: '#fff', margin: '4px 0 6px' }}>
+              Odoo Perfumes Haute Collection
+            </h3>
+            <p style={{ margin: 0, fontSize: '11px', color: '#b9a9ad', lineHeight: 1.5 }}>
+              Precision recurring deliveries curated with notes of Damask Rose, Sicilian Bergamot, and Royal Agarwood.
+            </p>
+          </div>
+        </div>
+
+        {/* Fragrance Tier Badges */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+          
+          <div 
+            style={{ 
+              background: 'rgba(255,255,255,0.03)', 
+              border: '1px solid rgba(214,72,84,0.25)', 
+              borderRadius: '8px', 
+              padding: '12px 10px',
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.borderColor = '#ef4451'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(214,72,84,0.25)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            onClick={(e) => spawnReaction('🌹', e)}
+          >
+            <span style={{ fontSize: '18px' }}>🌹</span>
+            <div style={{ font: '600 11px var(--sans)', color: '#fff', marginTop: '4px' }}>Rose Elixir</div>
+            <div style={{ font: '9px var(--mono)', color: '#76dca8', marginTop: '2px' }}>98% Retention</div>
+          </div>
+
+          <div 
+            style={{ 
+              background: 'rgba(255,255,255,0.03)', 
+              border: '1px solid rgba(214,72,84,0.25)', 
+              borderRadius: '8px', 
+              padding: '12px 10px',
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.borderColor = '#ef4451'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(214,72,84,0.25)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            onClick={(e) => spawnReaction('🪵', e)}
+          >
+            <span style={{ fontSize: '18px' }}>🪵</span>
+            <div style={{ font: '600 11px var(--sans)', color: '#fff', marginTop: '4px' }}>Royal Oud</div>
+            <div style={{ font: '9px var(--mono)', color: '#76dca8', marginTop: '2px' }}>Bespoke Tier</div>
+          </div>
+
+          <div 
+            style={{ 
+              background: 'rgba(255,255,255,0.03)', 
+              border: '1px solid rgba(214,72,84,0.25)', 
+              borderRadius: '8px', 
+              padding: '12px 10px',
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.2s'
+            }}
+            onMouseOver={(e) => { e.currentTarget.style.borderColor = '#ef4451'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+            onMouseOut={(e) => { e.currentTarget.style.borderColor = 'rgba(214,72,84,0.25)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+            onClick={(e) => spawnReaction('🍊', e)}
+          >
+            <span style={{ fontSize: '18px' }}>🍊</span>
+            <div style={{ font: '600 11px var(--sans)', color: '#fff', marginTop: '4px' }}>Bergamot Dusk</div>
+            <div style={{ font: '9px var(--mono)', color: '#76dca8', marginTop: '2px' }}>Bi-Weekly Run</div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 6. Insights Grid: Revenue Overview & Collection Health */}
       <section className="insights-grid">
         
         {/* Revenue Overview Panel */}
@@ -486,15 +698,28 @@ export default function FinanceDashboard({ setActiveTab }) {
               <path id="chartArea" className="chart-area" d={areaD} />
               <path id="chartLine" className="chart-line" d={lineD} />
               <g id="chartPoints">
-                {selectedIndices.map((idx) => (
-                  <circle 
-                    key={idx}
-                    className="chart-point" 
-                    cx={points[idx][0]} 
-                    cy={points[idx][1]} 
-                    r="3.5" 
-                  />
-                ))}
+                {selectedIndices.map((idx) => {
+                  const isHovered = activeChartPoint === idx;
+                  return (
+                    <circle 
+                      key={idx}
+                      className="chart-point" 
+                      cx={points[idx][0]} 
+                      cy={points[idx][1]} 
+                      r={isHovered ? 6 : 3.5} 
+                      style={{
+                        cursor: 'pointer',
+                        fill: isHovered ? '#ff8b95' : '#16080c',
+                        stroke: '#ff808a',
+                        strokeWidth: isHovered ? 3 : 2,
+                        transition: 'all 0.2s'
+                      }}
+                      onMouseEnter={() => setActiveChartPoint(idx)}
+                      onMouseLeave={() => setActiveChartPoint(null)}
+                      onClick={(e) => spawnReaction('📈', e)}
+                    />
+                  );
+                })}
               </g>
             </svg>
           </div>
@@ -516,7 +741,7 @@ export default function FinanceDashboard({ setActiveTab }) {
             </div>
             <button 
               className="more-button" 
-              onClick={() => showToast('Collection health', '92.4% of recorded subscription charges successfully settled.')}
+              onClick={(e) => { spawnReaction('💎', e); showToast('Collection Health', '92.4% of recorded subscription charges successfully settled.'); }}
               aria-label="More collection options"
             >
               ···
@@ -524,7 +749,12 @@ export default function FinanceDashboard({ setActiveTab }) {
           </div>
 
           <div className="donut-area">
-            <div className="donut" id="collectionDonut">
+            <div 
+              className="donut" 
+              id="collectionDonut"
+              onClick={(e) => spawnReaction('✨', e)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="donut-center">
                 <strong>92.4%</strong>
                 <span>Collected</span>
@@ -549,13 +779,13 @@ export default function FinanceDashboard({ setActiveTab }) {
         </article>
       </section>
 
-      {/* 5. Recent Invoices Panel */}
+      {/* 7. Recent Invoices Panel */}
       <section className="panel invoice-panel">
         <div className="panel-heading invoice-heading">
           <div>
             <p className="eyebrow">REQUIRES ATTENTION</p>
             <h2>Recent invoices</h2>
-            <p className="panel-subtitle">Stay ahead of upcoming and overdue payments.</p>
+            <p className="panel-subtitle">Stay ahead of upcoming and overdue fragrance orders.</p>
           </div>
           <button 
             className="text-link" 
@@ -595,7 +825,7 @@ export default function FinanceDashboard({ setActiveTab }) {
                   <td>
                     <button 
                       className="row-action" 
-                      onClick={() => showToast(`Invoice ${inv.invoice_number || inv.id}`, `Status: ${inv.status || 'Pending'}`)}
+                      onClick={(e) => { spawnReaction('🧾', e); showToast(`Invoice ${inv.invoice_number || inv.id}`, `Status: ${inv.status || 'Pending'}`); }}
                       aria-label="Invoice actions"
                     >
                       ···
@@ -608,7 +838,7 @@ export default function FinanceDashboard({ setActiveTab }) {
         </div>
       </section>
 
-      {/* 6. Footer */}
+      {/* 8. Footer */}
       <footer className="footer">
         <span>© 2026 Odoo Perfumes · Odoo ERP Edition</span>
         <span>SUBSCRIPTION INTELLIGENCE <i></i> BUILT FOR CLARITY</span>
@@ -635,7 +865,7 @@ export default function FinanceDashboard({ setActiveTab }) {
             </button>
             <p className="eyebrow">ODOO PERFUMES / QUICK ACTION</p>
             <h2 className="modal-title">New Subscription</h2>
-            <p className="modal-copy">Create a subscription with automated recurring cycle and zero double-billing guard.</p>
+            <p className="modal-copy">Create a luxury fragrance subscription with automated recurring cycles and zero double-billing guard.</p>
             
             <form onSubmit={handleCreateSubscription}>
               <div className="modal-field">
@@ -649,15 +879,15 @@ export default function FinanceDashboard({ setActiveTab }) {
               </div>
 
               <div className="modal-field">
-                <label>PLAN</label>
+                <label>FRAGRANCE PLAN</label>
                 <select 
                   value={subForm.plan} 
                   onChange={(e) => setSubForm({ ...subForm, plan: e.target.value })}
                 >
-                  <option>Beauty Box Premium</option>
-                  <option>Professional Monthly Plan</option>
-                  <option>Enterprise Annual Contract</option>
-                  <option>Rapid Sprint Weekly Plan</option>
+                  <option>Rose & Ambergris Luxury Elixir</option>
+                  <option>Royal Agarwood Oud Bespoke Contract</option>
+                  <option>Sicilian Bergamot Bi-Weekly Discovery</option>
+                  <option>Private Reserve Artisan Flacon</option>
                 </select>
               </div>
 
@@ -683,8 +913,8 @@ export default function FinanceDashboard({ setActiveTab }) {
                 />
               </div>
 
-              <button type="submit" className="modal-submit">
-                Create Subscription
+              <button type="submit" className="modal-submit shimmer-btn">
+                Create Fragrance Subscription
               </button>
             </form>
           </div>
@@ -712,7 +942,7 @@ export default function FinanceDashboard({ setActiveTab }) {
             </button>
             <p className="eyebrow">ODOO PERFUMES / QUICK ACTION</p>
             <h2 className="modal-title">Create Invoice</h2>
-            <p className="modal-copy">Issue an invoice to a customer with automatic line calculations and tax compliance.</p>
+            <p className="modal-copy">Issue a fragrance subscription invoice with automatic line calculations and tax compliance.</p>
             
             <form onSubmit={handleCreateInvoice}>
               <div className="modal-field">
@@ -757,7 +987,7 @@ export default function FinanceDashboard({ setActiveTab }) {
                 </select>
               </div>
 
-              <button type="submit" className="modal-submit">
+              <button type="submit" className="modal-submit shimmer-btn">
                 Issue Invoice
               </button>
             </form>
