@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#060405" />
-  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <meta name="description" content="Odoo Perfume — Fragrance of Identity. Discover our full luxury collection of 20 artisanal fragrances and exclusive subscription plans." />
   <title>Odoo Perfume — Fragrance of Identity</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -200,7 +200,7 @@
       display: flex;
       align-items: center;
       background-color: var(--bg);
-      background-image: url('../assets/clean_hero_bg_2x.webp');
+      background-image: url('assets/clean_hero_bg_2x.webp');
       background-position: right center;
       background-size: cover;
       background-repeat: no-repeat;
@@ -904,7 +904,7 @@
       height: 140%;
       right: -4%;
       top: -20%;
-      background: url('../assets/clean_hero_bg.webp') center right / cover;
+      background: url('assets/clean_hero_bg.webp') center right / cover;
       opacity: .35;
       filter: saturate(.85);
       mask-image: linear-gradient(90deg, transparent, black 33%);
@@ -1424,19 +1424,19 @@
         <div class="collections-cards-grid">
           <div class="collection-pill-card reveal" data-filter-col="men">
             <span class="pill-title">Men</span>
-            <img src="../assets/faded_collection_men_art.png" alt="Men's collection" class="pill-art" loading="lazy">
+            <img src="assets/faded_collection_men_art.png" alt="Men's collection" class="pill-art" loading="lazy">
           </div>
           <div class="collection-pill-card reveal" data-filter-col="women">
             <span class="pill-title">Women</span>
-            <img src="../assets/faded_collection_women_art.png" alt="Women's collection" class="pill-art" loading="lazy">
+            <img src="assets/faded_collection_women_art.png" alt="Women's collection" class="pill-art" loading="lazy">
           </div>
           <div class="collection-pill-card reveal" data-filter-col="unisex">
             <span class="pill-title">Unisex</span>
-            <img src="../assets/faded_collection_unisex_art.png" alt="Unisex collection" class="pill-art" loading="lazy">
+            <img src="assets/faded_collection_unisex_art.png" alt="Unisex collection" class="pill-art" loading="lazy">
           </div>
           <div class="collection-pill-card reveal" data-filter-col="premium">
             <span class="pill-title">Premium</span>
-            <img src="../assets/faded_collection_premium_art.png" alt="Premium collection" class="pill-art" loading="lazy">
+            <img src="assets/faded_collection_premium_art.png" alt="Premium collection" class="pill-art" loading="lazy">
           </div>
         </div>
       </div>
@@ -1462,7 +1462,7 @@
           <div class="plan-card reveal" data-plan="silver">
             <span class="plan-badge">Discovery Tier</span>
             <div class="plan-img-wrap">
-              <img src="../assets/plans/silver-package.webp" alt="Silver package presentation" loading="lazy">
+              <img src="assets/plans/silver-package.webp" alt="Silver package presentation" loading="lazy">
             </div>
             <h3 class="plan-name">Silver Discovery</h3>
             <p class="plan-tagline">For curious noses exploring new olfactory identities.</p>
@@ -1484,7 +1484,7 @@
           <div class="plan-card featured reveal" data-plan="golden">
             <span class="plan-badge">Most Popular ⭐</span>
             <div class="plan-img-wrap">
-              <img src="../assets/plans/golden-package.webp" alt="Golden package presentation" loading="lazy">
+              <img src="assets/plans/golden-package.webp" alt="Golden package presentation" loading="lazy">
             </div>
             <h3 class="plan-name">Golden Connoisseur</h3>
             <p class="plan-tagline">Our most coveted edition for passionate fragrance collectors.</p>
@@ -1506,7 +1506,7 @@
           <div class="plan-card reveal" data-plan="diamond">
             <span class="plan-badge">Prestige Tier ✦</span>
             <div class="plan-img-wrap">
-              <img src="../assets/plans/diamond-package.webp" alt="Diamond package presentation" loading="lazy">
+              <img src="assets/plans/diamond-package.webp" alt="Diamond package presentation" loading="lazy">
             </div>
             <h3 class="plan-name">Diamond Prestige</h3>
             <p class="plan-tagline">The pinnacle of bespoke perfumery and master cellar reserves.</p>
@@ -1675,7 +1675,7 @@
 
     <!-- Selected Item Preview -->
     <div class="checkout-item-preview" id="checkoutPreview">
-      <img src="../assets/products/01-noir.jpg" id="checkoutItemImg" alt="Product preview">
+      <img src="assets/products/01-noir.jpg" id="checkoutItemImg" alt="Product preview">
       <div class="checkout-item-info">
         <h4 id="checkoutItemName">Noir</h4>
         <p id="checkoutItemNotes">Woody · Amber · Intense · 100 ml</p>
@@ -1804,7 +1804,7 @@
       <button class="drawer-close modal-close" id="subClose">&times;</button>
     </div>
     <div class="checkout-item-preview">
-      <img src="../assets/plans/golden-package.webp" id="subPreviewImg" alt="Plan preview">
+      <img src="assets/plans/golden-package.webp" id="subPreviewImg" alt="Plan preview">
       <div class="checkout-item-info">
         <h4 id="subPlanTitle">Golden Connoisseur</h4>
         <p id="subPlanFreq">Monthly auto-curation · 100ml Full Flacon</p>
@@ -1828,16 +1828,20 @@
       <div class="form-row">
         <div class="form-group">
           <label>Member Full Name</label>
-          <input type="text" class="form-input" required value="Aryan Sharma">
+          <input type="text" id="subCustName" class="form-input" required value="Aryan Sharma">
         </div>
         <div class="form-group">
           <label>Phone Number</label>
-          <input type="tel" class="form-input" required value="+91 98765 43210">
+          <input type="tel" id="subCustPhone" class="form-input" required value="+91 98765 43210">
         </div>
       </div>
       <div class="form-group">
+        <label>Member Email (for invoice & VIP delivery)</label>
+        <input type="email" id="subCustEmail" class="form-input" required value="aryan.vip@scentclub.in">
+      </div>
+      <div class="form-group">
         <label>Shipping Address</label>
-        <input type="text" class="form-input" required value="402, Signature Palms, Golf Course Road, Gurugram">
+        <input type="text" id="subCustAddress" class="form-input" required value="402, Signature Palms, Golf Course Road, Gurugram">
       </div>
       <div class="form-group">
         <label>Payment Mode (Auto-Renewal, pause or cancel anytime)</label>
@@ -1872,26 +1876,26 @@
   <script>
     // All 20 Luxury Perfumes Data
     const productsData = [
-      { id: 'noir', name: 'Noir', category: 'men premium', notes: 'Woody · Amber · Intense', price: 4990, originalPrice: 5990, image: '../assets/products/01-noir.jpg', badge: 'Bestseller', desc: 'A dark, magnetic signature with a trail of warm woods, patchouli and smouldering amber.' },
-      { id: 'bloom', name: 'Bloom', category: 'women', notes: 'Floral · Rose · Musk', price: 3890, originalPrice: 4590, image: '../assets/products/02-bloom.jpg', badge: 'New Arrival', desc: 'Soft petals and luminous musk, crafted for effortless romance and luminous grace.' },
-      { id: 'ocean', name: 'Ocean', category: 'unisex men', notes: 'Aquatic · Citrus · Cedar', price: 4290, originalPrice: 4990, image: '../assets/products/03-ocean.jpg', badge: 'Fresh Favourite', desc: 'A crisp, open-air scent with sea salt, coastal breeze, and a sun-bleached cedar finish.' },
-      { id: 'oud', name: 'Oud', category: 'unisex premium', notes: 'Oud · Spice · Saffron', price: 5490, originalPrice: 6490, image: '../assets/products/04-oud.jpg', badge: 'Limited Edition', desc: 'Smouldering Cambodian resin and precious woods infused with royal saffron.' },
-      { id: 'frost', name: 'Frost', category: 'unisex men', notes: 'Crisp Bergamot · Mint · White Musk', price: 3990, originalPrice: 4690, image: '../assets/products/05-frost.jpg', badge: 'Trending', desc: 'An icy burst of glacial freshness with crushed mint leaves and frosted juniper berry.' },
-      { id: 'mystic', name: 'Mystic', category: 'women premium', notes: 'Incense · Dark Patchouli · Vanilla', price: 4890, originalPrice: 5790, image: '../assets/products/06-mystic.jpg', badge: 'Exclusive', desc: 'An enigmatic veil of smoky amber, midnight patchouli, and intoxicating black vanilla.' },
-      { id: 'laven', name: 'Laven', category: 'women unisex', notes: 'French Lavender · Tonka · Cardamom', price: 4190, originalPrice: 4890, image: '../assets/products/07-laven.jpg', badge: 'Calming Blend', desc: 'Sun-drenched Provencal lavender rounded with creamy tonka bean and spiced warmth.' },
-      { id: 'leather', name: 'Leather', category: 'men premium', notes: 'Tuscan Leather · Smoked Birch · Tobacco', price: 5290, originalPrice: 6290, image: '../assets/products/08-leather.jpg', badge: 'Signature Bold', desc: 'Rich saddle leather and aged tobacco leaf layered over smouldering birchwood.' },
-      { id: 'cherry', name: 'Cherry', category: 'women', notes: 'Black Cherry · Bitter Almond · Amber', price: 4790, originalPrice: 5490, image: '../assets/products/09-cherry.jpg', badge: 'Sensual Edit', desc: 'Ripe dark cherries soaked in bitter almond liqueur with a warm amber embrace.' },
-      { id: 'forest', name: 'Forest', category: 'men unisex', notes: 'Cedarwood · Pine Needle · Vetiver', price: 4490, originalPrice: 5190, image: '../assets/products/10-forest.jpg', badge: 'Earthy Reserve', desc: 'The misty stillness of ancient pine groves and damp moss on sunlit bark.' },
-      { id: 'midnight', name: 'Midnight', category: 'men premium', notes: 'Black Pepper · Iris · Sandalwood', price: 5190, originalPrice: 6190, image: '../assets/products/11-midnight.jpg', badge: 'Night Signature', desc: 'A striking nocturne of cracked peppercorns, powdery black iris, and Mysore sandalwood.' },
-      { id: 'vanilla', name: 'Vanilla', category: 'women unisex', notes: 'Bourbon Vanilla · Orchid · Tonka', price: 3990, originalPrice: 4690, image: '../assets/products/12-vanilla.jpg', badge: 'Sweet Gourmand', desc: 'Warm Madagascan vanilla pods spun with golden caramel and night-blooming orchid.' },
-      { id: 'rosewood', name: 'Rosewood', category: 'women unisex', notes: 'Brazilian Rosewood · Pink Pepper · Amber', price: 4690, originalPrice: 5390, image: '../assets/products/13-rosewood.jpg', badge: 'Artisanal', desc: 'Precious rosewood infused with delicate pink peppercorns and glowing resin.' },
-      { id: 'incense', name: 'Incense', category: 'unisex premium', notes: 'Frankincense · Myrrh · Cashmeran', price: 5390, originalPrice: 6390, image: '../assets/products/14-incense.jpg', badge: 'Sacred Blend', desc: 'Spiritual resin, sacred myrrh, and soft cashmere wood that lingers for hours.' },
-      { id: 'citrus', name: 'Citrus', category: 'unisex men', notes: 'Blood Orange · Grapefruit · Neroli', price: 3790, originalPrice: 4390, image: '../assets/products/15-citrus.jpg', badge: 'Radiant Zest', desc: 'Sparkling Mediterranean citrus zest kissed with sun-warmed orange blossoms.' },
-      { id: 'aqua', name: 'Aqua', category: 'men unisex', notes: 'Marine Breeze · Sea Salt · Driftwood', price: 4390, originalPrice: 5090, image: '../assets/products/16-aqua.jpg', badge: 'Crisp Coastal', desc: 'Sunlit waves, mineral sea foam, and bleached coastal driftwood.' },
-      { id: 'spice', name: 'Spice', category: 'men premium', notes: 'Cinnamon Bark · Clove · Guaiac Wood', price: 4690, originalPrice: 5490, image: '../assets/products/17-spice.jpg', badge: 'Warm Oriental', desc: 'Spiced rum, crushed cloves, and glowing embers of smoked guaiac wood.' },
-      { id: 'eclipse', name: 'Eclipse', category: 'unisex premium', notes: 'Blackcurrant · Smoked Amber · Patchouli', price: 5590, originalPrice: 6590, image: '../assets/products/18-eclipse.jpg', badge: 'Celestial Edition', desc: 'Dark syrupy cassis fruit plunged into brooding smoked amber and velvet night.' },
-      { id: 'pure', name: 'Pure', category: 'women unisex', notes: 'White Lotus · Clean Cotton · Ambergris', price: 3890, originalPrice: 4590, image: '../assets/products/19-pure.jpg', badge: 'Clean Linen', desc: 'A pristine cocoon of freshly washed white linen, water lotus, and skin musk.' },
-      { id: 'signature', name: 'Signature', category: 'unisex premium men women', notes: 'Royal Saffron · Damascus Rose · Oud Royale', price: 5990, originalPrice: 7290, image: '../assets/products/20-signature.jpg', badge: 'Masterpiece ✦', desc: 'The pinnacle of Odoo perfumery: Damascus rose steeped in liquid gold saffron and 20-year aged oud.' }
+      { id: 'noir', name: 'Noir', category: 'men premium', notes: 'Woody · Amber · Intense', price: 4990, originalPrice: 5990, image: 'assets/products/01-noir.jpg', badge: 'Bestseller', desc: 'A dark, magnetic signature with a trail of warm woods, patchouli and smouldering amber.' },
+      { id: 'bloom', name: 'Bloom', category: 'women', notes: 'Floral · Rose · Musk', price: 3890, originalPrice: 4590, image: 'assets/products/02-bloom.jpg', badge: 'New Arrival', desc: 'Soft petals and luminous musk, crafted for effortless romance and luminous grace.' },
+      { id: 'ocean', name: 'Ocean', category: 'unisex men', notes: 'Aquatic · Citrus · Cedar', price: 4290, originalPrice: 4990, image: 'assets/products/03-ocean.jpg', badge: 'Fresh Favourite', desc: 'A crisp, open-air scent with sea salt, coastal breeze, and a sun-bleached cedar finish.' },
+      { id: 'oud', name: 'Oud', category: 'unisex premium', notes: 'Oud · Spice · Saffron', price: 5490, originalPrice: 6490, image: 'assets/products/04-oud.jpg', badge: 'Limited Edition', desc: 'Smouldering Cambodian resin and precious woods infused with royal saffron.' },
+      { id: 'frost', name: 'Frost', category: 'unisex men', notes: 'Crisp Bergamot · Mint · White Musk', price: 3990, originalPrice: 4690, image: 'assets/products/05-frost.jpg', badge: 'Trending', desc: 'An icy burst of glacial freshness with crushed mint leaves and frosted juniper berry.' },
+      { id: 'mystic', name: 'Mystic', category: 'women premium', notes: 'Incense · Dark Patchouli · Vanilla', price: 4890, originalPrice: 5790, image: 'assets/products/06-mystic.jpg', badge: 'Exclusive', desc: 'An enigmatic veil of smoky amber, midnight patchouli, and intoxicating black vanilla.' },
+      { id: 'laven', name: 'Laven', category: 'women unisex', notes: 'French Lavender · Tonka · Cardamom', price: 4190, originalPrice: 4890, image: 'assets/products/07-laven.jpg', badge: 'Calming Blend', desc: 'Sun-drenched Provencal lavender rounded with creamy tonka bean and spiced warmth.' },
+      { id: 'leather', name: 'Leather', category: 'men premium', notes: 'Tuscan Leather · Smoked Birch · Tobacco', price: 5290, originalPrice: 6290, image: 'assets/products/08-leather.jpg', badge: 'Signature Bold', desc: 'Rich saddle leather and aged tobacco leaf layered over smouldering birchwood.' },
+      { id: 'cherry', name: 'Cherry', category: 'women', notes: 'Black Cherry · Bitter Almond · Amber', price: 4790, originalPrice: 5490, image: 'assets/products/09-cherry.jpg', badge: 'Sensual Edit', desc: 'Ripe dark cherries soaked in bitter almond liqueur with a warm amber embrace.' },
+      { id: 'forest', name: 'Forest', category: 'men unisex', notes: 'Cedarwood · Pine Needle · Vetiver', price: 4490, originalPrice: 5190, image: 'assets/products/10-forest.jpg', badge: 'Earthy Reserve', desc: 'The misty stillness of ancient pine groves and damp moss on sunlit bark.' },
+      { id: 'midnight', name: 'Midnight', category: 'men premium', notes: 'Black Pepper · Iris · Sandalwood', price: 5190, originalPrice: 6190, image: 'assets/products/11-midnight.jpg', badge: 'Night Signature', desc: 'A striking nocturne of cracked peppercorns, powdery black iris, and Mysore sandalwood.' },
+      { id: 'vanilla', name: 'Vanilla', category: 'women unisex', notes: 'Bourbon Vanilla · Orchid · Tonka', price: 3990, originalPrice: 4690, image: 'assets/products/12-vanilla.jpg', badge: 'Sweet Gourmand', desc: 'Warm Madagascan vanilla pods spun with golden caramel and night-blooming orchid.' },
+      { id: 'rosewood', name: 'Rosewood', category: 'women unisex', notes: 'Brazilian Rosewood · Pink Pepper · Amber', price: 4690, originalPrice: 5390, image: 'assets/products/13-rosewood.jpg', badge: 'Artisanal', desc: 'Precious rosewood infused with delicate pink peppercorns and glowing resin.' },
+      { id: 'incense', name: 'Incense', category: 'unisex premium', notes: 'Frankincense · Myrrh · Cashmeran', price: 5390, originalPrice: 6390, image: 'assets/products/14-incense.jpg', badge: 'Sacred Blend', desc: 'Spiritual resin, sacred myrrh, and soft cashmere wood that lingers for hours.' },
+      { id: 'citrus', name: 'Citrus', category: 'unisex men', notes: 'Blood Orange · Grapefruit · Neroli', price: 3790, originalPrice: 4390, image: 'assets/products/15-citrus.jpg', badge: 'Radiant Zest', desc: 'Sparkling Mediterranean citrus zest kissed with sun-warmed orange blossoms.' },
+      { id: 'aqua', name: 'Aqua', category: 'men unisex', notes: 'Marine Breeze · Sea Salt · Driftwood', price: 4390, originalPrice: 5090, image: 'assets/products/16-aqua.jpg', badge: 'Crisp Coastal', desc: 'Sunlit waves, mineral sea foam, and bleached coastal driftwood.' },
+      { id: 'spice', name: 'Spice', category: 'men premium', notes: 'Cinnamon Bark · Clove · Guaiac Wood', price: 4690, originalPrice: 5490, image: 'assets/products/17-spice.jpg', badge: 'Warm Oriental', desc: 'Spiced rum, crushed cloves, and glowing embers of smoked guaiac wood.' },
+      { id: 'eclipse', name: 'Eclipse', category: 'unisex premium', notes: 'Blackcurrant · Smoked Amber · Patchouli', price: 5590, originalPrice: 6590, image: 'assets/products/18-eclipse.jpg', badge: 'Celestial Edition', desc: 'Dark syrupy cassis fruit plunged into brooding smoked amber and velvet night.' },
+      { id: 'pure', name: 'Pure', category: 'women unisex', notes: 'White Lotus · Clean Cotton · Ambergris', price: 3890, originalPrice: 4590, image: 'assets/products/19-pure.jpg', badge: 'Clean Linen', desc: 'A pristine cocoon of freshly washed white linen, water lotus, and skin musk.' },
+      { id: 'signature', name: 'Signature', category: 'unisex premium men women', notes: 'Royal Saffron · Damascus Rose · Oud Royale', price: 5990, originalPrice: 7290, image: 'assets/products/20-signature.jpg', badge: 'Masterpiece ✦', desc: 'The pinnacle of Odoo perfumery: Damascus rose steeped in liquid gold saffron and 20-year aged oud.' }
     ];
 
     const productsMap = {};
@@ -2213,12 +2217,127 @@
       }
     });
 
-    // Order Submission
-    document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+
+    // ============================================================
+    // REAL-TIME DASHBOARD SYNCHRONIZATION BRIDGE
+    // ============================================================
+    const syncChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('odoo_perfumes_sync') : null;
+
+    async function dispatchStoreOrderToDashboard(orderData) {
+      console.log('Dispatching order to Odoo Perfumes Dashboard:', orderData);
+
+      // 1. Send to Backend API if available
+      try {
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const endpoint = isLocal
+          ? (window.location.port === '8000' ? '/api/store/order' : 'http://localhost:8000/api/store/order')
+          : '/api/store/order';
+
+        const resp = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+        if (resp.ok) {
+          const res = await resp.json();
+          orderData.invoice_number = res.invoice_number;
+          orderData.subscription_number = res.subscription_number;
+          console.log('Order successfully synced to database:', res);
+        }
+      } catch (err) {
+        console.warn('Backend API offline or cross-origin, continuing with browser storage sync:', err);
+      }
+
+      // 2. Persist to localStorage for static hosting & cross-window sync
+      try {
+        const existing = JSON.parse(localStorage.getItem('odoo_perfumes_live_orders') || '[]');
+        existing.unshift(orderData);
+        localStorage.setItem('odoo_perfumes_live_orders', JSON.stringify(existing));
+        localStorage.setItem('odoo_perfumes_last_order', JSON.stringify({ ...orderData, _ts: Date.now() }));
+      } catch (e) {
+        console.error('Storage sync error:', e);
+      }
+
+      // 3. Broadcast to all open tabs / dashboard windows
+      if (syncChannel) {
+        syncChannel.postMessage({
+          type: 'ORDER_PLACED',
+          order: orderData,
+          timestamp: Date.now()
+        });
+      }
+    }
+
+    // Order Submission with Real-Time Dashboard Sync
+    document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const placeBtn = document.getElementById('placeOrderBtn');
       placeBtn.textContent = 'Verifying & Securing Payment…';
       placeBtn.disabled = true;
+
+      const custName = document.getElementById('custName').value.trim() || 'Aryan Sharma';
+      const custEmail = document.getElementById('custEmail').value.trim() || 'aryan@example.com';
+      const custPhone = document.getElementById('custPhone').value.trim() || '+91 98765 43210';
+      const custAddress = document.getElementById('custAddress').value.trim() || 'Signature Palms';
+      const custCity = document.getElementById('custCity').value.trim() || 'Gurugram';
+      const custPin = document.getElementById('custPin').value.trim() || '122002';
+      const payRadio = document.querySelector('input[name="payMethod"]:checked');
+      const payMethod = payRadio ? (payRadio.value.toUpperCase() + ' Online') : 'UPI Instant';
+
+      let orderItems = [];
+      let calculatedSubtotal = 0;
+
+      if (isCartCheckout) {
+        orderItems = Object.entries(cart).map(([id, count]) => {
+          const prod = productsMap[id];
+          calculatedSubtotal += prod.price * count;
+          return {
+            name: prod.name,
+            price: prod.price,
+            quantity: count,
+            item_type: 'product',
+            notes: prod.notes
+          };
+        });
+      } else {
+        calculatedSubtotal = activeCheckoutItem.price * checkoutQty;
+        orderItems = [{
+          name: activeCheckoutItem.name,
+          price: activeCheckoutItem.price,
+          quantity: checkoutQty,
+          item_type: 'product',
+          notes: activeCheckoutItem.notes
+        }];
+      }
+
+      const discountAmt = appliedDiscountPct > 0 ? Math.round(calculatedSubtotal * (appliedDiscountPct / 100)) : 0;
+      const taxable = calculatedSubtotal - discountAmt;
+      const taxAmt = Math.round(taxable * 0.18);
+      const finalAmt = taxable + taxAmt;
+
+      const randNum = Math.floor(10000 + Math.random() * 90000);
+      const generatedInv = `INV-2026-${randNum}`;
+
+      const orderPayload = {
+        invoice_number: generatedInv,
+        customer_name: custName,
+        customer_email: custEmail,
+        customer_phone: custPhone,
+        customer_address: custAddress,
+        customer_city: custCity,
+        customer_pin: custPin,
+        items: orderItems,
+        subtotal: calculatedSubtotal,
+        discount_amount: discountAmt,
+        tax_amount: taxAmt,
+        total_amount: finalAmt,
+        payment_method: payMethod,
+        promo_code: appliedDiscountPct > 0 ? 'ODOO10' : null,
+        created_at: new Date().toISOString()
+      };
+
+      // Dispatch real-time update to dashboard
+      await dispatchStoreOrderToDashboard(orderPayload);
 
       setTimeout(() => {
         placeBtn.textContent = 'Confirm & Place Order →';
@@ -2226,7 +2345,6 @@
         checkoutModal.classList.remove('open');
 
         // Populate receipt
-        const randNum = Math.floor(10000 + Math.random() * 90000);
         document.getElementById('receiptId').textContent = `#ODOO-${randNum}`;
         if (isCartCheckout) {
           document.getElementById('receiptItem').textContent = `Bag Order (${cartQuantity()} Flacons)`;
@@ -2236,13 +2354,11 @@
         } else {
           document.getElementById('receiptItem').textContent = `${activeCheckoutItem.name} (${checkoutQty} x 100ml)`;
         }
-        document.getElementById('receiptTotal').textContent = orderFinalTotal.textContent;
-        const city = document.getElementById('custCity').value || 'New Delhi';
-        const pin = document.getElementById('custPin').value || '110001';
-        document.getElementById('receiptAddress').textContent = `${city}, ${pin}`;
+        document.getElementById('receiptTotal').textContent = money(finalAmt);
+        document.getElementById('receiptAddress').textContent = `${custCity}, ${custPin}`;
 
         document.getElementById('orderSuccessModal').classList.add('open');
-      }, 1000);
+      }, 700);
     });
 
     // ============================================================
@@ -2288,14 +2404,16 @@
     const subPlanPrice = document.getElementById('subPlanPrice');
 
     const planMeta = {
-      silver: { title: 'Silver Discovery', img: '../assets/plans/silver-package.webp', freq: '50ml flacon + 2 travel atomizers' },
-      golden: { title: 'Golden Connoisseur', img: '../assets/plans/golden-package.webp', freq: '100ml full bottle + gold engraved atomizer' },
-      diamond: { title: 'Diamond Prestige', img: '../assets/plans/diamond-package.webp', freq: '100ml bespoke extrait + private cellar access' }
+      silver: { title: 'Silver Discovery', img: 'assets/plans/silver-package.webp', freq: '50ml flacon + 2 travel atomizers' },
+      golden: { title: 'Golden Connoisseur', img: 'assets/plans/golden-package.webp', freq: '100ml full bottle + gold engraved atomizer' },
+      diamond: { title: 'Diamond Prestige', img: 'assets/plans/diamond-package.webp', freq: '100ml bespoke extrait + private cellar access' }
     };
 
+    let selectedPlanKey = 'golden';
     document.querySelectorAll('[data-subscribe]').forEach(btn => {
       btn.addEventListener('click', () => {
         const planKey = btn.dataset.subscribe;
+        selectedPlanKey = planKey;
         const meta = planMeta[planKey];
         const price = planPrices[planKey][currentInterval];
 
@@ -2310,10 +2428,47 @@
       });
     });
 
-    document.getElementById('subForm').addEventListener('submit', (e) => {
+    document.getElementById('subForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const meta = planMeta[selectedPlanKey || 'golden'];
+      const price = planPrices[selectedPlanKey || 'golden'][currentInterval];
+
+      const memberName = document.getElementById('subCustName')?.value.trim() || 'Aryan Sharma';
+      const memberEmail = document.getElementById('subCustEmail')?.value.trim() || 'aryan.vip@scentclub.in';
+      const memberPhone = document.getElementById('subCustPhone')?.value.trim() || '+91 98765 43210';
+      const memberAddress = document.getElementById('subCustAddress')?.value.trim() || '402 Signature Palms';
+      const pref = document.getElementById('subScentPref')?.value || 'Master Perfumer Curation';
+
+      const randNum = Math.floor(10000 + Math.random() * 90000);
+      const subPayload = {
+        invoice_number: `INV-SUB-${randNum}`,
+        subscription_number: `SUB-2026-${randNum}`,
+        customer_name: memberName,
+        customer_email: memberEmail,
+        customer_phone: memberPhone,
+        customer_address: memberAddress,
+        customer_city: 'Gurugram',
+        customer_pin: '122002',
+        items: [{
+          name: meta.title + ' (' + currentInterval.toUpperCase() + ')',
+          price: price,
+          quantity: 1,
+          item_type: 'subscription',
+          plan_freq: currentInterval,
+          notes: pref
+        }],
+        subtotal: price,
+        discount_amount: 0,
+        tax_amount: Math.round(price * 0.18),
+        total_amount: Math.round(price * 1.18),
+        payment_method: 'Auto-Pay Subscription',
+        created_at: new Date().toISOString()
+      };
+
+      await dispatchStoreOrderToDashboard(subPayload);
+
       closePanels();
-      showToast('🎉 Welcome to The Scent Club! Your VIP membership flacon is scheduled for delivery.');
+      showToast('🎉 Welcome to The Scent Club! VIP subscription activated and synced to Dashboard.');
     });
 
     // ============================================================
