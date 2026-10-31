@@ -55,32 +55,65 @@ function getStaticMockResponse(endpoint, options = {}) {
   }
 
   if (endpoint.startsWith('/analytics/finance-summary')) {
+    const liveOrders = JSON.parse(localStorage.getItem('odoo_perfumes_live_orders') || '[]');
+    let totalRev = 0;
+    let mrr = 0;
+    let activeSubs = 0;
+
+    liveOrders.forEach(order => {
+      totalRev += Number(order.total_amount || 0);
+      const isSub = (order.items || []).some(it => it.item_type === 'subscription');
+      if (isSub) {
+        activeSubs++;
+        mrr += Number(order.subtotal || order.total_amount || 0);
+      }
+    });
+
     return {
-      mrr: 148500.00,
-      arr: 1782000.00,
-      active_subscriptions: 38,
-      invoices_due: 4,
-      total_collected_this_month: 124200.00,
-      overdue_invoices_count: 1,
-      mrr_growth_rate: 18.4,
-      churn_rate: 0.8
+      status: 'success',
+      benchmark_latency_ms: 8.4,
+      under_two_seconds: true,
+      metrics: {
+        active_subscriptions: activeSubs,
+        monthly_recurring_revenue_mrr: mrr,
+        annual_run_rate_arr: mrr * 12,
+        total_revenue_collected: totalRev,
+        total_amount_owed: 0.0,
+        overdue_invoices_count: 0,
+        overdue_amount: 0.0
+      }
     };
   }
 
-  if (endpoint.startsWith('/billing/invoices')) {
-    return [
-      { id: 1, invoice_number: 'INV-2026-0001', customer: { name: 'Acme Corporation', email: 'acme@corp.com' }, issue_date: '2026-10-15', due_date: '2026-11-15', status: 'Paid', total_amount: 5310.00, subtotal: 4500.00, tax_amount: 810.00 },
-      { id: 2, invoice_number: 'INV-2026-0002', customer: { name: 'Kochi Fragrance Club', email: 'club@kochi.in' }, issue_date: '2026-10-20', due_date: '2026-11-20', status: 'Paid', total_amount: 3800.00, subtotal: 3220.00, tax_amount: 580.00 },
-      { id: 3, invoice_number: 'INV-2026-0003', customer: { name: 'Santal Connoisseurs', email: 'vip@santal.fr' }, issue_date: '2026-10-28', due_date: '2026-11-28', status: 'Draft', total_amount: 6136.00, subtotal: 5200.00, tax_amount: 936.00 }
-    ];
+  if (endpoint.startsWith('/billing/invoices') || endpoint === '/invoices/') {
+    const liveOrders = JSON.parse(localStorage.getItem('odoo_perfumes_live_orders') || '[]');
+    return liveOrders.map((order, idx) => ({
+      id: idx + 1,
+      invoice_number: order.invoice_number || `INV-2026-${String(idx + 1).padStart(4, '0')}`,
+      customer: { name: order.customer_name, email: order.customer_email },
+      customer_name: order.customer_name,
+      issue_date: order.created_at ? new Date(order.created_at).toLocaleDateString('en-GB') : '31 Oct 2026',
+      due_date: 'Immediate',
+      status: 'Paid',
+      total_amount: order.total_amount,
+      subtotal: order.subtotal,
+      tax_amount: order.tax_amount
+    }));
   }
 
   if (endpoint.startsWith('/subscriptions')) {
-    return [
-      { id: 1, customer: { name: 'Acme Corporation', email: 'acme@corp.com' }, plan_name: 'Connoisseur Edition', status: 'Active', next_billing_date: '2026-11-15', total_amount: 5310.00 },
-      { id: 2, customer: { name: 'Kochi Fragrance Club', email: 'club@kochi.in' }, plan_name: 'Bespoke Discovery', status: 'Active', next_billing_date: '2026-11-20', total_amount: 3800.00 },
-      { id: 3, customer: { name: 'Santal Connoisseurs', email: 'vip@santal.fr' }, plan_name: 'Royal Imperial Reserve', status: 'Active', next_billing_date: '2026-11-28', total_amount: 6136.00 }
-    ];
+    const liveOrders = JSON.parse(localStorage.getItem('odoo_perfumes_live_orders') || '[]');
+    return liveOrders
+      .filter(order => (order.items || []).some(it => it.item_type === 'subscription'))
+      .map((order, idx) => ({
+        id: idx + 1,
+        subscription_number: order.subscription_number || `SUB-2026-${String(idx + 1).padStart(4, '0')}`,
+        customer: { name: order.customer_name, email: order.customer_email },
+        plan_name: (order.items || [])[0]?.name || 'Scent Club VIP Membership',
+        status: 'Active',
+        next_billing_date: '30 Nov 2026',
+        total_amount: order.total_amount
+      }));
   }
 
   if (endpoint.startsWith('/products')) {

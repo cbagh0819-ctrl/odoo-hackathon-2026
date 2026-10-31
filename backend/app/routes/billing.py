@@ -30,6 +30,7 @@ def trigger_billing_day(
     }
 
 @router.get("/invoices", response_model=list[InvoiceOut])
+@router.get("/invoices/", response_model=list[InvoiceOut])
 def list_invoices(
     status_filter: str = None,
     overdue_only: bool = False,

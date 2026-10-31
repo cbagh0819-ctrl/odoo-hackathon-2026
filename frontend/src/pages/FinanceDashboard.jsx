@@ -67,9 +67,9 @@ export default function FinanceDashboard({ setActiveTab }) {
       const res = await apiRequest('/analytics/finance-summary');
       setData(res);
 
-      const invRes = await apiRequest('/invoices/');
-      if (Array.isArray(invRes) && invRes.length > 0) {
-        setInvoicesList(invRes.slice(0, 5));
+      const invRes = await apiRequest('/billing/invoices');
+      if (Array.isArray(invRes)) {
+        setInvoicesList(invRes);
       }
     } catch (err) {
       console.error(err);
@@ -78,11 +78,62 @@ export default function FinanceDashboard({ setActiveTab }) {
     }
   };
 
+  // Real-time synchronization with Shopping Website via BroadcastChannel & Storage events
   useEffect(() => {
     fetchMetrics();
-    const interval = setInterval(fetchMetrics, 3500);
-    return () => clearInterval(interval);
+    const interval = setInterval(fetchMetrics, 2500);
+
+    let channel = null;
+    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+      channel = new BroadcastChannel('odoo_perfumes_sync');
+      channel.onmessage = (event) => {
+        if (event.data?.type === 'ORDER_PLACED') {
+          const ord = event.data.order;
+          showToast(
+            '🛒 New Storefront Order Received!',
+            `${ord.customer_name} placed order for ${ord.items?.[0]?.name || 'Fragrance'} (₹${Number(ord.total_amount).toLocaleString('en-IN')})`
+          );
+          spawnReaction('✨');
+          spawnReaction('💎');
+          fetchMetrics();
+        }
+      };
+    }
+
+    const handleStorage = (e) => {
+      if (e.key === 'odoo_perfumes_last_order' && e.newValue) {
+        try {
+          const ord = JSON.parse(e.newValue);
+          showToast(
+            '🛒 Live Storefront Order Received!',
+            `${ord.customer_name} - ₹${Number(ord.total_amount).toLocaleString('en-IN')}`
+          );
+          spawnReaction('✨');
+          fetchMetrics();
+        } catch (_) {}
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+
+    return () => {
+      clearInterval(interval);
+      if (channel) channel.close();
+      window.removeEventListener('storage', handleStorage);
+    };
   }, []);
+
+  const handleResetToZero = async () => {
+    if (!window.confirm('Reset all dashboard metrics and transactions back to zero?')) return;
+    try {
+      localStorage.removeItem('odoo_perfumes_live_orders');
+      localStorage.removeItem('odoo_perfumes_last_order');
+      await apiRequest('/store/reset-dashboard-zero', { method: 'POST' });
+    } catch (err) {
+      console.log('Resetting local cache');
+    }
+    await fetchMetrics();
+    showToast('Dashboard Reset to Zero', 'Metrics: 0 Subscriptions · ₹0 Revenue. Ready for fresh storefront orders.');
+  };
 
   // 1. EXECUTE BILLING DAY WITH SHOWER REACTION
   const handleExecuteBilling = async (e) => {
@@ -138,15 +189,7 @@ export default function FinanceDashboard({ setActiveTab }) {
 
   const metrics = data?.metrics || {};
 
-  const defaultInvoices = [
-    { invoice_number: 'INV-2026-084', customer_name: 'Aster Fragrance Labs', issue_date: '24 Oct 2026', due_date: '31 Oct 2026', total_amount: 24500, status: 'Pending' },
-    { invoice_number: 'INV-2026-083', customer_name: 'Northstar Scent Studio', issue_date: '22 Oct 2026', due_date: '29 Oct 2026', total_amount: 12800, status: 'Overdue' },
-    { invoice_number: 'INV-2026-082', customer_name: 'Morrow & Oud Co.', issue_date: '20 Oct 2026', due_date: '27 Oct 2026', total_amount: 18900, status: 'Paid' },
-    { invoice_number: 'INV-2026-081', customer_name: 'Cedar Amber Works', issue_date: '18 Oct 2026', due_date: '25 Oct 2026', total_amount: 9600, status: 'Paid' },
-    { invoice_number: 'INV-2026-080', customer_name: 'Orbit Perfumery', issue_date: '16 Oct 2026', due_date: '23 Oct 2026', total_amount: 7200, status: 'Overdue' }
-  ];
-
-  const displayInvoices = invoicesList.length > 0 ? invoicesList : defaultInvoices;
+  const displayInvoices = invoicesList;
 
   // Chart data calculations matching uploaded dashboard
   const chartSeries = {
@@ -170,11 +213,9 @@ export default function FinanceDashboard({ setActiveTab }) {
     90: ['AUG', 'MID AUG', 'SEP', 'MID SEP', 'OCT', '31 OCT']
   }[chartRange];
 
-  const chartTotal = {
-    7: '₹1.12L',
-    30: '₹3.84L',
-    90: '₹10.8L'
-  }[chartRange];
+  const chartTotal = metrics.total_revenue_collected !== undefined 
+    ? '₹' + Number(metrics.total_revenue_collected || 0).toLocaleString('en-IN')
+    : '₹0';
 
   const money = (n) => '₹' + Number(n || 0).toLocaleString('en-IN');
   const currentLatency = data?.benchmark_latency_ms || 12.8;
@@ -219,6 +260,56 @@ export default function FinanceDashboard({ setActiveTab }) {
             <span>LIVE</span>
             <b>{currentLatency} ms</b>
           </div>
+
+          {/* Open Shopping Website Button */}
+          <a
+            href="./store/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shimmer-btn"
+            style={{
+              height: '38px',
+              padding: '0 14px',
+              border: '1px solid rgba(223,177,91,0.4)',
+              borderRadius: '8px',
+              background: 'rgba(223,177,91,0.08)',
+              color: '#f8d998',
+              fontSize: '12px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              textDecoration: 'none',
+              transition: 'all 0.25s'
+            }}
+            title="Open the live perfume shopping storefront in a new tab"
+          >
+            <span>🛍️</span> Open Shopping Website ↗
+          </a>
+
+          {/* Reset to Zero Button */}
+          <button
+            onClick={handleResetToZero}
+            className="shimmer-btn"
+            style={{
+              height: '38px',
+              padding: '0 13px',
+              border: '1px solid rgba(255,255,255,0.18)',
+              borderRadius: '8px',
+              background: 'rgba(255,255,255,0.04)',
+              color: '#d1c5c3',
+              fontSize: '12px',
+              fontWeight: '500',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+            title="Reset subscriptions, revenue, and invoices back to 0"
+          >
+            <span>↺</span> Reset to 0
+          </button>
 
           {/* Refresh Button */}
           <button 
@@ -439,7 +530,7 @@ export default function FinanceDashboard({ setActiveTab }) {
             <span className="metric-icon">♧</span>
           </div>
           <div className="metric-value">
-            {metrics.active_subscriptions || 128}
+            {metrics.active_subscriptions ?? 0}
           </div>
           <div className="metric-foot">
             <span className="trend up">↗ 8.4%</span>
@@ -459,9 +550,7 @@ export default function FinanceDashboard({ setActiveTab }) {
             <span className="metric-icon">↗</span>
           </div>
           <div className="metric-value">
-            {metrics.monthly_recurring_revenue_mrr 
-              ? money(metrics.monthly_recurring_revenue_mrr) 
-              : '₹1,28,450'}
+            {money(metrics.monthly_recurring_revenue_mrr ?? 0)}
           </div>
           <div className="metric-foot">
             <span className="trend up">↗ 12.6%</span>
@@ -481,9 +570,7 @@ export default function FinanceDashboard({ setActiveTab }) {
             <span className="metric-icon">₹</span>
           </div>
           <div className="metric-value">
-            {metrics.total_revenue_collected 
-              ? money(metrics.total_revenue_collected) 
-              : '₹3,84,200'}
+            {money(metrics.total_revenue_collected ?? 0)}
           </div>
           <div className="metric-foot">
             <span className="trend up">↗ 6.2%</span>
@@ -503,9 +590,7 @@ export default function FinanceDashboard({ setActiveTab }) {
             <span className="metric-icon">⚠</span>
           </div>
           <div className="metric-value">
-            {metrics.total_amount_owed 
-              ? money(metrics.total_amount_owed) 
-              : '₹42,500'}
+            {money(metrics.total_amount_owed ?? 0)}
           </div>
           <div className="metric-foot">
             <span className={`trend ${metrics.overdue_invoices_count > 0 ? 'danger' : 'up'}`}>
@@ -810,29 +895,66 @@ export default function FinanceDashboard({ setActiveTab }) {
               </tr>
             </thead>
             <tbody id="invoiceTableBody">
-              {displayInvoices.map((inv) => (
-                <tr key={inv.invoice_number || inv.id}>
-                  <td>{inv.invoice_number || inv.id}</td>
-                  <td>{inv.customer_name || inv.customer}</td>
-                  <td>{inv.issue_date || inv.issued || '31 Oct 2026'}</td>
-                  <td>{inv.due_date || inv.due || '07 Nov 2026'}</td>
-                  <td className="amount-cell">{money(inv.total_amount || inv.amount)}</td>
-                  <td>
-                    <span className={`status ${(inv.status || 'Pending').toLowerCase()}`}>
-                      {inv.status || 'Pending'}
-                    </span>
-                  </td>
-                  <td>
-                    <button 
-                      className="row-action" 
-                      onClick={(e) => { spawnReaction('🧾', e); showToast(`Invoice ${inv.invoice_number || inv.id}`, `Status: ${inv.status || 'Pending'}`); }}
-                      aria-label="Invoice actions"
+              {displayInvoices.length === 0 ? (
+                <tr>
+                  <td colSpan="7" style={{ textAlign: 'center', padding: '42px 20px', color: '#8f8186' }}>
+                    <div style={{ fontSize: '28px', marginBottom: '8px' }}>🛒</div>
+                    <div style={{ color: '#fff', fontSize: '15px', fontWeight: '500', marginBottom: '4px' }}>Dashboard Initialized to Zero</div>
+                    <div style={{ fontSize: '12px', maxWidth: '420px', margin: '0 auto 16px', color: '#a19395' }}>
+                      Orders placed on the Shopping Website will populate this ledger and update revenue in real-time.
+                    </div>
+                    <a
+                      href="./store/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shimmer-btn"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '8px 18px',
+                        borderRadius: '8px',
+                        background: 'linear-gradient(110deg, #8a0e1e, #d62035)',
+                        color: '#fff',
+                        fontSize: '12px',
+                        fontWeight: '600',
+                        textDecoration: 'none'
+                      }}
                     >
-                      ···
-                    </button>
+                      🛍️ Open Shopping Website to Order
+                    </a>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                displayInvoices.map((inv) => (
+                  <tr key={inv.invoice_number || inv.id}>
+                    <td>
+                      <span style={{ fontWeight: '600', color: '#fff' }}>{inv.invoice_number || inv.id}</span>
+                      <span style={{ display: 'inline-block', marginLeft: '6px', fontSize: '9px', font: 'var(--mono)', background: 'rgba(74,222,128,0.15)', color: '#4ade80', padding: '1px 5px', borderRadius: '4px' }}>
+                        LIVE ORDER
+                      </span>
+                    </td>
+                    <td>{inv.customer?.name || inv.customer_name || inv.customer || 'Aryan Sharma'}</td>
+                    <td>{inv.issue_date || inv.issued || '31 Oct 2026'}</td>
+                    <td>{inv.due_date || inv.due || 'Immediate'}</td>
+                    <td className="amount-cell" style={{ fontWeight: '700', color: '#76dca8' }}>{money(inv.total_amount || inv.amount)}</td>
+                    <td>
+                      <span className={`status ${(inv.status || 'Paid').toLowerCase()}`}>
+                        {inv.status || 'Paid'}
+                      </span>
+                    </td>
+                    <td>
+                      <button 
+                        className="row-action" 
+                        onClick={(e) => { spawnReaction('🧾', e); showToast(`Invoice ${inv.invoice_number || inv.id}`, `Status: ${inv.status || 'Paid'}`); }}
+                        aria-label="Invoice actions"
+                      >
+                        ···
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

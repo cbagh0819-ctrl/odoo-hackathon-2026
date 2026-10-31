@@ -1828,16 +1828,20 @@
       <div class="form-row">
         <div class="form-group">
           <label>Member Full Name</label>
-          <input type="text" class="form-input" required value="Aryan Sharma">
+          <input type="text" id="subCustName" class="form-input" required value="Aryan Sharma">
         </div>
         <div class="form-group">
           <label>Phone Number</label>
-          <input type="tel" class="form-input" required value="+91 98765 43210">
+          <input type="tel" id="subCustPhone" class="form-input" required value="+91 98765 43210">
         </div>
       </div>
       <div class="form-group">
+        <label>Member Email (for invoice & VIP delivery)</label>
+        <input type="email" id="subCustEmail" class="form-input" required value="aryan.vip@scentclub.in">
+      </div>
+      <div class="form-group">
         <label>Shipping Address</label>
-        <input type="text" class="form-input" required value="402, Signature Palms, Golf Course Road, Gurugram">
+        <input type="text" id="subCustAddress" class="form-input" required value="402, Signature Palms, Golf Course Road, Gurugram">
       </div>
       <div class="form-group">
         <label>Payment Mode (Auto-Renewal, pause or cancel anytime)</label>
@@ -2213,12 +2217,127 @@
       }
     });
 
-    // Order Submission
-    document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+
+    // ============================================================
+    // REAL-TIME DASHBOARD SYNCHRONIZATION BRIDGE
+    // ============================================================
+    const syncChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('odoo_perfumes_sync') : null;
+
+    async function dispatchStoreOrderToDashboard(orderData) {
+      console.log('Dispatching order to Odoo Perfumes Dashboard:', orderData);
+
+      // 1. Send to Backend API if available
+      try {
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const endpoint = isLocal
+          ? (window.location.port === '8000' ? '/api/store/order' : 'http://localhost:8000/api/store/order')
+          : '/api/store/order';
+
+        const resp = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderData)
+        });
+        if (resp.ok) {
+          const res = await resp.json();
+          orderData.invoice_number = res.invoice_number;
+          orderData.subscription_number = res.subscription_number;
+          console.log('Order successfully synced to database:', res);
+        }
+      } catch (err) {
+        console.warn('Backend API offline or cross-origin, continuing with browser storage sync:', err);
+      }
+
+      // 2. Persist to localStorage for static hosting & cross-window sync
+      try {
+        const existing = JSON.parse(localStorage.getItem('odoo_perfumes_live_orders') || '[]');
+        existing.unshift(orderData);
+        localStorage.setItem('odoo_perfumes_live_orders', JSON.stringify(existing));
+        localStorage.setItem('odoo_perfumes_last_order', JSON.stringify({ ...orderData, _ts: Date.now() }));
+      } catch (e) {
+        console.error('Storage sync error:', e);
+      }
+
+      // 3. Broadcast to all open tabs / dashboard windows
+      if (syncChannel) {
+        syncChannel.postMessage({
+          type: 'ORDER_PLACED',
+          order: orderData,
+          timestamp: Date.now()
+        });
+      }
+    }
+
+    // Order Submission with Real-Time Dashboard Sync
+    document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const placeBtn = document.getElementById('placeOrderBtn');
       placeBtn.textContent = 'Verifying & Securing Payment…';
       placeBtn.disabled = true;
+
+      const custName = document.getElementById('custName').value.trim() || 'Aryan Sharma';
+      const custEmail = document.getElementById('custEmail').value.trim() || 'aryan@example.com';
+      const custPhone = document.getElementById('custPhone').value.trim() || '+91 98765 43210';
+      const custAddress = document.getElementById('custAddress').value.trim() || 'Signature Palms';
+      const custCity = document.getElementById('custCity').value.trim() || 'Gurugram';
+      const custPin = document.getElementById('custPin').value.trim() || '122002';
+      const payRadio = document.querySelector('input[name="payMethod"]:checked');
+      const payMethod = payRadio ? (payRadio.value.toUpperCase() + ' Online') : 'UPI Instant';
+
+      let orderItems = [];
+      let calculatedSubtotal = 0;
+
+      if (isCartCheckout) {
+        orderItems = Object.entries(cart).map(([id, count]) => {
+          const prod = productsMap[id];
+          calculatedSubtotal += prod.price * count;
+          return {
+            name: prod.name,
+            price: prod.price,
+            quantity: count,
+            item_type: 'product',
+            notes: prod.notes
+          };
+        });
+      } else {
+        calculatedSubtotal = activeCheckoutItem.price * checkoutQty;
+        orderItems = [{
+          name: activeCheckoutItem.name,
+          price: activeCheckoutItem.price,
+          quantity: checkoutQty,
+          item_type: 'product',
+          notes: activeCheckoutItem.notes
+        }];
+      }
+
+      const discountAmt = appliedDiscountPct > 0 ? Math.round(calculatedSubtotal * (appliedDiscountPct / 100)) : 0;
+      const taxable = calculatedSubtotal - discountAmt;
+      const taxAmt = Math.round(taxable * 0.18);
+      const finalAmt = taxable + taxAmt;
+
+      const randNum = Math.floor(10000 + Math.random() * 90000);
+      const generatedInv = `INV-2026-${randNum}`;
+
+      const orderPayload = {
+        invoice_number: generatedInv,
+        customer_name: custName,
+        customer_email: custEmail,
+        customer_phone: custPhone,
+        customer_address: custAddress,
+        customer_city: custCity,
+        customer_pin: custPin,
+        items: orderItems,
+        subtotal: calculatedSubtotal,
+        discount_amount: discountAmt,
+        tax_amount: taxAmt,
+        total_amount: finalAmt,
+        payment_method: payMethod,
+        promo_code: appliedDiscountPct > 0 ? 'ODOO10' : null,
+        created_at: new Date().toISOString()
+      };
+
+      // Dispatch real-time update to dashboard
+      await dispatchStoreOrderToDashboard(orderPayload);
 
       setTimeout(() => {
         placeBtn.textContent = 'Confirm & Place Order →';
@@ -2226,7 +2345,6 @@
         checkoutModal.classList.remove('open');
 
         // Populate receipt
-        const randNum = Math.floor(10000 + Math.random() * 90000);
         document.getElementById('receiptId').textContent = `#ODOO-${randNum}`;
         if (isCartCheckout) {
           document.getElementById('receiptItem').textContent = `Bag Order (${cartQuantity()} Flacons)`;
@@ -2236,13 +2354,11 @@
         } else {
           document.getElementById('receiptItem').textContent = `${activeCheckoutItem.name} (${checkoutQty} x 100ml)`;
         }
-        document.getElementById('receiptTotal').textContent = orderFinalTotal.textContent;
-        const city = document.getElementById('custCity').value || 'New Delhi';
-        const pin = document.getElementById('custPin').value || '110001';
-        document.getElementById('receiptAddress').textContent = `${city}, ${pin}`;
+        document.getElementById('receiptTotal').textContent = money(finalAmt);
+        document.getElementById('receiptAddress').textContent = `${custCity}, ${custPin}`;
 
         document.getElementById('orderSuccessModal').classList.add('open');
-      }, 1000);
+      }, 700);
     });
 
     // ============================================================
@@ -2293,9 +2409,11 @@
       diamond: { title: 'Diamond Prestige', img: 'assets/plans/diamond-package.webp', freq: '100ml bespoke extrait + private cellar access' }
     };
 
+    let selectedPlanKey = 'golden';
     document.querySelectorAll('[data-subscribe]').forEach(btn => {
       btn.addEventListener('click', () => {
         const planKey = btn.dataset.subscribe;
+        selectedPlanKey = planKey;
         const meta = planMeta[planKey];
         const price = planPrices[planKey][currentInterval];
 
@@ -2310,10 +2428,47 @@
       });
     });
 
-    document.getElementById('subForm').addEventListener('submit', (e) => {
+    document.getElementById('subForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const meta = planMeta[selectedPlanKey || 'golden'];
+      const price = planPrices[selectedPlanKey || 'golden'][currentInterval];
+
+      const memberName = document.getElementById('subCustName')?.value.trim() || 'Aryan Sharma';
+      const memberEmail = document.getElementById('subCustEmail')?.value.trim() || 'aryan.vip@scentclub.in';
+      const memberPhone = document.getElementById('subCustPhone')?.value.trim() || '+91 98765 43210';
+      const memberAddress = document.getElementById('subCustAddress')?.value.trim() || '402 Signature Palms';
+      const pref = document.getElementById('subScentPref')?.value || 'Master Perfumer Curation';
+
+      const randNum = Math.floor(10000 + Math.random() * 90000);
+      const subPayload = {
+        invoice_number: `INV-SUB-${randNum}`,
+        subscription_number: `SUB-2026-${randNum}`,
+        customer_name: memberName,
+        customer_email: memberEmail,
+        customer_phone: memberPhone,
+        customer_address: memberAddress,
+        customer_city: 'Gurugram',
+        customer_pin: '122002',
+        items: [{
+          name: meta.title + ' (' + currentInterval.toUpperCase() + ')',
+          price: price,
+          quantity: 1,
+          item_type: 'subscription',
+          plan_freq: currentInterval,
+          notes: pref
+        }],
+        subtotal: price,
+        discount_amount: 0,
+        tax_amount: Math.round(price * 0.18),
+        total_amount: Math.round(price * 1.18),
+        payment_method: 'Auto-Pay Subscription',
+        created_at: new Date().toISOString()
+      };
+
+      await dispatchStoreOrderToDashboard(subPayload);
+
       closePanels();
-      showToast('🎉 Welcome to The Scent Club! Your VIP membership flacon is scheduled for delivery.');
+      showToast('🎉 Welcome to The Scent Club! VIP subscription activated and synced to Dashboard.');
     });
 
     // ============================================================

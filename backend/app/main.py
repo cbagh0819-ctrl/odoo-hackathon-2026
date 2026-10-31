@@ -1,5 +1,7 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from .database import Base, engine
 from .routes import auth, products, plans, rules, subscriptions, billing, payments, analytics, store
 from .security_firewall import WebApplicationFirewallMiddleware, router as firewall_router
@@ -36,6 +38,11 @@ app.include_router(payments.router)
 app.include_router(analytics.router)
 app.include_router(store.router)
 app.include_router(firewall_router)
+
+# Mount Shopping Website (Storefront) as static files
+storefront_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "storefront"))
+if os.path.exists(storefront_dir):
+    app.mount("/store", StaticFiles(directory=storefront_dir, html=True), name="storefront")
 
 @app.get("/")
 def root():
