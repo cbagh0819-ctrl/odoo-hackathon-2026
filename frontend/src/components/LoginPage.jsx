@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { apiRequest, setAuthToken, setCurrentUser } from '../api';
-import { Lock, User, ArrowRight, ShieldCheck, Sparkles, Key } from 'lucide-react';
+import { Lock, User, ArrowRight, ShieldCheck, Sparkles, Key, Globe } from 'lucide-react';
 
-export default function LoginPage({ onLoginSuccess }) {
+export default function LoginPage({ onLoginSuccess, onExploreWebsite }) {
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -194,6 +194,17 @@ export default function LoginPage({ onLoginSuccess }) {
               className="text-[11px] text-zinc-400 hover:text-white transition underline cursor-pointer"
             >
               Or log in as 🏢 <strong>CUSTOMER (Acme Corp)</strong> to view personal portal
+            </button>
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-zinc-800/80 text-center">
+            <button
+              type="button"
+              onClick={onExploreWebsite}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-red-300 hover:text-white bg-red-950/40 hover:bg-red-900/60 border border-red-700/50 transition cursor-pointer"
+            >
+              <Globe className="w-3.5 h-3.5 text-red-400" />
+              <span>Explore Public Brand Website &amp; Catalog</span>
             </button>
           </div>
         </div>

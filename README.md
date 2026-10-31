@@ -50,7 +50,18 @@
 ### 6. Omnichannel Customer Portal & Live Storefront
 - Real-time customer self-service: plan upgrades, payment method updates, invoice history, and instant subscription purchase.
 
-### 7. Cinematic Dark Luxury Dashboard
+### 7. Public Luxury Brand Website & Subscription Experience
+- Complete public-facing storefront presenting the Haute Parfumerie collections and brand philosophy.
+- Interactive Fragrance Vault featuring detailed olfactory notes palettes (Cambodian Agarwood, Grasse Rose, Mysore Sandalwood).
+- Membership Club tiers with instant recurring sign-up (*Bespoke Discovery*, *Connoisseur Club*, *Royal Reserve*).
+- 1-Click gateway allowing visitors and evaluators to seamlessly toggle between the Public Brand Website and the ERP / Billing Workspace.
+
+### 8. Genuine Downloadable PDF Invoices (ReportLab Engine)
+- Generates official binary `.pdf` invoices on demand for all customer and batch billing cycles.
+- Formatted with luxury typography, itemized tax computations (CGST/SGST), and security certification stamp.
+- 1-click download directly from Invoices View, Customer Portal, and Billing Day console.
+
+### 9. Cinematic Dark Luxury Dashboard
 - Real-time MRR, ARR, and Cash Collection Health visualizations.
 - Interactive date-range revenue analytics (7-day, 30-day, 90-day Bézier curves).
 - One-click Billing Day execution and quick subscription generation modals.
@@ -134,7 +145,8 @@ tests/test_firewall_security.py::test_waf_blocks_xss_script PASSED
 tests/test_firewall_security.py::test_waf_blocks_path_traversal PASSED
 tests/test_firewall_security.py::test_waf_allows_clean_payload PASSED
 tests/test_firewall_security.py::test_owasp_security_headers_injected PASSED
-============================== 10 passed in 1.13s ==============================
+tests/test_firewall_security.py::test_real_pdf_invoice_download PASSED
+============================== 11 passed in 1.24s ==============================
 ```
 
 ---
@@ -147,13 +159,13 @@ tests/test_firewall_security.py::test_owasp_security_headers_injected PASSED
 │   │   ├── schemas.py        # Pydantic Schemas & Validators
 │   │   ├── security_firewall.py # Enterprise WAF, DPI, Rate Limiting & OWASP Headers
 │   │   ├── routes/           # API Routers (Auth, Billing, Invoices, Subscriptions, Firewall)
-│   │   └── services/         # Recurring Billing Engine & Analytics
+│   │   └── services/         # Recurring Billing Engine & ReportLab PDF Generator
 │   ├── seed.py               # Database Demo Data Seeder
 │   └── requirements.txt      # Python Dependencies
 ├── frontend/                 # React 18 + Vite Web Application
 │   ├── src/
 │   │   ├── components/       # LoadingScreen, LoginPage, Sidebar
-│   │   ├── pages/            # FinanceDashboard, LiveStore, FirewallSecurityView, StaffManagementView
+│   │   ├── pages/            # BrandWebsiteView, LiveStore, FinanceDashboard, FirewallSecurityView, StaffManagementView
 │   │   ├── api.js            # API Client & Auth Gateway
 │   │   └── brightloop-dashboard.css # Cinematic Theme Styles
 │   └── package.json          # Node Dependencies
