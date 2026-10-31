@@ -105,7 +105,7 @@ export default function App() {
         )}
 
         {activeTab === 'store' && <LiveStoreView onPurchaseSuccess={handlePurchaseNotification} />}
-        {activeTab === 'analytics' && <FinanceDashboard />}
+        {activeTab === 'analytics' && <FinanceDashboard setActiveTab={setActiveTab} />}
         {activeTab === 'billing_day' && <BillingDayView />}
         {activeTab === 'subscriptions' && <SubscriptionsView />}
         {activeTab === 'invoices' && <InvoicesView />}
