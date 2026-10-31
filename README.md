@@ -4,9 +4,14 @@
 
 ---
 
-### 🌐 Live Hosted Website:
-👉 **[https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/](https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/)**  
-*(Live hosted on GitHub Pages: includes the full Luxury Brand Website, Fragrance Vault, 1-Click Evaluator Login (ADMIN/1234), Real-Time Dashboard, and Downloadable PDF Invoices).*
+### 🌐 Live Hosted Platform & Brand Storefront:
+
+| Experience | Live URL | Features & Highlights |
+| :--- | :--- | :--- |
+| 🌸 **Luxury Perfume Brand Storefront** | [**Launch Perfume Store**](https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/store.html) | • 20 artisan fragrances with real-time pricing<br>• 3 luxury subscription plans (Silver, Golden, Diamond)<br>• Instant Bag drawer & One-Click Checkout<br>• Real-time ERP sync banner & bidirectional portal |
+| ⚡ **Odoo ERP & Subscription Dashboard** | [**Launch ERP Dashboard**](https://cbagh0819-ctrl.github.io/odoo-hackathon-2026/) | • 1-Click Evaluator Login (ADMIN / 1234)<br>• Recurring billing engine & quotes generation<br>• Dynamic variant pricing & tax calculations<br>• Active WAF Security Shield & live PDF invoice generation |
+
+*Both portals are fully deployed on GitHub Pages and connected bidirectionally with one-click access pills.*
 
 ---
 
