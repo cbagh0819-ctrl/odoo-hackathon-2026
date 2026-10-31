@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { 
-  BarChart3, Calendar, Layers, FileText, Package, Settings, 
+  Store, BarChart3, Calendar, Layers, FileText, Package, Settings, 
   ChevronRight, ShieldCheck, Check
 } from 'lucide-react';
 
@@ -8,6 +8,7 @@ export default function Sidebar({ activeTab, setActiveTab, currentUser, onSwitch
   const [showRoleMenu, setShowRoleMenu] = useState(false);
 
   const menuItems = [
+    { id: 'store', label: 'Live Store', icon: Store, badge: 'Live' },
     { id: 'analytics', label: 'Dashboard', icon: BarChart3 },
     { id: 'billing_day', label: 'Billing', icon: Calendar },
     { id: 'subscriptions', label: 'Subscriptions', icon: Layers },

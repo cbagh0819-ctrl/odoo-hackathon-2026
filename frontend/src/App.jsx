@@ -7,12 +7,19 @@ import InvoicesView from './pages/InvoicesView';
 import ProductsView from './pages/ProductsView';
 import PlansAndRulesView from './pages/PlansAndRulesView';
 import CustomerPortalView from './pages/CustomerPortalView';
+import LiveStoreView from './pages/LiveStoreView';
 import { apiRequest, setAuthToken, setCurrentUser, getCurrentUser } from './api';
 
 export default function App() {
   const [currentUser, setUser] = useState(getCurrentUser());
   const [activeTab, setActiveTab] = useState('analytics');
   const [initialLoading, setInitialLoading] = useState(true);
+  const [liveToast, setLiveToast] = useState(null);
+
+  const handlePurchaseNotification = (order) => {
+    setLiveToast(order);
+    setTimeout(() => setLiveToast(null), 7000);
+  };
 
   const switchUser = async (email) => {
     try {
@@ -79,6 +86,25 @@ export default function App() {
 
       {/* Main Content Viewport */}
       <main className="flex-1 min-h-screen z-10 px-6 sm:px-10 py-6 overflow-y-auto">
+        {/* Real-time Purchase Alert Toast */}
+        {liveToast && (
+          <div className="fixed bottom-6 right-6 z-50 bg-black/90 text-white p-4 rounded-2xl shadow-2xl border border-red-600/60 backdrop-blur-xl flex items-center space-x-4 animate-slide-up max-w-sm">
+            <span className="text-3xl">🎉</span>
+            <div className="text-xs">
+              <div className="font-bold text-red-400 font-mono uppercase tracking-wider text-[10px]">
+                Live Subscription Received
+              </div>
+              <div className="font-medium text-white mt-0.5">
+                <strong>{liveToast.customer}</strong> subscribed online
+              </div>
+              <div className="text-emerald-400 font-semibold font-mono mt-1">
+                +₹{liveToast.total_paid?.toFixed(2)} &bull; MRR & Dashboard Updated!
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'store' && <LiveStoreView onPurchaseSuccess={handlePurchaseNotification} />}
         {activeTab === 'analytics' && <FinanceDashboard />}
         {activeTab === 'billing_day' && <BillingDayView />}
         {activeTab === 'subscriptions' && <SubscriptionsView />}
