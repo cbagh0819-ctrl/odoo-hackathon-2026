@@ -16,3 +16,4 @@ frontend/dist/
 *.db
 backend/*.db
 .gemini/
+*.zip
