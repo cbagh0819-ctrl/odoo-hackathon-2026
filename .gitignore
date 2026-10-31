@@ -10,4 +10,8 @@ env/
 # IDE & OS
 .DS_Store
 Thumbs.db
+dist/
+frontend/dist/
 *.log
+*.db
+backend/*.db
