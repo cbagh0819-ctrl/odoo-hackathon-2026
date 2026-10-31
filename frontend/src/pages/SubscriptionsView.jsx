@@ -107,9 +107,6 @@ export default function SubscriptionsView() {
             <Layers className="w-5 h-5 mr-2.5 text-red-500" />
             Subscription Lifecycle Engine
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
-            Pipeline: <span className="font-mono text-red-300">Draft ➔ Quotation ➔ Confirmed ➔ Active ➔ Closed / Paused</span>
-          </p>
         </div>
 
         <button
