@@ -8,9 +8,11 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
+    username = Column(String(50), unique=True, index=True, nullable=True)
     email = Column(String(150), unique=True, index=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
     role = Column(String(20), default="customer")  # admin, staff, customer
+    permissions = Column(Text, nullable=True)  # comma-separated e.g. "subscriptions,invoices,products,billing"
     reset_token = Column(String(100), nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 

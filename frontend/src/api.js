@@ -12,6 +12,11 @@ export function setAuthToken(token) {
   }
 }
 
+export function clearAuth() {
+  localStorage.removeItem('brightloop_token');
+  localStorage.removeItem('brightloop_user');
+}
+
 export function getCurrentUser() {
   const user = localStorage.getItem('brightloop_user');
   return user ? JSON.parse(user) : null;

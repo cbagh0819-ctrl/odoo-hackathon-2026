@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
+import LoadingScreen from './components/LoadingScreen';
+import LoginPage from './components/LoginPage';
 import FinanceDashboard from './pages/FinanceDashboard';
 import BillingDayView from './pages/BillingDayView';
 import SubscriptionsView from './pages/SubscriptionsView';
@@ -8,12 +10,13 @@ import ProductsView from './pages/ProductsView';
 import PlansAndRulesView from './pages/PlansAndRulesView';
 import CustomerPortalView from './pages/CustomerPortalView';
 import LiveStoreView from './pages/LiveStoreView';
-import { apiRequest, setAuthToken, setCurrentUser, getCurrentUser } from './api';
+import StaffManagementView from './pages/StaffManagementView';
+import { apiRequest, setAuthToken, setCurrentUser, getCurrentUser, clearAuth } from './api';
 
 export default function App() {
   const [currentUser, setUser] = useState(getCurrentUser());
   const [activeTab, setActiveTab] = useState('analytics');
-  const [initialLoading, setInitialLoading] = useState(true);
+  const [isAppLoading, setIsAppLoading] = useState(true);
   const [liveToast, setLiveToast] = useState(null);
 
   const handlePurchaseNotification = (order) => {
@@ -21,62 +24,76 @@ export default function App() {
     setTimeout(() => setLiveToast(null), 7000);
   };
 
-  const switchUser = async (email) => {
+  // Switch or authenticate user
+  const handleUserLogin = async (loginId, password) => {
     try {
-      let password = 'Brightloop@2026';
-      if (email.includes('@corp') || email.includes('@shop')) {
-        password = 'Customer@2026';
-      }
-
       const res = await apiRequest('/auth/login', {
         method: 'POST',
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ login_id: loginId, password: password })
       });
 
       setAuthToken(res.access_token);
       setCurrentUser(res.user);
       setUser(res.user);
 
+      // Route by role
       if (res.user.role === 'customer') {
         setActiveTab('portal');
-      } else if (activeTab === 'portal') {
+      } else {
         setActiveTab('analytics');
       }
     } catch (err) {
-      console.error('Failed to switch persona:', err);
+      console.error('Failed to authenticate:', err);
     }
   };
 
-  useEffect(() => {
-    if (!currentUser) {
-      switchUser('admin@brightloop.com').finally(() => setInitialLoading(false));
+  const handleLogout = () => {
+    clearAuth();
+    setUser(null);
+  };
+
+  const handleLoginSuccess = (user) => {
+    setUser(user);
+    if (user.role === 'customer') {
+      setActiveTab('portal');
     } else {
-      setInitialLoading(false);
+      setActiveTab('analytics');
     }
-  }, []);
+  };
+
+  // Adjust active tab if user role changes or doesn't have permission
+  useEffect(() => {
+    if (currentUser?.role === 'customer' && activeTab !== 'portal' && activeTab !== 'store') {
+      setActiveTab('portal');
+    }
+    if (currentUser?.role === 'staff' && activeTab === 'staff_mgmt') {
+      setActiveTab('analytics');
+    }
+  }, [currentUser, activeTab]);
 
   const tabTitles = {
-    store: 'Live Storefront',
+    store: 'Live Perfume Store',
     analytics: 'Dashboard',
     billing_day: 'Billing Operations',
     subscriptions: 'Subscriptions',
     invoices: 'Invoices & Payments',
     products: 'Products & Catalog',
+    staff_mgmt: 'Staff & Members',
     plans_rules: 'Settings',
     portal: 'Customer Portal',
   };
 
-  if (initialLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#080405] text-zinc-400 font-mono text-xs">
-        <div className="flex items-center space-x-3">
-          <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-          <span>INITIALIZING ODOO PERFUMES LUXURY SUITE...</span>
-        </div>
-      </div>
-    );
+  // 1. Initial Luxury Loading Screen
+  if (isAppLoading) {
+    return <LoadingScreen onFinished={() => setIsAppLoading(false)} />;
   }
 
+  // 2. Unauthenticated Login Page
+  if (!currentUser) {
+    return <LoginPage onLoginSuccess={handleLoginSuccess} />;
+  }
+
+  // 3. Authenticated Workspace
   return (
     <div className="min-h-screen bg-[#080405] text-[#f5f0ee] relative overflow-x-hidden selection:bg-red-600 selection:text-white">
       
@@ -85,18 +102,19 @@ export default function App() {
       <div className="ambient ambient-two"></div>
 
       <div className="shell">
-        {/* Left Vertical Luxury Sidebar */}
+        {/* Left Vertical Luxury Sidebar with Role Guard */}
         <Sidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           currentUser={currentUser}
-          onSwitchUser={switchUser}
+          onSwitchUser={handleUserLogin}
+          onLogout={handleLogout}
         />
 
         {/* Main Content Area */}
         <main className="main-area">
           
-          {/* Top Bar matching uploaded styles.css */}
+          {/* Top Bar with Breadcrumbs & Role Indicator */}
           <header className="topbar">
             <div className="breadcrumb">
               <span>ODOO PERFUMES</span>
@@ -121,11 +139,31 @@ export default function App() {
                 <span className="persona-label">ACTIVE PERSONA</span>
                 <button 
                   className="persona-button"
-                  onClick={() => switchUser(currentUser?.role === 'admin' ? 'staff@brightloop.com' : 'admin@brightloop.com')}
+                  onClick={() => {
+                    if (currentUser?.role === 'admin') {
+                      handleUserLogin('MEMBER1', '1234');
+                    } else if (currentUser?.role === 'staff') {
+                      handleUserLogin('CUSTOMER', '1234');
+                    } else {
+                      handleUserLogin('ADMIN', '1234');
+                    }
+                  }}
+                  title="Click to quickly toggle persona"
                 >
-                  <span>♛</span> {currentUser?.role === 'admin' ? 'Admin' : currentUser?.role || 'User'} <span className="chevron">⌄</span>
+                  <span>{currentUser?.role === 'admin' ? '👑' : currentUser?.role === 'staff' ? '⚙️' : '🏢'}</span> 
+                  <span className="capitalize">{currentUser?.username || currentUser?.role}</span> 
+                  <span className="chevron">⌄</span>
                 </button>
               </div>
+
+              {/* Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="text-xs text-zinc-500 hover:text-red-400 transition ml-1"
+                title="Log out"
+              >
+                Log Out
+              </button>
             </div>
           </header>
 
@@ -147,15 +185,16 @@ export default function App() {
             </div>
           )}
 
-          {/* Page Viewport */}
+          {/* Page Viewport based on Role Permissions */}
           <div style={{ padding: '34px clamp(20px, 3vw, 48px) 30px' }}>
             {activeTab === 'store' && <LiveStoreView onPurchaseSuccess={handlePurchaseNotification} />}
-            {activeTab === 'analytics' && <FinanceDashboard setActiveTab={setActiveTab} />}
-            {activeTab === 'billing_day' && <BillingDayView />}
-            {activeTab === 'subscriptions' && <SubscriptionsView />}
-            {activeTab === 'invoices' && <InvoicesView />}
-            {activeTab === 'products' && <ProductsView />}
-            {activeTab === 'plans_rules' && <PlansAndRulesView currentUser={currentUser} />}
+            {activeTab === 'analytics' && currentUser?.role !== 'customer' && <FinanceDashboard setActiveTab={setActiveTab} />}
+            {activeTab === 'billing_day' && currentUser?.role !== 'customer' && <BillingDayView />}
+            {activeTab === 'subscriptions' && currentUser?.role !== 'customer' && <SubscriptionsView />}
+            {activeTab === 'invoices' && currentUser?.role !== 'customer' && <InvoicesView />}
+            {activeTab === 'products' && currentUser?.role !== 'customer' && <ProductsView />}
+            {activeTab === 'staff_mgmt' && currentUser?.role === 'admin' && <StaffManagementView currentUser={currentUser} />}
+            {activeTab === 'plans_rules' && currentUser?.role === 'admin' && <PlansAndRulesView currentUser={currentUser} />}
             {activeTab === 'portal' && <CustomerPortalView currentUser={currentUser} />}
           </div>
 
